@@ -1,55 +1,65 @@
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.time.format.DateTimeParseException;
-import java.util.Scanner;
+/**
+ * Imports the necessary classes from the Java I/O package to handle input and output operations.
+ */
+import java.io.*;
+import java.net.ServerSocket;
+import java.net.Socket;
+
 
 public class MainServer {
     public static void main(String[] args) {
-        Scanner sn = new Scanner(System.in);
-        System.out.println("Are you an applicant or a school representative?\nEnter 1 if you are an applicant or Enter 2 if you are a School Representative");
-        int userChoice = sn.nextInt();
+        try (ServerSocket serverSocket = new ServerSocket(2020)) {
+            System.out.println("Server is listening on port 2020");
 
-        if (userChoice == 1) {
-            System.out.println("Are you already registered?\nEnter 1 for yes or 0 for no");
-            int isRegistered = sn.nextInt();
-            if (isRegistered == 1) {
-                System.out.println("Enter your username");
-                String username = sn.next();
-                // Add logic to check if the username is in the database
+            while (true) {
+                try (Socket socket = serverSocket.accept();
+                     BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                     PrintWriter out = new PrintWriter(socket.getOutputStream(), true)) {
 
-                System.out.println("Enter the School registration number");
-                String registrationNumber = sn.next();
-                // Add logic to check for corresponding school registration number
-                // If the details correspond, proceed with further logic
-
-            } else if (isRegistered == 0) {
-                Applicant.newApplicant();
-            }else{
-                System.out.println("Invalid input. Please try again.");
-                return;
+                    String inputLine;
+                    while ((inputLine = in.readLine()) != null) {
+                        switch (inputLine) {
+                            case "1": // Applicant
+                                handleApplicant(in, out);
+                                break;
+                            case "2": // School Representative
+                                SchoolRepresentative.handleSchoolRepresentative(in, out);
+                                break;
+                            default:
+                                out.println("Invalid input. Please try again.");
+                                break;
+                        }
+                    }
+                } catch (IOException e) {
+                    System.out.println("Exception caught when trying to listen on port 12345 or listening for a connection");
+                    System.out.println(e.getMessage());
+                }
             }
-        }else if (userChoice == 2) {
-            System.out.println("Enter your username:");
-            String username = sn.next();
-            if (username.isEmpty()) {
-                System.out.println("Username cannot be empty.");
-                return;
-            }
-            System.out.println("Enter your password:");
-            String password = sn.next();
-            if (password.isEmpty()) {
-                System.out.println("Password cannot be empty.");
-                return;
-            }
-            // Add logic to check if the username is in the database
-
-
-        }else{
-            System.out.println("Invalid input. Please try again.");
-            return;
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
-    
 
+    private static void handleApplicant(BufferedReader in, PrintWriter out) throws IOException {
+        out.println("Are you already registered? Enter 1 for yes or 0 for no");
+        String isRegistered = in.readLine();
+
+        if ("1".equals(isRegistered)) {
+            out.println("Enter your username");
+            String username = in.readLine();
+            // Add logic to check if the username is in the database
+
+            out.println("Enter the School registration number");
+            String registrationNumber = in.readLine();
+            // Add logic to check for corresponding school registration number
+            // If the details correspond, proceed with further logic
+
+        } else if ("0".equals(isRegistered)) {
+            Applicant.newApplicant(in,out);
+        } else {
+            out.println("Invalid input. Please try again.");
+        }
+    }
+
+    
 }

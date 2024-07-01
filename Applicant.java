@@ -1,12 +1,8 @@
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintWriter;
+import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.Scanner;
+
 
 public class Applicant {
     public String username;
@@ -17,6 +13,20 @@ public class Applicant {
     public String schoolRegistrationNumber;
     public byte[] image;
 
+    /**
+     * Writes the applicant's information to a file named "Vault.txt". If the file does not exist, it will be created.
+     * The file will contain the following information on separate lines:
+     * - Username
+     * - First name
+     * - Last name
+     * - Email address
+     * - Date of birth
+     * - School registration number
+     * - Image data (as a byte array)
+     *
+     * @param applicant The Applicant object containing the information to be written to the file.
+     * @throws IOException If there is an error creating or writing to the file.
+     */
     public static void fileHandler(Applicant applicant) throws IOException {
         File file = new File("Vault.txt");
 
@@ -62,14 +72,13 @@ public class Applicant {
 
     
     //This is the method used to create object of an applicant to store the applicant detail into the file
-    public static void newApplicant() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Welcome To Thrive Math Competition");
-        System.out.println("To Register, enter the following command, and mind to skip a space where indicated:");
-        System.out.println("Register: username\t firstname\t lastname\t emailAddress\t date_of_birth(yyyy-mm-dd)\t school_registration\t location_of_image");
-        String response = scanner.nextLine();
+    public static void newApplicant(BufferedReader in, PrintWriter out) throws IOException{
 
-        if (response.startsWith("Register:")) {
+        out.println("Welcome To Thrive Math Competition\nTo Register, enter the following command, and mind to skip a space where indicated:\nRegister: username\\t firstname\\t lastname\\t emailAddress\\t date_of_birth(yyyy-mm-dd)\\t school_registration\\t location_of_image");
+      // Read the response from the client
+        String response = in.readLine();
+
+        if (response != null && response.startsWith("Register:")) {
             // Remove the "Register:" part and trim leading/trailing whitespace
             String trimmedResponse = response.substring(9).trim();
             // Split the trimmed response by one or more spaces since i am a forgiving person
@@ -90,25 +99,25 @@ public class Applicant {
 
                 try {
                     Applicant applicant = new Applicant(username, firstname, lastname, email, dateOfBirth, registrationNumber, imagePath);
-                    System.out.println("Applicant registered successfully!");
+                    out.println("Applicant registered successfully\nPlease wait to be verified by your School Representative\nYou will recieve an email when verified\nThank you\n:)");
                     Applicant.fileHandler(applicant);
                     // Add logic to save the applicant to the database
                 } catch (IOException e) {
-                    System.out.println("Failed to save image as BLOB.");
+                    out.println("Failed to save image as BLOB.");
                     e.printStackTrace();
                 } catch (DateTimeParseException e) {
-                    System.out.println("Failed to parse date of birth.");
+                    out.println("Failed to parse date of birth. Please try again and write a correct date");
                     e.printStackTrace();
                 }
                 
             } else {
-                System.out.println("Invalid command format. Please ensure you provide all required fields.");
+                out.println("Invalid command format. Please ensure you provide all required fields.");
             }
         } else {
-            System.out.println("Invalid command");
+            out.println("Invalid command please Enter the Command Correctly \"Register:\"");
         }
 
-        scanner.close();
+
     }
 
   
