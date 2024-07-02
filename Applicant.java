@@ -74,7 +74,9 @@ public class Applicant {
     //This is the method used to create object of an applicant to store the applicant detail into the file
     public static void newApplicant(BufferedReader in, PrintWriter out) throws IOException{
 
-        out.println("Welcome To Thrive Math Competition\nTo Register, enter the following command, and mind to skip a space where indicated:\nRegister: username\\t firstname\\t lastname\\t emailAddress\\t date_of_birth(yyyy-mm-dd)\\t school_registration\\t location_of_image");
+        out.println("Welcome To Thrive Math Competition");
+        out.println("To Register, enter the following command, and mind to skip a space where indicated:");
+        out.println("Register: username\t firstname\t lastname\t emailAddress\t date_of_birth(yyyy-mm-dd)\t school_registration\t location_of_image");
       // Read the response from the client
         String response = in.readLine();
 
@@ -105,6 +107,7 @@ public class Applicant {
                 } catch (IOException e) {
                     out.println("Failed to save image as BLOB.");
                     e.printStackTrace();
+                    
                 } catch (DateTimeParseException e) {
                     out.println("Failed to parse date of birth. Please try again and write a correct date");
                     e.printStackTrace();
