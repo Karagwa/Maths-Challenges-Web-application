@@ -40,6 +40,16 @@ public class MainServer {
         }
     }
 
+    /**
+     * Handles the logic for an applicant interacting with the server.
+     * Prompts the applicant to indicate if they are already registered, and then
+     * either proceeds with login logic or new applicant registration depending on
+     * the user's response.
+     *
+     * @param in The BufferedReader to read input from the applicant.
+     * @param out The PrintWriter to write output to the applicant.
+     * @throws IOException If there is an error reading or writing to the socket.
+     */
     private static void handleApplicant(BufferedReader in, PrintWriter out) throws IOException {
         out.println("Are you already registered? Enter 1 for yes or 0 for no");
         String isRegistered = in.readLine();
@@ -53,6 +63,7 @@ public class MainServer {
             String registrationNumber = in.readLine();
             // Add logic to check for corresponding school registration number
             // If the details correspond, proceed with further logic
+            DatabaseConnection.authenticateApplicant(username, registrationNumber, in, out);
 
         } else if ("0".equals(isRegistered)) {
             Applicant.newApplicant(in,out);

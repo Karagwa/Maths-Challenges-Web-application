@@ -18,6 +18,13 @@ public class SchoolRepresentative {
         if (password.isEmpty()) {
             out.println("Password cannot be empty.");
         }
+
+        DatabaseConnection.authenticateRepresentative(username, password, in, out);
         // Add logic to check if the username is in the database
+    }
+
+    public static String viewApplicant(){
+        //This is the part of view Applicants
+        return null; //i have returned null for now
     }
 }

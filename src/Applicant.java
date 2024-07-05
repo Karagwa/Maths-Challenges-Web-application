@@ -45,6 +45,13 @@ public class Applicant {
             out.println(applicant.schoolRegistrationNumber);
             out.println(applicant.image);
         }
+        String repEmail = DatabaseConnection.checkRepresentativeEmail(applicant.schoolRegistrationNumber);
+
+        if (repEmail!= null) {
+            Email.notifyRep(repEmail);
+        }else{
+            System.out.println("No Representative Found");
+        }
     }
 
 
