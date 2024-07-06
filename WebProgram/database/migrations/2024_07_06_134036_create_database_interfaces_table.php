@@ -13,14 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
-            $table->timestamps();
+        Schema::create('database_interfaces', function (Blueprint $table) {
+            $table->string('URL', 80)->primary();
+            $table->integer('PortNo');
+
+            $table->foreign('PortNo')->references('PortNo')->on('java_server')
+            ->onDelete('cascade')
+            ->onUpdate('cascade');
         });
     }
 
@@ -31,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('database_interfaces');
     }
 };
