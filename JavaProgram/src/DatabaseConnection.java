@@ -16,7 +16,9 @@ public class DatabaseConnection {
     private static final String DB_PASSWORD = "yourpassword";
 
 
-    public static void authenticateRepresentative(String username, String password,BufferedReader in, PrintWriter out){
+
+    public static String authenticateRepresentative(String username, String password,BufferedReader in, PrintWriter out){
+
          try {
 
             //Setting up the connection to the database
@@ -36,16 +38,14 @@ public class DatabaseConnection {
               // Process the results
             if (rs.next()) {
                 System.out.println("User authenticated successfully!");
-                out.println("1");
+                return "1";
             } else {
                 System.out.println("Invalid username or password.");
-                out.println("0");
-            }
-
-
-            
+               return "0";
+            }  
         } catch (SQLException e) {
             e.printStackTrace();
+            return "0";
         }
 
 
