@@ -1,5 +1,7 @@
 import java.io.BufferedReader;
+
 import java.io.FileReader;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -19,6 +21,7 @@ public class SchoolRepresentative {
         if (password.isEmpty()) {
             out.println("Password cannot be empty.");
         }
+
 
         String databaseresponse=DatabaseConnection.authenticateRepresentative(username, password, in, out);
         if (databaseresponse=="1") {
@@ -58,4 +61,5 @@ public class SchoolRepresentative {
             }
             return sb.toString();
         }
+
 }

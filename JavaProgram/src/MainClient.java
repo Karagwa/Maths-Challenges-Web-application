@@ -51,6 +51,7 @@ public class MainClient {
                     return;
                 }
             } else if ("Enter your system username:".equals(response)) {
+              
                 handleSchoolRepresentativeLogin(in, out, sn);
                 String auth = in.readLine();
                 if("Welcome To Thrive Math Competition".equals(auth)){
@@ -64,12 +65,8 @@ public class MainClient {
                     }else{
                         System.out.println(viewresponse);
                     }
+
                     //logic for viewApplicant logic 
-
-
-
-
-
                 }else{
                     System.out.println("Invalid username or password\nTry again");
                 }
