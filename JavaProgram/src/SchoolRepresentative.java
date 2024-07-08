@@ -20,7 +20,22 @@ public class SchoolRepresentative {
             out.println("Password cannot be empty.");
         }
 
-        DatabaseConnection.authenticateRepresentative(username, password, in, out);
+        String databaseresponse=DatabaseConnection.authenticateRepresentative(username, password, in, out);
+        if (databaseresponse=="1") {
+            out.println("Welcome To Thrive Math Competition");
+    
+            String repcommand= in.readLine();
+            if (repcommand=="viewApplicant") {
+                String applicantData = viewApplicant("Temp.csv",in,out);
+                out.println(applicantData);       
+            }else{
+                out.println("Invalid command");
+            }
+            
+            
+        } else {
+            out.println("Invalid username or password \nPlease try again");
+        }
         // Add logic to check if the username is in the database
     }
 
