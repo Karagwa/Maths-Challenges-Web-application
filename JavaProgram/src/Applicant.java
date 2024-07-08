@@ -28,22 +28,20 @@ public class Applicant {
      * @throws IOException If there is an error creating or writing to the file.
      */
     public static void fileHandler(Applicant applicant) throws IOException {
-        File file = new File("Vault.txt");
-
+        File file = new File("Temp.csv");
+        PrintWriter out = new PrintWriter(file, "UTF-8");
         if (file.createNewFile()) {
             System.out.println("File is Created");
+            out.println("Username, First Name, Last Name, Email, Date of Birth, School Registration Number, Image");
+            out.close();
         } else {
             System.out.println("File already exists");
+            out.close();
         }
 
-        try (PrintWriter out = new PrintWriter(file, "UTF-8")) {
-            out.println(applicant.username);
-            out.println(applicant.firstName);
-            out.println(applicant.lastName);
-            out.println(applicant.emailAddress);
-            out.println(applicant.dateOfBirth);
-            out.println(applicant.schoolRegistrationNumber);
-            out.println(applicant.image);
+        try (PrintWriter out1 = new PrintWriter(file, "UTF-8")) {
+            
+            out1.println(applicant.username + "," + applicant.firstName + "," + applicant.lastName + "," + applicant.emailAddress + "," + applicant.dateOfBirth + "," + applicant.schoolRegistrationNumber + "," + applicant.image);
         }
         String repEmail = DatabaseConnection.checkRepresentativeEmail(applicant.schoolRegistrationNumber);
 

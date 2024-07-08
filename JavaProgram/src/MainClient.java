@@ -2,6 +2,7 @@
  * Provides functionality for reading input from a buffered stream.
  */
 import java.io.BufferedReader;
+import java.io.Console;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -118,13 +119,24 @@ public class MainClient {
         System.out.println("Enter your system username:");
         out.println(sn.nextLine());
 
-        System.out.println(in.readLine()); // Prompt for password
-        out.println(sn.nextLine());
+        
+        out.println(getPassword(in)); // Prompt for password;
 
         System.out.println(in.readLine()); // Final response from server
 
         return in.readLine();
 
 
+    }
+    public static String getPassword(BufferedReader in) throws IOException {
+        Console console = System.console();
+        if (console == null) {
+            System.out.println("No console available");
+            return null;
+        }
+
+        // Read password
+        char[] passwordArray = console.readPassword(in.readLine());//Expect a prompt for password
+        return new String(passwordArray);
     }
 }
