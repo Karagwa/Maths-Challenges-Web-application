@@ -17,17 +17,10 @@ public class DatabaseConnection {
 
 
 
-    public static String authenticateRepresentative(String username, String password,BufferedReader in, PrintWriter out){
-
-         try {
-
-            //Setting up the connection to the database
-            Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD); 
+public static String authenticateRepresentative(String username, String password) {
+        try {
+            Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
             System.out.println("Connected to the database successfully!");
-            
-
-            //Setting up my object to send and excute the sql statements
-            //i will use preparedStatements to prevent sql injection
 
             String sql = "SELECT * FROM SchoolRepresentative WHERE username = ? AND password = ?";
             PreparedStatement pstmt = connection.prepareStatement(sql);
@@ -35,21 +28,19 @@ public class DatabaseConnection {
             pstmt.setString(2, password);
             ResultSet rs = pstmt.executeQuery();
 
-              // Process the results
             if (rs.next()) {
                 System.out.println("User authenticated successfully!");
                 return "1";
             } else {
                 System.out.println("Invalid username or password.");
-               return "0";
-            }  
+                return "0";
+            }
         } catch (SQLException e) {
             e.printStackTrace();
             return "0";
         }
-
-
     }
+
 
 
     public static void authenticateApplicant(String username, String registrationNumber,BufferedReader in, PrintWriter out){

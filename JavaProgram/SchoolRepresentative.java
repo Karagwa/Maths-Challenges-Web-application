@@ -15,20 +15,22 @@ public class SchoolRepresentative {
         String username = in.readLine();
         if (username.isEmpty()) {
             out.println("Username cannot be empty.");
+            return;
         }
         out.println("Enter your password:");
         String password = in.readLine();
         if (password.isEmpty()) {
             out.println("Password cannot be empty.");
+            return;
         }
 
 
-        String databaseresponse=DatabaseConnection.authenticateRepresentative(username, password, in, out);
-        if (databaseresponse=="1") {
+        String databaseresponse=DatabaseConnection.authenticateRepresentative(username, password);
+        if ("1".equals(databaseresponse)) {
             out.println("Welcome To Thrive Math Competition");
     
             String repcommand= in.readLine();
-            if (repcommand=="viewApplicant") {
+            if ("viewApplicant".equals(repcommand)) {
                 String applicantData = viewApplicant("Temp.csv",in,out);
                 out.println(applicantData);       
             }else{
@@ -50,10 +52,11 @@ public class SchoolRepresentative {
                     // Split CSV line into parts
                     String[] parts = line.split(",");
                     if (parts.length >= 6) { // Ensure there are enough fields
+                        String userName=parts[0].trim();
                         String firstName = parts[1].trim();
                         String lastName = parts[2].trim();
                         String regNumber = parts[5].trim(); // Assuming school registration number is in the 6th column
-                        sb.append(firstName).append(" ").append(lastName).append(" - Registration Number: ").append(regNumber).append("\n");
+                        sb.append(firstName).append(" ").append(lastName).append(" - Registration Number: ").append(regNumber).append(" ").append(" -Username: ").append(userName).append("\n");
                     }
                 }
             } catch (IOException e) {
@@ -61,5 +64,19 @@ public class SchoolRepresentative {
             }
             return sb.toString();
         }
+
+        //ADDED
+    public static void handleViewApplicant(BufferedReader in,PrintWriter out)throws IOException{
+        String viewCommand = in.readLine();
+
+        if ("viewApplicant".equals(viewCommand)) {
+           out.println( viewApplicant("Temp.csv",in,out));
+            
+        } else {
+            out.println("Invalid command");
+            
+        }
+
+    } 
 
 }

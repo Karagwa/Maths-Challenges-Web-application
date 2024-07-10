@@ -24,6 +24,11 @@ public class MainServer {
                                 break;
                             case "2": // School Representative
                                 SchoolRepresentative.handleSchoolRepresentative(in, out);
+                                
+                                //ADDED
+
+
+                                SchoolRepresentative.handleViewApplicant(in,out);
                                 break;
                             default:
                                 out.println("Invalid input. Please try again.");
