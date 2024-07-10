@@ -51,15 +51,22 @@ public class MainClient {
                     return;
                 }
             } else if ("Enter your system username:".equals(response)) {
-                String auth =handleSchoolRepresentativeLogin(in, out, sn);
-                if("1".equals(auth)){
+              
+                handleSchoolRepresentativeLogin(in, out, sn);
+                String auth = in.readLine();
+                if("Welcome To Thrive Math Competition".equals(auth)){
+                    System.out.println(auth);
                     System.out.println("Enter the viewApplicant Command");
+                    out.println(sn.nextLine());
+                    String viewresponse = in.readLine();
+                    if(viewresponse=="Invalid command"){
+                        System.out.println(viewresponse);
+
+                    }else{
+                        System.out.println(viewresponse);
+                    }
+
                     //logic for viewApplicant logic 
-
-
-
-
-
                 }else{
                     System.out.println("Invalid username or password\nTry again");
                 }
