@@ -15,20 +15,22 @@ public class SchoolRepresentative {
         String username = in.readLine();
         if (username.isEmpty()) {
             out.println("Username cannot be empty.");
+            return;
         }
         out.println("Enter your password:");
         String password = in.readLine();
         if (password.isEmpty()) {
             out.println("Password cannot be empty.");
+            return;
         }
 
 
-        String databaseresponse=DatabaseConnection.authenticateRepresentative(username, password, in, out);
-        if (databaseresponse=="1") {
+        String databaseresponse=DatabaseConnection.authenticateRepresentative(username, password);
+        if ("1".equals(databaseresponse)) {
             out.println("Welcome To Thrive Math Competition");
     
             String repcommand= in.readLine();
-            if (repcommand=="viewApplicant") {
+            if ("viewApplicant".equals(repcommand)) {
                 String applicantData = viewApplicant("Temp.csv",in,out);
                 out.println(applicantData);       
             }else{
