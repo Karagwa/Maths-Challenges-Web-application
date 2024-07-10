@@ -1,48 +1,49 @@
 <?php
-
 namespace App\Http\Controllers;
 
-use App\Models\School;
 use Illuminate\Http\Request;
+use App\Models\School;
 
 class SchoolController extends Controller
 {
-    public function index()
+    public function fetchSchools()
     {
-        return response()->json(School::all());
-    }
-
-    public function store(Request $request)
-    {
-        $request->validate([
-            'name' => 'required',
-            'district' => 'required',
-            'regno' => 'required'
-        ]);
-        \Log::info($request->all());  // Log the request data
-        try {
-            $school = School::create($request->all());
-            return response()->json(['success' => true, 'school' => $school]);
-        } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => $e->getMessage()]);
+        $schools = School::all();
+        
+        // Convert the data to a custom delimited string
+        $output = "";
+        foreach ($schools as $school) {
+            $output .= $school->id . "|" . $school->name . "|" . $school->district . "|" . $school->regno . "\n";
         }
 
-        
-       // $school = School::create($request->all());
-       // return response()->json(['success' => 'School added successfully', 'school' => $school]);
+        return response(rtrim($output), 200)->header('Content-Type', 'text/plain');
     }
 
-   
-    public function destroy($id)
-{
-    $school = School::findOrFail($id);
-    $school->delete();
-    return redirect()->back();
+    public function addSchool(Request $request)
+    {
+        $school = new School();
+        $school->name = $request->name;
+        $school->district = $request->district;
+        $school->regno = $request->regno;
+        $school->save();
 
-    return response()->json(['success' => true]);
+        return response("success|School added successfully", 200)->header('Content-Type', 'text/plain');
+    }
+
+    
+    public function delete($id)
+    {
+     try {
+        $school = School::findOrFail($id);
+        $school->delete();
+
+        return response("success|School deleted successfully", 200)->header('Content-Type', 'text/plain');
+    } catch (\Exception $e) {
+        return response("error|Failed to delete school: " . $e->getMessage(), 500)->header('Content-Type', 'text/plain');
+    }
+    }
 }
 
+?>
 
-
-}
 
