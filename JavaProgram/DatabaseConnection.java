@@ -321,6 +321,28 @@ public static String authenticateRepresentative(String username, String password
           
     }
 
+
+    public static void getChallenges()throws SQLException,IOException{
+        Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD); 
+        System.out.println("Connected to the database successfully!");
+        
+        LocalDate today = LocalDate.now();
+        String sql="SELECT ChallengeNumber,ChallengeName FROM challenge WHERE ClosingDate >= ?";
+
+        PreparedStatement pstmt = connection.prepareStatement(sql); //prevents sql injections
+        pstmt.setDate(1, java.sql.Date.valueOf(today));
+
+        ResultSet resultSet = pstmt.executeQuery();
+ 
+              // Process the results
+            while(resultSet.next()) {
+                int ChallengeNumber =resultSet.getInt("ChallengeNumber");
+                String ChallengeName =resultSet.getString("ChallengeName");
+                System.out.println("ChallengeNumber-" + ChallengeNumber+ "  ChallengeName- " + ChallengeName);
+                
+            }
+        connection.close();
+    }
  
 
 }

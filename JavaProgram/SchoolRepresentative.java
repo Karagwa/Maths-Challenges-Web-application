@@ -53,8 +53,8 @@ public class SchoolRepresentative {
                 String line;
                 while ((line = reader.readLine()) != null) {
                     // Split CSV line into parts
-                    String[] parts = line.split(",");
-                    if (parts.length >= 6) { // Ensure there are enough fields
+                    String[] parts = line.split(",");  
+                    if (parts.length == 6) { // Ensure there are enough fields
 
                         String userName=parts[0].trim();
                         String firstName = parts[1].trim();
