@@ -4,6 +4,7 @@ import java.io.FileReader;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 
 public class SchoolRepresentative {
     String username;
@@ -78,5 +79,33 @@ public class SchoolRepresentative {
         }
 
     } 
+
+    public static void confirmApplicant(String command,BufferedReader in,PrintWriter out) throws  IOException,SQLException{
+        //String command = in.readLine();
+        String[] parts =  command.split(" ");
+
+        if (parts.length == 3 && parts[0].equals("confirm")) {
+            String action = parts[1];
+            String username = parts[2];
+
+            if (action.equals("yes")) {
+                DatabaseConnection.addParticipant("Temp.csv",username);
+                out.println("User "+username+" confirmed and added to participants");
+
+                
+            }else if(action.equals("no")){
+                DatabaseConnection.addRejected("Temp.csv",username);
+                out.println("Username "+ username+" rejected and added to rejected table ");
+
+            }else{
+                out.println("Invalid action. Use 'yes' or 'no'");
+            }
+
+            
+        } else {
+            out.println("Invalid command format. Use 'confirm yes/no username' .");
+            
+        }
+    }
 
 }
