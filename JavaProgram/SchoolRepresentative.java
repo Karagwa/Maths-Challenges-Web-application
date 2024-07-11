@@ -4,7 +4,9 @@ import java.io.FileReader;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+
 import java.sql.SQLException;
+
 
 public class SchoolRepresentative {
     String username;
@@ -53,11 +55,13 @@ public class SchoolRepresentative {
                     // Split CSV line into parts
                     String[] parts = line.split(",");
                     if (parts.length >= 6) { // Ensure there are enough fields
+
                         String userName=parts[0].trim();
                         String firstName = parts[1].trim();
                         String lastName = parts[2].trim();
                         String regNumber = parts[5].trim(); // Assuming school registration number is in the 6th column
                         sb.append(firstName).append(" ").append(lastName).append(" - Registration Number: ").append(regNumber).append(" ").append(" -Username: ").append(userName).append("\n");
+
                     }
                 }
             } catch (IOException e) {
@@ -65,6 +69,7 @@ public class SchoolRepresentative {
             }
             return sb.toString();
         }
+
 
         //ADDED
     public static void handleViewApplicant(BufferedReader in,PrintWriter out)throws IOException{
@@ -107,5 +112,6 @@ public class SchoolRepresentative {
             
         }
     }
+
 
 }

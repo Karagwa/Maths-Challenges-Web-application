@@ -17,21 +17,23 @@ use App\Http\Controllers\RepresentativeController;
  //Route::post('/delete-school', 'SchoolController@deleteSchool')->name('delete.school');
 //Route::post('/delete-representative', 'RepresentativeController@deleteRepresentative')->name('delete.representative');
 
-Route::resource('schools', SchoolController::class);
-Route::resource('representatives', RepresentativeController::class);
 
-Route::get('/schools', [SchoolController::class, 'index']);
-Route::post('/schools', [SchoolController::class, 'store']);
+Route::get('/fetch_schools', [SchoolController::class, 'fetchSchools']);
+Route::post('/add_school', [SchoolController::class, 'addSchool']);
+Route::delete('/schools/{id}', [SchoolController::class, 'delete'])->name('schools.delete');
+
+Route::get('/fetch_representatives', [RepresentativeController::class, 'fetchRepresentatives']);
+Route::post('/add_representative', [RepresentativeController::class, 'addRepresentative']);
+Route::delete('/representatives/{id}', [RepresentativeController::class, 'destroy'])->name('representatives.delete');
+
+//Route::resource('schools', SchoolController::class);
+//Route::resource('representatives', RepresentativeController::class);
 
 
-Route::get('/representatives', [RepresentativeController::class, 'index']);
-//Route::post('/representatives', [RepresentativeController::class, 'store']);
-//Route::delete('/representatives/{id}', [RepresentativeController::class, 'destroy']);
 
-Route::delete('/schools/{id}', [SchoolController::class, 'destroy'])->name('schools.destroy');
-Route::delete('/representatives/{id}', [RepresentativeController::class, 'destroy'])->name('representatives.destroy');
 
-Route::post('/representatives', [RepresentativeController::class, 'store']);
+
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -54,4 +56,5 @@ Route::group(['middleware' => 'auth'], function () {
 Route::group(['middleware' => 'auth'], function () {
 	Route::get('{page}', ['as' => 'page.index', 'uses' => 'App\Http\Controllers\PageController@index']);
 });
+
 

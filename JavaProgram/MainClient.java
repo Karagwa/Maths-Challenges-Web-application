@@ -63,6 +63,7 @@ public class MainClient {
                         System.out.println(viewresponse);
                     } else {
                         System.out.println(viewresponse);
+
                         
                         System.out.println("To confirm any applicant,enter the command (confirm yes/no username)");
                         String command=sn.nextLine();
@@ -70,6 +71,7 @@ public class MainClient {
                         out.println(command); 
                         String confirmationResponse =in.readLine();
                         System.out.println(confirmationResponse);
+
 
                     }
                 } else {

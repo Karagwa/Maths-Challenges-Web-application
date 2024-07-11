@@ -4,11 +4,13 @@
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+
 import java.sql.SQLException;
 
 
 public class MainServer {
     public static void main(String[] args) throws SQLException{
+
         try (ServerSocket serverSocket = new ServerSocket(2020)) {
             System.out.println("Server is listening on port 2020");
 
@@ -25,6 +27,7 @@ public class MainServer {
                                 break;
                             case "2": // School Representative
                                 SchoolRepresentative.handleSchoolRepresentative(in, out);
+
 
                                 
                                 //ADDED
@@ -45,6 +48,7 @@ public class MainServer {
                                 }
 
                                 
+
                                 break;
                             default:
                                 out.println("Invalid input. Please try again.");

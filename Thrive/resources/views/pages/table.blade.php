@@ -1,4 +1,4 @@
-@extends('layouts.app', ['activePage' => 'table', 'title' => 'Thrive Mathematical Challenges  by Thrive challenges & Fantastic Five', 'navName' => 'Table List', 'activeButton' => 'laravel'])
+@extends('layouts.app', ['activePage' => 'table', 'title' => 'Thrive Mathematical Challenges by Thrive challenges & Fantastic Five', 'navName' => 'Table List', 'activeButton' => 'laravel'])
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>REGISTRATION</title>
-    <!-- Your other head elements -->
+    
 </head>
 <body>
 @section('content')
@@ -15,34 +15,34 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="card strpied-tabled-with-hover">
-                        <div class="card-header ">
-                            <h4 class="card-title">SCHOOLS THAT A RE ENTERING INTO THE COMPETION</h4>
-                            <p class="card-category">please enter the information of the schools</p>
+                        <div class="card-header">
+                            <h4 class="card-title">SCHOOLS THAT ARE ENTERING INTO THE COMPETITION</h4>
+                            <p class="card-category">Please enter the information of the schools</p>
                         </div>
                         
-                        <form method="GET" name="sample" style="width: 800px;">
-                            @csrf
-                        <br>
+                        <form method="GET"  name="sample" style="width: 800px;">
+                        @csrf    
+
+                            <br>
                             ID <input type="number" name="id" id="id" autocomplete="off">
                             Name <input type="text" name="name" id="name" autocomplete="name">
                             District <input type="text" name="district" id="district" autocomplete="address-level2"><br>
-                           <br> RegNo <input type="text" name="regno" id="regno" autocomplete="off"> <br> <br>
-                           <input type="button" name="add" value="Add infor" onclick="addSchool();">
+                            <br> RegNo <input type="text" name="regno" id="regno" autocomplete="off"> <br> <br>
+                            <input type="button" name="add" value="Add info" onclick="addSchool();">
  
-                           <div class="card-body table-full-width table-responsive">
-                            <table class="table table-hover table-striped" id="tb1">
-                                <thead>
-                                    <th>ID</th>
-                                    <th>Name</th>
-                                    <th>District</th>
-                                    <th>School registration number</th>
-                                    
-                                </thead>
-                                <tbody>
+                            <div class="card-body table-full-width table-responsive">
+                                <table class="table table-hover table-striped" id="tb1">
+                                    <thead>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>District</th>
+                                        <th>School Registration Number</th>
+                                    </thead>
+                                    <tbody>
                           
-                                </tbody>
-                            </table>
-                           </div>
+                                    </tbody>
+                                </table>
+                            </div>
                         </form>
                         
                     </div>
@@ -51,79 +51,85 @@
             </div>
         </div>
     </div>
-    
 @endsection
-<script type="">
-document.addEventListener('DOMContentLoaded', function () {
+
+<script>
+    
+    document.addEventListener('DOMContentLoaded', function () {
     fetchSchools();
 });
 
 function fetchSchools() {
-    fetch('/schools')
-        .then(response => response.json())
+    fetch('/fetch_schools')
+        .then(response => response.text())
         .then(data => {
+            const rows = data.split('\n');
             const tbody = document.getElementById('tb1').getElementsByTagName('tbody')[0];
             tbody.innerHTML = '';
-            data.forEach(school => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${school.id}</td>
-                    <td>${school.name}</td>
-                    <td>${school.district}</td>
-                    <td>${school.regno}</td>
-                    <td><button onclick="removeRow(${school.id}, 'school')">Delete</button></td>
-                `;
-                tbody.appendChild(tr);
+            rows.forEach(row => {
+                const columns = row.split('|');
+                if (columns.length === 4) {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${columns[0]}</td>
+                        <td>${columns[1]}</td>
+                        <td>${columns[2]}</td>
+                        <td>${columns[3]}</td>
+                        <td><button onclick="removeRow(${columns[0]}, 'school')">Delete</button></td>
+                    `;
+                    tbody.appendChild(tr);
+                }
             });
-        });
+        })
+        .catch(error => console.error('Error fetching data:', error));
 }
-
-
 
 function addSchool() {
     const formData = new FormData(document.forms.sample);
     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-    fetch('/schools', {
+
+    fetch('/add_school', {
         method: 'POST',
         headers: {
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            'X-CSRF-TOKEN': csrfToken
         },
         body: formData
     })
-    .then(response => response.json())
+    .then(response => response.text())
     .then(data => {
-        if (data.success) {
+        const [status, message] = data.split('|');
+        if (status === 'success') {
             fetchSchools();
         } else {
-            alert('Failed to add school');
+            alert(message);
         }
     })
-    .catch(error => console.error('Error:', error));
+    .catch(error => console.error('Fetch schools error:', error));
 }
 
+function removeSchool(id) {
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-
-function removeRow(id, type) {
-    fetch(`/${type === 'school' ? 'schools' : 'representatives'}/${id}`, {
+    fetch(`/schools/${id}`, {
         method: 'DELETE',
         headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            'X-CSRF-TOKEN': csrfToken
         }
     })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            if (type === 'school') {
-                fetchSchools();
-            } else {
-                fetchReps();
-            }
-        } else {
-            alert('Failed to delete');
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
         }
-    });
+        return response.text();
+    })
+    .then(data => {
+        // Handle success or error response
+    })
+    .catch(error => console.error('Error deleting school:', error));
 }
+
+
 </script>
 </body>
 </html>
+

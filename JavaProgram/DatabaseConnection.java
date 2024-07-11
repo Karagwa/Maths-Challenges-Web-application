@@ -7,6 +7,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+
 import java.io.PrintWriter;
 
 public class DatabaseConnection {
@@ -147,6 +149,7 @@ public static String authenticateRepresentative(String username, String password
             e.printStackTrace();
         }
     }
+
 
     public static void addParticipant(String filePath,String targetUsername) throws IOException,SQLException{
         Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD); 
@@ -317,6 +320,7 @@ public static String authenticateRepresentative(String username, String password
         connection.close();
           
     }
+
  
 
 }
