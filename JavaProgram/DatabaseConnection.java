@@ -7,7 +7,16 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import java.io.PrintWriter;
 
 public class DatabaseConnection {
@@ -140,6 +149,178 @@ public static String authenticateRepresentative(String username, String password
             e.printStackTrace();
         }
     }
+
+
+    public static void addParticipant(String filePath,String targetUsername) throws IOException,SQLException{
+        Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD); 
+        System.out.println("Connected to the database successfully!");
+
+        BufferedReader reader=new BufferedReader(new FileReader(filePath));
+        String line;
+        boolean userFound = false;
+        int lineCount =0;
+
+        List<String> lines = new ArrayList<>();
+
+        while((line=reader.readLine()) !=null){
+            lineCount++;
+            String[] fields = line.split(",");
+
+            //extracting the username
+            String Username = fields[0];
+
+
+            //extracting the remaining values
+            
+            if(Username.equals(targetUsername)){
+                String Firstname = fields[1];
+                String Lastname = fields[2];
+                String EmailAddress = fields[3];
+
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                LocalDate Date_of_birth =LocalDate.parse(fields[4], formatter);
+
+                String schoolRegNumber = fields[5];
+
+                String byteString=fields[6].substring(fields[6].indexOf("[B@")+3);
+                // Decode the base64 string to a byte array
+                byte[] Image =byteString.getBytes();
+                
+
+                //confirm with the database actual fielnames-to  do dont forget!!!!!!!!!
+                String sql ="INSERT INTO participant (Username,Firstname,Lastname, EmailAddress,Date_of_birth,School_Registration_Number,Image) VALUES (?,?,?,?,?,?,?)";
+
+                PreparedStatement statement=connection.prepareStatement(sql);
+
+                //set values for placeholders ?
+                statement.setString(1, Username);
+                statement.setString(2, Firstname);
+                statement.setString(3, Lastname);
+                statement.setString(4, EmailAddress);
+                
+                
+                statement.setDate(5, java.sql.Date.valueOf(Date_of_birth));
+                statement.setString(6, schoolRegNumber);
+                statement.setBytes(7, Image);
+            
+
+                //executing statement
+                statement.executeUpdate();
+
+                //send success message
+                System.out.println("Accepted Applicant added to database successfully -"+ lineCount);
+
+                userFound=true;
+                break; //after user is found and added
+            }else{
+
+                /*add non matching lines to the list*/
+                lines.add(line);
+            }
+            
+        }
+        reader.close();
+
+        if (userFound){
+            // Write remaining lines back to the CSV file
+            try (PrintWriter writer = new PrintWriter(new FileWriter(filePath))) {
+                for (String remainingLine : lines) {
+                    writer.println(remainingLine);
+                }
+            }
+        }else{
+            System.out.println("Username " + targetUsername + " not found in the file.");
+        }
+        connection.close();
+          
+    }
+
+
+
+    public static void addRejected(String filePath,String targetUsername) throws IOException,SQLException{
+        Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD); 
+        System.out.println("Connected to the database successfully!");
+
+        BufferedReader reader=new BufferedReader(new FileReader(filePath));
+        String line;
+        boolean userFound = false;
+        int lineCount =0;
+
+        List<String> lines = new ArrayList<>();
+
+        while((line=reader.readLine()) !=null){
+            lineCount++;
+            String[] fields = line.split(",");
+
+            //extracting the username
+            String Username = fields[0];
+
+
+            //extracting the remaining values
+            
+            if(Username.equals(targetUsername)){
+                String Firstname = fields[1];
+                String Lastname = fields[2];
+                String EmailAddress = fields[3];
+
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                LocalDate Date_of_birth =LocalDate.parse(fields[4], formatter);
+
+                String schoolRegNumber = fields[5];
+
+                String byteString=fields[6].substring(fields[6].indexOf("[B@")+3);
+                // Decode the base64 string to a byte array
+                byte[] Image =byteString.getBytes();
+                
+
+                //confirm with the database actual fielnames-to  do dont forget!!!!!!!!!
+                String sql ="INSERT INTO rejected (Username,Firstname,Lastname, EmailAddress,Date_of_birth,School_Registration_Number,Image) VALUES (?,?,?,?,?,?,?)";
+
+                PreparedStatement statement=connection.prepareStatement(sql);
+
+                //set values for placeholders ?
+                statement.setString(1, Username);
+                statement.setString(2, Firstname);
+                statement.setString(3, Lastname);
+                statement.setString(4, EmailAddress);
+                
+                
+                statement.setDate(5, java.sql.Date.valueOf(Date_of_birth));
+                statement.setString(6, schoolRegNumber);
+                statement.setBytes(7, Image);
+            
+
+                //executing statement
+                statement.executeUpdate();
+
+                //send success message
+                System.out.println("Rejected Applicant added to database successfully"+ lineCount);
+
+                userFound=true;
+                break; //after user is found and added
+            }else{
+
+                /*add non matching lines to the list*/
+                lines.add(line);
+            }
+            
+        }
+        reader.close();
+
+        if (userFound){
+            // Write remaining lines back to the CSV file
+            try (PrintWriter writer = new PrintWriter(new FileWriter(filePath))) {
+                for (String remainingLine : lines) {
+                    writer.println(remainingLine);
+                }
+            }
+        }else{
+            System.out.println("Username " + targetUsername + " not found in the file.");
+        }
+        connection.close();
+          
+    }
+
  
 
 }
