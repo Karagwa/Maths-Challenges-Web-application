@@ -54,20 +54,17 @@ public class MainClient {
               
                 handleSchoolRepresentativeLogin(in, out, sn);
                 String auth = in.readLine();
-                if("Welcome To Thrive Math Competition".equals(auth)){
-                    System.out.println(auth);
-                    System.out.println("Enter the viewApplicant Command");
+                if ("Welcome To Thrive Math Competition".equals(auth)) {
+                    System.out.println(auth+"\nEnter the viewApplicant command to view the applicants");
+                    //Add logic to view the challenges and everything
                     out.println(sn.nextLine());
                     String viewresponse = in.readLine();
-                    if(viewresponse=="Invalid command"){
+                    if ("Invalid command".equals(viewresponse)) {
                         System.out.println(viewresponse);
-
-                    }else{
+                    } else {
                         System.out.println(viewresponse);
                     }
-
-                    //logic for viewApplicant logic 
-                }else{
+                } else {
                     System.out.println("Invalid username or password\nTry again");
                 }
             } else {
@@ -122,28 +119,28 @@ public class MainClient {
         return null;
     }
 
-    private static String handleSchoolRepresentativeLogin(BufferedReader in, PrintWriter out, Scanner sn) throws IOException {
+    private static void handleSchoolRepresentativeLogin(BufferedReader in, PrintWriter out, Scanner sn) throws IOException {
         System.out.println("Enter your system username:");
         out.println(sn.nextLine());
-
-        
-        out.println(getPassword(in)); // Prompt for password;
-
-        System.out.println(in.readLine()); // Final response from server
-
-        return in.readLine();
-
-
+    
+        System.out.println(in.readLine()); // Expecting "Enter the password"
+        String password = getPasswordFromConsole();
+        if (password != null) {
+            out.println(password);
+        } else {
+            System.out.println("Unable to read the password.");
+        }
     }
-    public static String getPassword(BufferedReader in) throws IOException {
+    
+    public static String getPasswordFromConsole() {
         Console console = System.console();
         if (console == null) {
             System.out.println("No console available");
             return null;
         }
-
-        // Read password
-        char[] passwordArray = console.readPassword(in.readLine());//Expect a prompt for password
+    
+        // Read password without printing another prompt
+        char[] passwordArray = console.readPassword();
         return new String(passwordArray);
     }
 }
