@@ -20,21 +20,23 @@ use App\Http\Controllers\AnswerController;
  //Route::post('/delete-school', 'SchoolController@deleteSchool')->name('delete.school');
 //Route::post('/delete-representative', 'RepresentativeController@deleteRepresentative')->name('delete.representative');
 
-Route::resource('schools', SchoolController::class);
-Route::resource('representatives', RepresentativeController::class);
 
-Route::get('/schools', [SchoolController::class, 'index']);
-Route::post('/schools', [SchoolController::class, 'store']);
+Route::get('/fetch_schools', [SchoolController::class, 'fetchSchools']);
+Route::post('/add_school', [SchoolController::class, 'addSchool']);
+Route::delete('/schools/{id}', [SchoolController::class, 'delete'])->name('schools.delete');
+
+Route::get('/fetch_representatives', [RepresentativeController::class, 'fetchRepresentatives']);
+Route::post('/add_representative', [RepresentativeController::class, 'addRepresentative']);
+Route::delete('/representatives/{id}', [RepresentativeController::class, 'destroy'])->name('representatives.delete');
+
+//Route::resource('schools', SchoolController::class);
+//Route::resource('representatives', RepresentativeController::class);
 
 
-Route::get('/representatives', [RepresentativeController::class, 'index']);
-//Route::post('/representatives', [RepresentativeController::class, 'store']);
-//Route::delete('/representatives/{id}', [RepresentativeController::class, 'destroy']);
 
-Route::delete('/schools/{id}', [SchoolController::class, 'destroy'])->name('schools.destroy');
-Route::delete('/representatives/{id}', [RepresentativeController::class, 'destroy'])->name('representatives.destroy');
 
-Route::post('/representatives', [RepresentativeController::class, 'store']);
+
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -58,17 +60,4 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('{page}', ['as' => 'page.index', 'uses' => 'App\Http\Controllers\PageController@index']);
 });
 
-
-
-
-
-
-Route::get('/challenges', [ChallengeController::class, 'index'])->name('challenges.index');
-Route::post('/challenges/store', [ChallengeController::class, 'store'])->name('challenges.store');
-
-Route::get('/question/import', [App\Http\Controllers\QuestionController::class, 'index']);
-Route::post('/import', [App\Http\Controllers\QuestionController::class, 'import']);
-
-Route::get('/answer/upload', [App\Http\Controllers\AnswerController::class, 'index']);
-Route::post('/upload', [App\Http\Controllers\AnswerController::class, 'upload'])->name('upload');
 

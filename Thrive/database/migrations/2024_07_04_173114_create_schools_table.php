@@ -15,11 +15,12 @@ return new class  extends Migration
     public function up()
     {
         Schema::create('schools', function (Blueprint $table) {
-            $table->string('regno')->primary();
+            //$table->id();
             $table->string('name');
             $table->string('district');
-            
-            
+            $table->string('regno')->unique();
+            $table->primary('regno');
+            $table->timestamps();
         });
         
     }

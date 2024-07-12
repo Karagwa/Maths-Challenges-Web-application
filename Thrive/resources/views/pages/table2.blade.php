@@ -1,4 +1,5 @@
-@extends('layouts.app', ['activePage' => 'table', 'title' => 'Thrive Mathematical Challenges  by Thrive challenges & Fantastic Five', 'navName' => 'Table List', 'activeButton' => 'laravel'])
+@extends('layouts.app', ['activePage' => 'table', 'title' => 'Thrive Mathematical Challenges by Thrive challenges & Fantastic Five', 'navName' => 'Table List', 'activeButton' => 'laravel'])
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,40 +7,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>REGISTRATION</title>
-    
 </head>
 <body>
 @section('content')
     <div class="content">
-    <div class="col-md-12">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
                     <div class="card card-plain table-plain-bg">
                         <div class="card-header ">
                             <h4 class="card-title">REPRESENTATIVE INFORMATION</h4>
-                            <p class="card-category">please enter the information of the representative below</p>
+                            <p class="card-category">Please enter the information of the representative below</p>
                         </div>
-                        <form method="POST"  name="sample2">
-                        
-                        <br>
+                        <form method="POST" name="sample2">
+                        @csrf
+                            <br>
                             ID <input type="number" name="id" id="id" autocomplete="off">
-                            Name <input type="text" name="name2" id="name" autocomplete="on">
+                            Username <input type="text" name="username" id="username" autocomplete="on">
+                            Name <input type="text" name="name2" id="name2" autocomplete="on">
                             Email <input type="email" name="email" id="email" autocomplete="on">
-                            <br> <br>
-                           <input type="button" name="add" value="Add infor" onclick="addRep();">
+                            Regno <input type="text" name="regno" id="regno" autocomplete="on">
+                            <br><br>
+                            <input type="button" name="add" value="Add info" onclick="addRep();">
                         <div class="card-body table-full-width table-responsive">
                             <table class="table table-hover" id="tb2">
                                 <thead>
                                     <th>ID</th>
+                                    <th>Username</th>
                                     <th>Name of the representative</th>
                                     <th>Email of the representative</th>
-                                    
-                                    
+                                    <th>Regno</th>
                                 </thead>
                                 <tbody>
-                 
-                                    
                                 </tbody>
                             </table>
-                            
                         </div>
                         </form>
                     </div>
@@ -47,76 +48,87 @@
             </div>
         </div>
     </div>
-    
 @endsection
-<script type="">
+
+<script>
 document.addEventListener('DOMContentLoaded', function () {
+    
     fetchReps();
 });
+
+
 function fetchReps() {
-    fetch('/representatives')
-        .then(response => {
-            if (!response.ok){
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
+    fetch('/fetch_representatives')
+        .then(response => response.text())
         .then(data => {
+            const rows = data.split('\n');
             const tbody = document.getElementById('tb2').getElementsByTagName('tbody')[0];
             tbody.innerHTML = '';
-            data.forEach(rep => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${rep.id}</td>
-                    <td>${rep.name}</td>
-                    <td>${rep.email}</td>
-                    <td><button onclick="removeRow(${rep.id}, 'representative')">Delete</button></td>
-                `;
-                tbody.appendChild(tr);
+            rows.forEach(row => {
+                const columns = row.split('|');
+                if (columns.length === 5) {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${columns[0]}</td>
+                        <td>${columns[1]}</td>
+                        <td>${columns[2]}</td>
+                        <td>${columns[3]}</td>
+                        <td>${columns[4]}</td>
+                        <td><button onclick="removeRow(${columns[0]}, 'representative')">Delete</button></td>
+                    `;
+                    tbody.appendChild(tr);
+                }
             });
-        });
+        })
+        .catch(error => console.error('Error fetching data:', error));
 }
+
+
 function addRep() {
     const formData = new FormData(document.forms.sample2);
     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-    fetch('/representatives', {
+    
+    fetch('/add_representative', {
         method: 'POST',
         headers: {
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            'X-CSRF-TOKEN': csrfToken
         },
+        
         body: formData
     })
-    .then(response => response.json())
+    .then(response => response.text())
     .then(data => {
-        if (data.success) {
+        const [status, message] = data.split('|');
+        if (status === 'success') {
             fetchReps();
         } else {
-            alert('Failed to add representative');
+            alert(message);
         }
     })
-    .catch(error => console.error('Error:', error));
+    .catch(error => console.error('Error adding representative:', error));
 }
+
 function removeRow(id, type) {
-    fetch(`/${type === 'school' ? 'schools' : 'representatives'}/${id}`, {
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+    fetch(`/representatives/${id}`, {
         method: 'DELETE',
         headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            'X-CSRF-TOKEN': csrfToken
         }
     })
-    .then(response => response.json())
+    .then(response => response.text())
     .then(data => {
-        if (data.success) {
-            if (type === 'school') {
-                fetchSchools();
-            } else {
-                fetchReps();
-            }
+        const [status, message] = data.split('|');
+        if (status === 'success') {
+            fetchReps();
         } else {
-            alert('Failed to delete');
+            alert(message);
         }
-    });
+    })
+    .catch(error => console.error('Error deleting data:', error));
 }
+
 </script>
 </body>
 </html>

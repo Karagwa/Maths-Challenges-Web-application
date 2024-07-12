@@ -9,7 +9,8 @@
                         @csrf
                         <div class="card card-login card-hidden">
                             <div class="card-header ">
-                                <h3 class="header text-center">{{ __('Login') }}</h3>
+                                <h2 class="header text-center">{{'For Adminstrator use only!'}}</h2>
+                                <h3 class="header text-center">{{ __('Adminstartor Login') }}</h3>
                             </div>
                             <div class="card-body ">
                                 <div class="card-body">

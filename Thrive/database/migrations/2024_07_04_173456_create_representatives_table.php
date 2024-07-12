@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Validation\Rules\Unique;
 
 return new class extends Migration
 {
@@ -14,11 +15,14 @@ return new class extends Migration
     public function up()
     {
         Schema::create('representatives', function (Blueprint $table) {
-        
-            $table->string('UserName');
-            $table->string('EmailOfRepresentative')->primary();
-            $table->string('NameOfRepresentative');
-            $table->string('regno')->references('regno')->on('schools');
+            //$table->id();
+            $table->string('username');
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->primary('email');
+            $table->string('regno');
+            $table->foreign('regno')->references('regno')->on('schools')->onDelete('cascade');
+            $table->timestamps();
             
         });
     }

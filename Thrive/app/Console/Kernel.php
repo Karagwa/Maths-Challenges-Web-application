@@ -1,35 +1,18 @@
 <?php
 
-namespace App\Console;
+namespace App\Http;
 
-use Illuminate\Console\Scheduling\Schedule;
-use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
-class Kernel extends ConsoleKernel
+class Kernel extends HttpKernel
 {
     /**
-     * Define the application's command schedule.
+     * The application's global HTTP middleware stack.
      *
-     * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
-     * @return void
-     */
-    protected function schedule(Schedule $schedule)
-    {
-        // $schedule->command('inspire')->hourly();
-    }
-
-    /**
-     * Register the commands for the application.
+     * These middleware are run during every request to your application.
      *
-     * @return void
+     * @var array<int, class-string|string>
      */
-    protected function commands()
-    {
-        $this->load(__DIR__.'/Commands');
-
-        require base_path('routes/console.php');
-    }
-
     protected $middleware = [
         // \App\Http\Middleware\TrustHosts::class,
         \App\Http\Middleware\TrustProxies::class,
@@ -63,4 +46,22 @@ class Kernel extends ConsoleKernel
         ],
     ];
 
+    /**
+     * The application's route middleware.
+     *
+     * These middleware may be assigned to groups or used individually.
+     *
+     * @var array<string, class-string|string>
+     */
+    protected $routeMiddleware = [
+        'auth' => \App\Http\Middleware\Authenticate::class,
+        'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
+        'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
+        'can' => \Illuminate\Auth\Middleware\Authorize::class,
+        'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+        'password.confirm' => \Illuminate\Auth\Middleware\RequirePassword::class,
+        'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
+        'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+        'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+    ];
 }

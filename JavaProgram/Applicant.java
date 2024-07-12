@@ -29,20 +29,19 @@ public class Applicant {
      */
     public static void fileHandler(Applicant applicant) throws IOException {
         File file = new File("Temp.csv");
-        PrintWriter out = new PrintWriter(file, "UTF-8");
-        if (file.createNewFile()) {
-            System.out.println("File is Created");
-            out.println("Username, First Name, Last Name, Email, Date of Birth, School Registration Number, Image");
-            out.close();
-        } else {
-            System.out.println("File already exists");
-            out.close();
+        
+        if(file.createNewFile()){
+            System.out.println("Temp file is created");
+            FileWriter headerWriter = new FileWriter("Temp.csv",true);
+            headerWriter.write("Username, First Name, Last Name, Email Address, Date of Birth, School Registration Number, Image\n");
+            headerWriter.close();
+        }else{
+            System.out.println("Temp file already exists");
         }
+        FileWriter writer = new FileWriter("Temp.csv",true);//true indicates append mode
+        writer.write(applicant.username + ", " + applicant.firstName + ", " + applicant.lastName + ", " + applicant.emailAddress + ", " + applicant.dateOfBirth.toString() + ", " + applicant.schoolRegistrationNumber + ", " + applicant.image + "\n");
+        writer.close();
 
-        try (PrintWriter out1 = new PrintWriter(file, "UTF-8")) {
-            
-            out1.println(applicant.username + "," + applicant.firstName + "," + applicant.lastName + "," + applicant.emailAddress + "," + applicant.dateOfBirth + "," + applicant.schoolRegistrationNumber + "," + applicant.image);
-        }
         String repEmail = DatabaseConnection.checkRepresentativeEmail(applicant.schoolRegistrationNumber);
 
         if (repEmail!= null) {

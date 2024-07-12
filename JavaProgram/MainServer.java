@@ -5,9 +5,12 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import java.sql.SQLException;
+
 
 public class MainServer {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException{
+
         try (ServerSocket serverSocket = new ServerSocket(2020)) {
             System.out.println("Server is listening on port 2020");
 
@@ -24,6 +27,28 @@ public class MainServer {
                                 break;
                             case "2": // School Representative
                                 SchoolRepresentative.handleSchoolRepresentative(in, out);
+
+
+                                
+                                //ADDED
+                                boolean rep= true;
+                                while(rep){
+
+                                    String repCommand= in.readLine();
+
+                                    if (repCommand.equals("viewApplicant")) {
+                                        SchoolRepresentative.handleViewApplicant(in,out);
+   
+                                    } else if(repCommand.startsWith("confirm")){
+                                        SchoolRepresentative.confirmApplicant(repCommand,in, out);
+                                        
+                                    }else{
+                                        rep=false;
+                                    }
+                                }
+
+                                
+
                                 break;
                             default:
                                 out.println("Invalid input. Please try again.");
