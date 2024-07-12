@@ -14,10 +14,12 @@ return new class extends Migration
     public function up()
     {
         Schema::create('representatives', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('email');
-            $table->timestamps();
+        
+            $table->string('UserName');
+            $table->string('EmailOfRepresentative')->primary();
+            $table->string('NameOfRepresentative');
+            $table->string('regno')->references('regno')->on('schools');
+            
         });
     }
 
