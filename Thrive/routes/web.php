@@ -61,3 +61,16 @@ Route::group(['middleware' => 'auth'], function () {
 });
 
 
+
+
+
+
+Route::get('/challenges', [ChallengeController::class, 'index'])->name('challenges.index');
+Route::post('/challenges/store', [ChallengeController::class, 'store'])->name('challenges.store');
+
+Route::get('/question/import', [App\Http\Controllers\QuestionController::class, 'index']);
+Route::post('/import', [App\Http\Controllers\QuestionController::class, 'import']);
+
+Route::get('/answer/upload', [App\Http\Controllers\AnswerController::class, 'index']);
+Route::post('/upload', [App\Http\Controllers\AnswerController::class, 'upload'])->name('upload');
+
