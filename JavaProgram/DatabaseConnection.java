@@ -178,7 +178,7 @@ public static String authenticateRepresentative(String username, String password
                 String EmailAddress = fields[3];
 
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                LocalDate Date_of_birth =LocalDate.parse(fields[4], formatter);
+                LocalDate Date_of_birth =LocalDate.parse(fields[4].trim(), formatter);
 
                 String schoolRegNumber = fields[5];
 
@@ -264,7 +264,7 @@ public static String authenticateRepresentative(String username, String password
                 String EmailAddress = fields[3];
 
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                LocalDate Date_of_birth =LocalDate.parse(fields[4], formatter);
+                LocalDate Date_of_birth =LocalDate.parse(fields[4].trim(), formatter);
 
                 String schoolRegNumber = fields[5];
 
@@ -294,7 +294,7 @@ public static String authenticateRepresentative(String username, String password
                 statement.executeUpdate();
 
                 //send success message
-                System.out.println("Rejected Applicant added to database successfully"+ lineCount);
+                System.out.println("Accepted Applicant added to database successfully -"+ lineCount);
 
                 userFound=true;
                 break; //after user is found and added
