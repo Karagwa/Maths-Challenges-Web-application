@@ -5,15 +5,14 @@ namespace App\Imports;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use App\Models\Question;
- // Add this line to import the 'Question' class
+use Maatwebsite\Excel\Concerns\WithChunkReading;
 
-class QuestionImport implements ToCollection
+class QuestionImport implements ToCollection, WithChunkReading
 {
-    /**
-    * @param Collection $collection
-    */
     public function collection(Collection $rows)
     {
+        $data = [];
+
         foreach ($rows as $row) 
         {
             $questionNo = (int) $row[0];
@@ -26,13 +25,20 @@ class QuestionImport implements ToCollection
                 // Log an error or handle the case where values are not integers
                 error_log("Invalid data type for QuestionNo or ChallengeNo");
                 continue; 
-            }// Skip this row
-            Question::updateOrCreate(
-                ['QuestionNo' => $questionNo],
-                ['Question' => $row[1],
+            }
+
+            $data[] = [
+                'QuestionNo' => $questionNo,
+                'Question' => $row[1],
                 'ChallengeNo' => $challengeNo,
-                ]
-            );
+            ];
         }
+
+        Question::upsert($data, ['QuestionNo'], ['Question', 'ChallengeNo']);
+    }
+
+    public function chunkSize(): int
+    {
+        return 50; // Adjust chunk size as needed
     }
 }
