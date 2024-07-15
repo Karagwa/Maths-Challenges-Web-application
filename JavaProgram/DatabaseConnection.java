@@ -178,7 +178,7 @@ public static String authenticateRepresentative(String username, String password
                 String EmailAddress = fields[3];
 
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                LocalDate Date_of_birth =LocalDate.parse(fields[4].trim(), formatter);
+                LocalDate Date_of_birth =LocalDate.parse(fields[4], formatter);
 
                 String schoolRegNumber = fields[5];
 
@@ -209,6 +209,7 @@ public static String authenticateRepresentative(String username, String password
 
                 //send success message
                 System.out.println("Accepted Applicant added to database successfully -"+ lineCount);
+                Email.AcceptEmail(EmailAddress);
 
                 userFound=true;
                 break; //after user is found and added
@@ -264,7 +265,7 @@ public static String authenticateRepresentative(String username, String password
                 String EmailAddress = fields[3];
 
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                LocalDate Date_of_birth =LocalDate.parse(fields[4].trim(), formatter);
+                LocalDate Date_of_birth =LocalDate.parse(fields[4], formatter);
 
                 String schoolRegNumber = fields[5];
 
@@ -294,7 +295,8 @@ public static String authenticateRepresentative(String username, String password
                 statement.executeUpdate();
 
                 //send success message
-                System.out.println("Accepted Applicant added to database successfully -"+ lineCount);
+                System.out.println("Rejected Applicant added to database successfully"+ lineCount);
+                Email.AcceptEmail(EmailAddress);
 
                 userFound=true;
                 break; //after user is found and added
@@ -321,28 +323,6 @@ public static String authenticateRepresentative(String username, String password
           
     }
 
-
-    public static void getChallenges()throws SQLException,IOException{
-        Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD); 
-        System.out.println("Connected to the database successfully!");
-        
-        LocalDate today = LocalDate.now();
-        String sql="SELECT ChallengeNumber,ChallengeName FROM challenge WHERE ClosingDate >= ?";
-
-        PreparedStatement pstmt = connection.prepareStatement(sql); //prevents sql injections
-        pstmt.setDate(1, java.sql.Date.valueOf(today));
-
-        ResultSet resultSet = pstmt.executeQuery();
- 
-              // Process the results
-            while(resultSet.next()) {
-                int ChallengeNumber =resultSet.getInt("ChallengeNumber");
-                String ChallengeName =resultSet.getString("ChallengeName");
-                System.out.println("ChallengeNumber-" + ChallengeNumber+ "  ChallengeName- " + ChallengeName);
-                
-            }
-        connection.close();
-    }
  
 
 }

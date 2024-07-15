@@ -58,19 +58,28 @@ public class MainClient {
                     System.out.println(auth+"\nEnter the viewApplicant command to view the applicants");
                     //Add logic to view the challenges and everything
                     out.println(sn.nextLine());
-                    String viewresponse = in.readLine();
-                    if ("Invalid command".equals(viewresponse)) {
-                        System.out.println(viewresponse);
-                    } else {
-                        System.out.println(viewresponse);
+                    StringBuilder receivedData = new StringBuilder();
+                    String line;
+                    while ((line = in.readLine()) != null) {
+                        if (line.equals("END")) {
+                            break;
+                        }
+                        receivedData.append(line).append("\n");
+                    }
 
-                        
-                        System.out.println("To confirm any applicant,enter the command (confirm yes/no username)");
+                    if ("Invalid command".equals(receivedData.toString())) {
+                        System.out.println(receivedData.toString());
+                    } else {
+                        System.out.println(receivedData.toString());
+                        String confirmationResponse = "";
+                        do{
+                        System.out.println("To confirm any applicant,enter the command (confirm yes/no username) or enter Exit to exit the program");
                         String command=sn.nextLine();
-                        System.out.println("Sending command: "+command);
                         out.println(command); 
-                        String confirmationResponse =in.readLine();
+                        confirmationResponse =in.readLine();
                         System.out.println(confirmationResponse);
+                        }while(!confirmationResponse.equals("Exit"));
+                        System.out.println("Thank you for using the Thrive Math Competition");
 
 
                     }
@@ -112,7 +121,7 @@ public class MainClient {
             while ((registrationResponse = in.readLine()) != null) {
                 System.out.println(registrationResponse);
                 if (registrationResponse.startsWith("Applicant registered successfully")) {
-                    System.out.println("You have registered successfully.\nPlease to be confirmed by your school representative\nThank you :)");
+                    System.out.println("You have registered successfully.\nPlease wait to be confirmed by your school representative\nThank you :)");
                     return null;
                 }else{
                     System.out.println(registrationResponse);

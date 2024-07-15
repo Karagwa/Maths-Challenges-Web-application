@@ -13,7 +13,7 @@ public class SchoolRepresentative {
     String password;
 
 
-    public static void handleSchoolRepresentative(BufferedReader in, PrintWriter out) throws IOException {
+    public static void handleSchoolRepresentative(BufferedReader in, PrintWriter out) throws IOException, SQLException {
         out.println("Enter your system username:");
         String username = in.readLine();
         if (username.isEmpty()) {
@@ -34,10 +34,20 @@ public class SchoolRepresentative {
     
             String repcommand= in.readLine();
             if ("viewApplicant".equals(repcommand)) {
-                String applicantData = viewApplicant("Temp.csv",in,out);
-                out.println(applicantData);       
+                String applicantData = viewApplicant("Temp.csv");
+                out.println(applicantData);
+                out.println("END");    
+                String confirm_command = in.readLine();   
+                while (!"Exit".equals(confirm_command)){
+                    
+                    confirmApplicant(confirm_command, in, out);
+                    confirm_command = in.readLine();
+                }
+                out.println("Exit");
+                
             }else{
                 out.println("Invalid command");
+                out.println("END");
             }
             
             
@@ -47,43 +57,36 @@ public class SchoolRepresentative {
         // Add logic to check if the username is in the database
     }
 
-    public static String viewApplicant(String CSV_FILE_PATH,BufferedReader in,PrintWriter out) {
+    public static String viewApplicant(String CSV_FILE_PATH) {
             StringBuilder sb = new StringBuilder();
             try (BufferedReader reader = new BufferedReader(new FileReader(CSV_FILE_PATH))) {
                 String line;
+                
                 while ((line = reader.readLine()) != null) {
+                    if (line.isEmpty()){
+                        continue;
+                    }
                     // Split CSV line into parts
-                    String[] parts = line.split(",");  
-                    if (parts.length == 6) { // Ensure there are enough fields
+                    String[] parts = line.split(",");
+                    if (parts.length == 7) { // Ensure there are enough fields
 
                         String userName=parts[0].trim();
                         String firstName = parts[1].trim();
                         String lastName = parts[2].trim();
                         String regNumber = parts[5].trim(); // Assuming school registration number is in the 6th column
-                        sb.append(firstName).append(" ").append(lastName).append(" - Registration Number: ").append(regNumber).append(" ").append(" -Username: ").append(userName).append("\n");
+                        sb.append(firstName).append(" ").append(lastName).append("\t\t").append(" - Registration Number: ").append(regNumber).append("\t\t").append(" -Username: ").append(userName).append("\n");
 
                     }
                 }
             } catch (IOException e) {
                 System.err.println("Error reading pupils data: " + e.getMessage());
             }
+            
             return sb.toString();
         }
 
 
-        //ADDED
-    public static void handleViewApplicant(BufferedReader in,PrintWriter out)throws IOException{
-        String viewCommand = in.readLine();
-
-        if ("viewApplicant".equals(viewCommand)) {
-           out.println( viewApplicant("Temp.csv",in,out));
-            
-        } else {
-            out.println("Invalid command");
-            
-        }
-
-    } 
+      
 
     public static void confirmApplicant(String command,BufferedReader in,PrintWriter out) throws  IOException,SQLException{
         //String command = in.readLine();

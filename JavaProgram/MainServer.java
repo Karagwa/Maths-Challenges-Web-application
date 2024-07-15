@@ -20,7 +20,8 @@ public class MainServer {
                      PrintWriter out = new PrintWriter(socket.getOutputStream(), true)) {
 
                     String inputLine;
-                    while ((inputLine = in.readLine()) != null) {
+                    inputLine = in.readLine();
+                    if (inputLine != null) {
                         switch (inputLine) {
                             case "1": // Applicant
                                 handleApplicant(in, out);
@@ -28,35 +29,16 @@ public class MainServer {
                             case "2": // School Representative
                                 SchoolRepresentative.handleSchoolRepresentative(in, out);
 
-
-                                
-                                //ADDED
-                                boolean rep= true;
-                                while(rep){
-
-                                    String repCommand= in.readLine();
-
-                                    if (repCommand.equals("viewApplicant")) {
-                                        SchoolRepresentative.handleViewApplicant(in,out);
-   
-                                    } else if(repCommand.startsWith("confirm")){
-                                        SchoolRepresentative.confirmApplicant(repCommand,in, out);
-                                        
-                                    }else{
-                                        rep=false;
-                                    }
-                                }
-
-                                
-
                                 break;
                             default:
                                 out.println("Invalid input. Please try again.");
                                 break;
                         }
+                    }else{
+                        out.println("Invalid input");
                     }
                 } catch (IOException e) {
-                    System.out.println("Exception caught when trying to listen on port 12345 or listening for a connection");
+                    System.out.println("Exception caught when trying to listen on port 2020 or listening for a connection");
                     System.out.println(e.getMessage());
                 }
             }
