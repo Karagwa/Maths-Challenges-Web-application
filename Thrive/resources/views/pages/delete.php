@@ -15,9 +15,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->bind_param("i", $id);
 
     if ($stmt->execute()) {
-        echo json_encode(['success' => 'Record deleted successfully']);
+        echo (['success' => 'Record deleted successfully']);
     } else {
-        echo json_encode(['error' => 'Failed to delete record']);
+        echo (['error' => 'Failed to delete record']);
     }
 
     $stmt->close();

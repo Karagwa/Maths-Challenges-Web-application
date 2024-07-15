@@ -33,13 +33,13 @@ public class Applicant {
         if(file.createNewFile()){
             System.out.println("Temp file is created");
             FileWriter headerWriter = new FileWriter("Temp.csv",true);
-            headerWriter.write("Username, First Name, Last Name, Email Address, Date of Birth, School Registration Number, Image\n");
+            //headerWriter.write("Username, First Name, Last Name, Email Address, Date of Birth, School Registration Number, Image\n");
             headerWriter.close();
         }else{
             System.out.println("Temp file already exists");
         }
         FileWriter writer = new FileWriter("Temp.csv",true);//true indicates append mode
-        writer.write(applicant.username + ", " + applicant.firstName + ", " + applicant.lastName + ", " + applicant.emailAddress + ", " + applicant.dateOfBirth.toString() + ", " + applicant.schoolRegistrationNumber + ", " + applicant.image + "\n");
+        writer.write(applicant.username + "," + applicant.firstName + "," + applicant.lastName + "," + applicant.emailAddress + "," + applicant.dateOfBirth.toString() + "," + applicant.schoolRegistrationNumber + "," + applicant.image + "\n");
         writer.close();
 
         String repEmail = DatabaseConnection.checkRepresentativeEmail(applicant.schoolRegistrationNumber);

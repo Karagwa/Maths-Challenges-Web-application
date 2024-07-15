@@ -27,6 +27,7 @@
                             Name <input type="text" name="name2" id="name2" autocomplete="on">
                             Email <input type="email" name="email" id="email" autocomplete="on">
                             Regno <input type="text" name="regno" id="regno" autocomplete="on">
+                            Password <input type="password" name="password" id="password">
                             <br><br>
                             <input type="button" name="add" value="Add info" onclick="addRep();">
                         <div class="card-body table-full-width table-responsive">
@@ -37,6 +38,7 @@
                                     <th>Name of the representative</th>
                                     <th>Email of the representative</th>
                                     <th>Regno</th>
+                                    <th>Password</th>
                                 </thead>
                                 <tbody>
                                 </tbody>
@@ -74,6 +76,7 @@ function fetchReps() {
                         <td>${columns[2]}</td>
                         <td>${columns[3]}</td>
                         <td>${columns[4]}</td>
+                        
                         <td><button onclick="removeRow(${columns[0]}, 'representative')">Delete</button></td>
                     `;
                     tbody.appendChild(tr);
@@ -132,3 +135,4 @@ function removeRow(id, type) {
 </script>
 </body>
 </html>
+

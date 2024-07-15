@@ -22,6 +22,7 @@ class SchoolController extends Controller
     public function addSchool(Request $request)
     {
         $school = new School();
+        $school->username = $request->username;
         $school->name = $request->name;
         $school->district = $request->district;
         $school->regno = $request->regno;
@@ -45,5 +46,3 @@ class SchoolController extends Controller
 }
 
 ?>
-
-

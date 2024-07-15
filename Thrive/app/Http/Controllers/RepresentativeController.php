@@ -40,6 +40,7 @@ class RepresentativeController extends Controller
                 'name2' => 'required|string|max:255',
                 'email' => 'required|email|unique:representatives,email',
                 'regno' => 'required|string|max:255',
+                'password' => 'required|string|max:255',
             ]);
 
             // Creates new representative instance
@@ -48,6 +49,7 @@ class RepresentativeController extends Controller
             $representative->name = $validatedData['name2'];
             $representative->email = $validatedData['email'];
             $representative->regno = $validatedData['regno'];
+            $representative->password = $validatedData['password'];
             $representative->save();
 
             // Return success response

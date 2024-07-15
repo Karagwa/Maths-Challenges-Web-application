@@ -25,6 +25,7 @@
 
                             <br>
                             ID <input type="number" name="id" id="id" autocomplete="off">
+                            Username <input type="text" name="username" id="username" autocomplete="on">
                             Name <input type="text" name="name" id="name" autocomplete="name">
                             District <input type="text" name="district" id="district" autocomplete="address-level2"><br>
                             <br> RegNo <input type="text" name="regno" id="regno" autocomplete="off"> <br> <br>
@@ -33,10 +34,13 @@
                             <div class="card-body table-full-width table-responsive">
                                 <table class="table table-hover table-striped" id="tb1">
                                     <thead>
+                                       
                                         <th>ID</th>
+                                        <th>UserName</th>
                                         <th>Name</th>
                                         <th>District</th>
                                         <th>School Registration Number</th>
+                                        
                                     </thead>
                                     <tbody>
                           
@@ -75,6 +79,7 @@ function fetchSchools() {
                         <td>${columns[1]}</td>
                         <td>${columns[2]}</td>
                         <td>${columns[3]}</td>
+                        
                         <td><button onclick="removeRow(${columns[0]}, 'school')">Delete</button></td>
                     `;
                     tbody.appendChild(tr);
@@ -132,4 +137,3 @@ function removeSchool(id) {
 </script>
 </body>
 </html>
-

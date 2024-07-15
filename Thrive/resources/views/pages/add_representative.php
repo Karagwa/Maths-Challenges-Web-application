@@ -5,13 +5,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Extract data from POST request
     $username = $_POST['username'];
-    $name = $_POST['name'];
+    $name = $_POST['name2'];
     $email = $_POST['email'];
     $regno = $_POST['regno'];
+    $password = $_POST['password'];
 
     // Prepare SQL statement to insert data into representatives table
-    $stmt = $conn->prepare("INSERT INTO representatives (username, name, email, regno) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("ssss", $username, $name, $email, $regno);
+    $stmt = $conn->prepare("INSERT INTO representatives (username, name, email, regno, password) VALUES (?, ?, ?, ?)");
+    $stmt->bind_param("ssss", $username, $name, $email, $regno, $password);
     
 
 
@@ -34,6 +35,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Output the response
     echo $response;
 }
+?>
+
+
+
 
 
 
