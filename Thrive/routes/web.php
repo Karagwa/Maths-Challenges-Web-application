@@ -3,10 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SchoolController;
 use App\Http\Controllers\RepresentativeController;
-use Illuminate\Support\Facades\Auth; 
-use App\Http\Controllers\ChallengeController;
-use App\Http\Controllers\QuestionController;
-use App\Http\Controllers\AnswerController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -59,20 +56,4 @@ Route::group(['middleware' => 'auth'], function () {
 Route::group(['middleware' => 'auth'], function () {
 	Route::get('{page}', ['as' => 'page.index', 'uses' => 'App\Http\Controllers\PageController@index']);
 });
-
-
-
-
-
-
-Route::get('/challenges', [ChallengeController::class, 'index'])->name('challenges.index');
-Route::post('/challenges/store', [ChallengeController::class, 'store'])->name('challenges.store');
-
-//question routes
-Route::get('/question/import', [App\Http\Controllers\QuestionController::class, 'index']);
-Route::post('/import', [App\Http\Controllers\QuestionController::class, 'import']);
-
-//answer routes
-Route::get('/answer/upload', [App\Http\Controllers\AnswerController::class, 'index']);
-Route::post('/upload', [App\Http\Controllers\AnswerController::class, 'upload'])->name('upload');
 
