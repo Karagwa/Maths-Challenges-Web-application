@@ -31,7 +31,7 @@ public static String authenticateRepresentative(String username, String password
             Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
             System.out.println("Connected to the database successfully!");
 
-            String sql = "SELECT * FROM SchoolRepresentative WHERE username = ? AND password = ?";
+            String sql = "SELECT * FROM representatives WHERE username = ? AND password = ?";
             PreparedStatement pstmt = connection.prepareStatement(sql);
             pstmt.setString(1, username);
             pstmt.setString(2, password);
@@ -63,7 +63,7 @@ public static String authenticateRepresentative(String username, String password
            //Setting up my object to send and excute the sql statements
            //i will use preparedStatements to prevent sql injection
 
-           String sql = "SELECT * FROM Accepted WHERE username = ? AND RegNo = ?";
+           String sql = "SELECT * FROM participant WHERE Username = ? AND School_Registration_Number = ?";
            PreparedStatement pstmt = connection.prepareStatement(sql);
            pstmt.setString(1, username);
            pstmt.setString(2, registrationNumber);
@@ -97,7 +97,7 @@ public static String authenticateRepresentative(String username, String password
         //Setting up my object to send and excute the sql statements
         //i will use preparedStatements to prevent sql injection
 
-        String sql = "SELECT Email FROM SchoolRepresentative WHERE SchRegNo = ?";
+        String sql = "SELECT Email FROM representative WHERE SchRegNo = ?";
         PreparedStatement pstmt = connection.prepareStatement(sql);
         pstmt.setString(1, registrationNumber);
         ResultSet rs = pstmt.executeQuery();
@@ -322,6 +322,30 @@ public static String authenticateRepresentative(String username, String password
         connection.close();
           
     }
+    public static void getChallenges(BufferedReader in, PrintWriter out)throws SQLException,IOException{
+        Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD); 
+        System.out.println("Connected to the database successfully!");
+        
+        LocalDate today = LocalDate.now();
+        String sql="SELECT ChallengeNumber,ChallengeName FROM challenge WHERE ClosingDate >= ?";
+
+        PreparedStatement pstmt = connection.prepareStatement(sql); //prevents sql injections
+        pstmt.setDate(1, java.sql.Date.valueOf(today));
+
+        ResultSet resultSet = pstmt.executeQuery();
+ 
+              // Process the results
+            while(resultSet.next()) {
+                int ChallengeNumber =resultSet.getInt("ChallengeNumber");
+                String ChallengeName =resultSet.getString("ChallengeName");
+                out.println("ChallengeNumber-" + ChallengeNumber+ "  ChallengeName- " + ChallengeName);
+
+            }
+            out.println("Enter the command attempt number");
+            out.println("END");
+        connection.close();
+    }
+ 
 
  
 

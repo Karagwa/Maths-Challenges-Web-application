@@ -42,14 +42,7 @@ public class MainClient {
             String response = in.readLine();
             if ("Are you already registered? Enter 1 for yes or 0 for no".equals(response)) {
                 String applicantresponse =handleApplicantRegistration(in, out, sn);
-                if("1".equals(applicantresponse)){
-                    System.out.println("Welcome to the Thrive Mathematics challenge");
-                    //Add logic to view the challenges and everything
-                }else if("0".equals(applicantresponse)){
-                    System.out.println("Invalid username or password\nTry again");
-                }else{
-                    return;
-                }
+                
             } else if ("Enter your system username:".equals(response)) {
               
                 handleSchoolRepresentativeLogin(in, out, sn);
@@ -101,14 +94,36 @@ public class MainClient {
         out.println(isRegistered);
 
         if ("1".equals(isRegistered)) {
-            System.out.println("Enter your username:");
+            System.out.println(in.readLine());
             String username = sn.nextLine();
             out.println(username);
 
             System.out.println(in.readLine()); // Expecting "Enter the School registration number"
             out.println(sn.nextLine());
 
-            return in.readLine(); // Final response from server
+            String auth_response = in.readLine(); // Final response from server
+            if ("1".equals(auth_response)) {
+                System.out.println("Welcome to the Thrive Mathematics challenge");
+                //Add logic to view the challenges and everything
+                System.out.println("Enter the command (viewChallenges) to view the valid Challenges");
+                out.println(sn.nextLine());
+                while (true) {
+                    String response = in.readLine();
+                    if ("END".equals(response)) {
+                        break;
+                    }
+                    System.out.println(response);
+                  
+                }
+                return null;
+                
+            } else if ("0".equals(auth_response)) {
+                System.out.println("Invalid username or password\nTry again");
+                return null;
+            } else {
+                System.out.println(auth_response); 
+                return null;
+            }
             
 
         } else if ("0".equals(isRegistered)) {
