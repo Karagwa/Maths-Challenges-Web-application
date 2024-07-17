@@ -1,0 +1,74 @@
+     /* Sidebar CSS */
+     .sidebar [data-color="custom-gradient"] {
+        background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        padding: 20px;
+        border-radius: 10px;
+        color: white;
+    }
+
+    .sidebar .sidebar-wrapper {
+        padding: 20px;
+    }
+
+    .sidebar .logo a {
+        color: white;
+        font-size: 1.5em;
+        font-weight: bold;
+        text-decoration: none;
+        display: block;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .sidebar .nav {
+        list-style: none;
+        padding-left: 0;
+    }
+
+    .sidebar .nav-item {
+        margin-bottom: 10px;
+    }
+
+    .sidebar .nav-item a {
+        color: white;
+        text-decoration: none;
+        padding: 10px 15px;
+        display: flex;
+        align-items: center;
+        border-radius: 5px;
+        transition: background 0.3s, color 0.3s;
+    }
+
+    .sidebar .nav-item a:hover,
+    .sidebar .nav-item.active a {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+    }
+
+    .sidebar .nav-item a i,
+    .sidebar .nav-item a img {
+        margin-right: 10px;
+    }
+
+    .sidebar .nav-item a p {
+        margin: 0;
+        font-size: 1em;
+    }
+
+    .sidebar .collapse {
+        padding-left: 15px;
+    }
+
+    .sidebar .collapse .nav-item a {
+        padding-left: 30px;
+    }
+
+    .sidebar .nav-link.active.bg-danger {
+        background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
+        color: white;
+    }
+
+    .sidebar .nav-link.active.bg-danger:hover {
+        background: linear-gradient(135deg, #ff4b2b 0%, #ff416c 100%);
+    }
+    

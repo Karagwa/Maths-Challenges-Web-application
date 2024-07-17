@@ -1,4 +1,94 @@
-<div class="sidebar"  data-color="green" data-image="{{ asset('light-bootstrap/img/download.jpeg') }}">
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ asset('css/light-bootstrap-dashboard.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+
+    <title>Sidebar Styling</title>
+    <style>
+        /* Sidebar CSS */
+        .sidebar {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%) !important;
+            padding: 20px;
+            border-radius: 10px;
+            color: white;
+        }
+
+        .sidebar .sidebar-wrapper {
+            padding: 20px;
+        }
+
+        .sidebar .logo a {
+            color: white;
+            font-size: 1.5em;
+            font-weight: bold;
+            text-decoration: none;
+            display: block;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .sidebar .nav {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .sidebar .nav-item {
+            margin-bottom: 10px;
+        }
+
+        .sidebar .nav-item a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            border-radius: 5px;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .sidebar .nav-item a:hover,
+        .sidebar .nav-item.active a {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .sidebar .nav-item a i,
+        .sidebar .nav-item a img {
+            margin-right: 10px;
+        }
+
+        .sidebar .nav-item a p {
+            margin: 0;
+            font-size: 1em;
+        }
+
+        .sidebar .collapse {
+            padding-left: 15px;
+        }
+
+        .sidebar .collapse .nav-item a {
+            padding-left: 30px;
+        }
+
+        .sidebar .nav-link.active.bg-danger {
+            background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
+            color: white;
+        }
+
+        .sidebar .nav-link.active.bg-danger:hover {
+            background: linear-gradient(135deg, #ff4b2b 0%, #ff416c 100%);
+        }
+    </style>
+</head>
+
+
+<body>
+<div class="sidebar"  data-color="red" data-image="{{ asset('light-bootstrap/img/download.jpeg') }}" >
     <!--
 Tip 1: You can change the color of the sidebar using: data-color="purple | blue | green | orange | red"
 
@@ -18,32 +108,12 @@ Tip 2: you can also add an image using data-image tag
                 </a>
             </li>
            
-            <li class="nav-item">
-                <a class="nav-link" data-toggle="collapse" href="#laravelExamples" @if($activeButton =='laravel') aria-expanded="true" @endif>
-                    <i>
-                        <img src="{{ asset('light-bootstrap/img/laravel.svg') }}" style="width:25px">
-                    </i>
-                    <p>
-                        {{ __('Users Infor') }}
-                        <b class="caret"></b>
-                    </p>
+            <li class="nav-item @if($activePage == 'user') active @endif">
+              <a class="nav-link" href="{{route('profile.edit')}}" >
+                  <i class="nc-icon nc-single-02"></i>
+                   <p>{{ __("User Profile") }}</p>
                 </a>
-                <div class="collapse @if($activeButton =='laravel') show @endif" id="laravelExamples">
-                    <ul class="nav">
-                        <li class="nav-item @if($activePage == 'user') active @endif">
-                            <a class="nav-link" href="{{route('profile.edit')}}">
-                                <i class="nc-icon nc-single-02"></i>
-                                <p>{{ __("User Profile") }}</p>
-                            </a>
-                        </li>
-                        <li class="nav-item @if($activePage == 'user-management') active @endif">
-                            <a class="nav-link" href="{{route('user.index')}}">
-                                <i class="nc-icon nc-circle-09"></i>
-                                <p>{{ __("User Management") }}</p>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
+                        
             </li>
 
             <li class="nav-item @if($activePage == 'table') active @endif">
@@ -71,18 +141,10 @@ Tip 2: you can also add an image using data-image tag
                 </a>
             </li>
           
-            <li class="nav-item @if($activePage == 'notifications') active @endif">
-                <a class="nav-link" href="{{route('page.index', 'notifications')}}">
-                    <i class="nc-icon nc-bell-55"></i>
-                    <p>{{ __("Notifications") }}</p>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link active bg-danger" href="{{route('page.index', 'upgrade')}}">
-                    <i class="nc-icon nc-alien-33"></i>
-                    <p>{{ __("Upgrade to PRO") }}</p>
-                </a>
-            </li>
+            
+           
         </ul>
     </div>
 </div>
+</body>
+</html>

@@ -1,3 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sidebar Styling</title>
+    <style>
+      /* Custom CSS for the main sidebar */
+.main-sidebar {
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%) !important;
+    padding: 20px;
+    border-radius: 10px;
+    color: white;
+}
+
+.main-sidebar .sidebar-wrapper {
+    padding: 20px;
+}
+
+.main-sidebar .logo a {
+    color: white;
+    font-size: 1.5em;
+    font-weight: bold;
+    text-decoration: none;
+    display: block;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.main-sidebar .nav {
+    list-style: none;
+    padding-left: 0;
+}
+
+.main-sidebar .nav-item {
+    margin-bottom: 10px;
+}
+
+.main-sidebar .nav-item a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    border-radius: 5px;
+    transition: all 150ms ease-in;
+}
+
+.main-sidebar .nav-item a:hover,
+.main-sidebar .nav-item.active a {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+.main-sidebar .nav-item a i,
+.main-sidebar .nav-item a img {
+    margin-right: 10px;
+}
+
+.main-sidebar .nav-item a p {
+    margin: 0;
+    font-size: 1em;
+}
+
+.main-sidebar .collapse {
+    padding-left: 15px;
+}
+
+.main-sidebar .collapse .nav-item a {
+    padding-left: 30px;
+}
+
+.main-sidebar .nav-link.active.bg-danger {
+    background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%) !important;
+    color: white;
+}
+
+.main-sidebar .nav-link.active.bg-danger:hover {
+    background: linear-gradient(135deg, #ff4b2b 0%, #ff416c 100%) !important;
+}
+
+    </style>
+</head>
+
+<body>
 <div class="fixed-plugin">
     <div class="dropdown show-dropdown">
         <a href="#" data-toggle="dropdown">
@@ -74,3 +159,4 @@
         </ul>
     </div>
 </div>
+</body>

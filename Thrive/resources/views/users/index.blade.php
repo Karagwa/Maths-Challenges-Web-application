@@ -146,12 +146,7 @@
                                         <p>{{ __("User Profile") }}</p>
                                     </a>
                                 </li>
-                                <li class="nav-item  active">
-                                    <a class="nav-link" href="{{route('user.index')}}">
-                                        <i class="nc-icon nc-circle-09"></i>
-                                        <p>{{ __("User Management") }}</p>
-                                    </a>
-                                </li>
+                                
                             </ul>
                         </div>
                     </li>
@@ -180,24 +175,8 @@
                             <p>{{ __("Icons") }}</p>
                         </a>
                     </li>
-                    <li class="nav-item ">
-                        <a class="nav-link" href="{{route('page.index', 'maps')}}">
-                            <i class="nc-icon nc-pin-3"></i>
-                            <p>{{ __("Maps") }}</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{route('page.index', 'notifications')}}">
-                            <i class="nc-icon nc-bell-55"></i>
-                            <p>{{ __("Notifications") }}</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active bg-danger" href="{{route('page.index', 'upgrade')}}">
-                            <i class="nc-icon nc-alien-33"></i>
-                            <p>{{ __("Upgrade to PRO") }}</p>
-                        </a>
-                    </li>
+                    
+                  
                 </ul>
             </div>
         </div>                <div class="fixed-plugin">
@@ -226,7 +205,7 @@
                     <span class="badge filter badge-green" data-color="green"></span>
                     <span class="badge filter badge-orange" data-color="orange"></span>
                     <span class="badge filter badge-red" data-color="red"></span>
-                    <span class="badge filter badge-purple active" data-color="purple"></span>
+                    <span class="badge filter badge-purple " data-color="purple"></span>
                 </div>
                 <div class="clearfix"></div>
             </a>
@@ -293,46 +272,10 @@
                                     <span class="d-lg-none">{{ __('Dashboard') }}</span>
                                 </a>
                             </li>
-                            <li class="dropdown nav-item">
-                                <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
-                                    <i class="nc-icon nc-planet"></i>
-                                    <span class="notification">5</span>
-                                    <span class="d-lg-none">{{ __('Notification') }}</span>
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <a class="dropdown-item" href="#">{{ __('Notification 1') }}</a>
-                                    <a class="dropdown-item" href="#">{{ __('Notification 2') }}</a>
-                                    <a class="dropdown-item" href="#">{{ __('Notification 3') }}3</a>
-                                    <a class="dropdown-item" href="#">{{ __('Notification 4') }}</a>
-                                    <a class="dropdown-item" href="#">{{ __('Another notification') }}</a>
-                                </ul>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#" class="nav-link">
-                                    <i class="nc-icon nc-zoom-split"></i>
-                                    <span class="d-lg-block">&nbsp;{{ __('Search') }}</span>
-                                </a>
-                            </li>
+                           
                         </ul>
                         <ul class="navbar-nav   d-flex align-items-center">
-                            <li class="nav-item">
-                                <a class="nav-link" href=" {{route('profile.edit') }} ">
-                                    <span class="no-icon">{{ __('Account') }}</span>
-                                </a>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="no-icon">{{ __('Dropdown') }}</span>
-                                </a>
-                                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                    <a class="dropdown-item" href="#">{{ __('Analysis') }}</a>
-                                    <a class="dropdown-item" href="#">{{ __('Questions') }}</a>
-                                    <a class="dropdown-item" href="#">{{ __('schools and Representatives') }}</a>
-                                    <a class="dropdown-item" href="#">{{ __('Emails') }}</a>
-                                    <div class="divider"></div>
-                                    <a class="dropdown-item" href="#">{{ __('set the parameters') }}</a>
-                                </div>
-                            </li>
+                            
                             <li class="nav-item">
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST">
                                     @csrf
