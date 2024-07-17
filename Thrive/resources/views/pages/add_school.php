@@ -3,13 +3,13 @@
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     include 'db_connection.php';
 
-    $username = $_POST['usename'];
+   
     $name = $_POST['name'];
     $district = $_POST['district'];
     $regno = $_POST['regno'];
 
-    $stmt = $conn->prepare("INSERT INTO schools (username,name, district, regno) VALUES (?, ?, ?)");
-    $stmt->bind_param("sss", $username, $name, $district, $regno);
+    $stmt = $conn->prepare("INSERT INTO schools (name, district, regno) VALUES (?, ?, ?)");
+    $stmt->bind_param("sss", $name, $district, $regno);
     $stmt->execute();
 
     $response = "";

@@ -16,7 +16,7 @@ return new class  extends Migration
     {
         Schema::create('schools', function (Blueprint $table) {
             //$table->id();
-            $table->string('username');
+            
             $table->string('name');
             $table->string('district');
             $table->string('regno')->unique();

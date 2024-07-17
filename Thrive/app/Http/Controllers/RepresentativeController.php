@@ -24,7 +24,6 @@ class RepresentativeController extends Controller
             return response('error|Failed to fetch representatives: ' . $e->getMessage(), 500)->header('Content-Type', 'text/plain');
         }
     }
-
     /**
      * Store a newly created representative in storage.
      *

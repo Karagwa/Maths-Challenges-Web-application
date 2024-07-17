@@ -10,7 +10,7 @@ class School extends Model
     use HasFactory;
 
     
-    protected $fillable = ['username','name', 'district', 'regno'];
+    protected $fillable = ['name', 'district', 'regno'];
 
     public function representatives()
     {
