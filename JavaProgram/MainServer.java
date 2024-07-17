@@ -56,8 +56,9 @@ public class MainServer {
      * @param in The BufferedReader to read input from the applicant.
      * @param out The PrintWriter to write output to the applicant.
      * @throws IOException If there is an error reading or writing to the socket.
+     * @throws SQLException 
      */
-    private static void handleApplicant(BufferedReader in, PrintWriter out) throws IOException {
+    private static void handleApplicant(BufferedReader in, PrintWriter out) throws IOException, SQLException {
         out.println("Are you already registered? Enter 1 for yes or 0 for no");
         String isRegistered = in.readLine();
 
@@ -71,6 +72,13 @@ public class MainServer {
             // Add logic to check for corresponding school registration number
             // If the details correspond, proceed with further logic
             DatabaseConnection.authenticateApplicant(username, registrationNumber, in, out);
+            String ChallengeCommand = in.readLine();
+            if ("viewChallenges".equals(ChallengeCommand)) {
+                DatabaseConnection.getChallenges(in, out);
+            } else {
+                out.println("Invalid Command. Please try again.");
+                out.println("END");
+            }
 
         } else if ("0".equals(isRegistered)) {
             Applicant.newApplicant(in,out);

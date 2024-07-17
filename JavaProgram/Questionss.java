@@ -14,7 +14,7 @@ public class Questionss {
         final String pass = "";
 
         try (Connection conn = DriverManager.getConnection(D_URL, user, pass)) {
-            String sql = "SELECT QuestionText, Marks FROM questions ORDER BY RAND() LIMIT 1";
+            String sql = "SELECT QuestionText FROM questions ORDER BY RAND() LIMIT 1";
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
 
