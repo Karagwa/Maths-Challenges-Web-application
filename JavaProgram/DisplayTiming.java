@@ -1,6 +1,6 @@
 import java.util.concurrent.atomic.AtomicBoolean;
 
-class DisplayTiming extends Thread {
+public class DisplayTiming extends Thread {
     private final AtomicBoolean running = new AtomicBoolean(false);
     private long startTime;
     private long totalTime;
