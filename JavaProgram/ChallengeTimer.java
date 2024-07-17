@@ -1,40 +1,43 @@
-import java.util.Timer;
-import java.util.TimerTask;
-import javax.swing.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-public class ChallengeTimer {
+class DisplayTiming extends Thread {
+    private final AtomicBoolean running = new AtomicBoolean(false);
+    private long startTime;
+    private long totalTime;
+    private long elapsedTime;
 
-    private static int remainingTime; // in seconds
-    private static Timer timer;
-
-    public static void main(String[] args) {
-        int challengeDuration = 120; // challenge duration in seconds
-        startTimer(challengeDuration);
+    public void startTimer(long totalTime) {
+        this.totalTime = totalTime;
+        running.set(true);
+        startTime = System.currentTimeMillis();
+        start();
     }
 
-    public static void startTimer(int durationInSeconds) {
-        remainingTime = durationInSeconds;
-        timer = new Timer();
-        
-        TimerTask task = new TimerTask() {
-            public void run() {
-                if (remainingTime > 0) {
-                    System.out.println("Time remaining: " + formatTime(remainingTime));
-                    remainingTime--;
-                } else {
-                    System.out.println("Time's up!");
-                    timer.cancel();
-                }
+    public void stopTimer() {
+        running.set(false);
+    }
+
+    public long getElapsedTime() {
+        return elapsedTime;
+    }
+
+    public long getRemainingTime() {
+        return totalTime - elapsedTime;
+    }
+
+    @Override
+    public void run() {
+        while (running.get()) {
+            elapsedTime = System.currentTimeMillis() - startTime;
+            long remainingTime = totalTime - elapsedTime;
+            System.out.print("\rRemaining time: " + remainingTime + " ms    ");
+            try {
+                Thread.sleep(100); // Update every 100 ms
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
             }
-        };
-
-        // Schedule the task to run every second
-        timer.scheduleAtFixedRate(task, 0, 1000);
-    }
-
-    public static String formatTime(int seconds) {
-        int minutes = seconds / 60;
-        int remainingSeconds = seconds % 60;
-        return String.format("%02d:%02d", minutes, remainingSeconds);
+        }
+        System.out.println(); // Move to the next line after stopping
     }
 }
+
