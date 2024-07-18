@@ -302,7 +302,7 @@ input:focus {
 }
 
 .page-header .filter:after {
-    background: transparent linear-gradient(to bottom, #9368e9 0%, #943bea 100%) repeat scroll 0 0/150% 150%;
+   /* background: transparent linear-gradient(to bottom, #9368e9 0%, #943bea 100%) repeat scroll 0 0/150% 150%;*/
     content: "";
     display: block;
     height: 100%;
@@ -333,6 +333,7 @@ input:focus {
     z-index: 21;
 }
 
+
 .sidebar,
 body>.navbar-collapse {
     position: absolute;
@@ -346,6 +347,7 @@ body>.navbar-collapse {
     font-weight: 200;
     background-size: cover;
     background-position: center center;
+    
 }
 
 .sidebar .sidebar-wrapper,
@@ -357,6 +359,7 @@ body>.navbar-collapse .sidebar-wrapper {
     width: 260px;
     z-index: 4;
     padding-bottom: 100px;
+   
 }
 
 .sidebar .sidebar-background,
@@ -370,6 +373,7 @@ body>.navbar-collapse .sidebar-background {
     left: 0;
     background-size: cover;
     background-position: center center;
+   
 }
 
 .sidebar .logo,
@@ -388,6 +392,7 @@ body>.navbar-collapse .logo p {
     color: #FFFFFF;
     line-height: 20px;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  
 }
 
 .sidebar .logo .simple-text,
@@ -400,6 +405,7 @@ body>.navbar-collapse .logo .simple-text {
     text-align: center;
     font-weight: 400;
     line-height: 30px;
+ 
 }
 
 .sidebar .logo-tim,
@@ -411,6 +417,7 @@ body>.navbar-collapse .logo-tim {
     width: 61px;
     float: left;
     overflow: hidden;
+    
 }
 
 .sidebar .logo-tim img,
@@ -424,11 +431,12 @@ body>.navbar-collapse .nav {
     margin-top: 20px;
     float: none;
     display: block;
+  
 }
 
 .sidebar .nav li .nav-link,
 body>.navbar-collapse .nav li .nav-link {
-    color: #FFFFFF;
+    color: #141111;
     margin: 5px 15px;
     opacity: .86;
     border-radius: 4px;
@@ -450,7 +458,9 @@ body>.navbar-collapse .nav li .nav-link p {
     font-weight: 600;
     text-transform: uppercase;
     display: inline-flex;
+    
 }
+
 
 .sidebar .nav li .nav-link i,
 body>.navbar-collapse .nav li .nav-link i {
@@ -477,7 +487,7 @@ body>.navbar-collapse .nav li:hover .nav-link {
 
 .sidebar .nav li.active > .nav-link,
 body>.navbar-collapse .nav li.active > .nav-link {
-    color: #FFFFFF;
+    color: #131010;
     opacity: 1;
     background: rgba(255, 255, 255, 0.23);
 }
@@ -509,12 +519,12 @@ body>.navbar-collapse .nav .active-pro {
 
 .sidebar .nav .active-pro a,
 body>.navbar-collapse .nav .active-pro a {
-    color: #FFFFFF !important;
+    color: #201b1b !important;
 }
 
 .sidebar .nav .nav-link,
 body>.navbar-collapse .nav .nav-link {
-    color: #FFFFFF;
+    color: #1b1717;
     margin: 5px 15px;
     opacity: .86;
     border-radius: 4px;
@@ -535,7 +545,7 @@ body>.navbar-collapse .logo p {
     float: left;
     font-size: 20px;
     margin: 10px 10px;
-    color: #FFFFFF;
+    color: #2b2020;
     line-height: 20px;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
@@ -546,7 +556,7 @@ body>.navbar-collapse .logo .simple-text {
     padding: 5px 0px;
     display: block;
     font-size: 18px;
-    color: #FFFFFF;
+    color: #352c2c;
     text-align: center;
     font-weight: 400;
     line-height: 30px;
@@ -591,13 +601,13 @@ body>.navbar-collapse:before {
 
 .sidebar:after,
 body>.navbar-collapse:after {
-    background: #9368E9;
-    background: -moz-linear-gradient(top, #9368E9 0%, #943bea 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #9368E9), color-stop(100%, #943bea));
-    background: -webkit-linear-gradient(top, #9368E9 0%, #943bea 100%);
-    background: -o-linear-gradient(top, #9368E9 0%, #943bea 100%);
-    background: -ms-linear-gradient(top, #9368E9 0%, #943bea 100%);
-    background: linear-gradient(to bottom, #9368E9 0%, #943bea 100%);
+    background: #FEF9E7;
+    background: -moz-linear-gradient(top, #FEF9E7 0%, #FEF9E7 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #FEF9E7), color-stop(100%, #FEF9E7));
+    background: -webkit-linear-gradient(top, #FEF9E7 0%, #FEF9E7 100%);
+    background: -o-linear-gradient(top, #FEF9E7 0%, #FEF9E7 100%);
+    background: -ms-linear-gradient(top, #FEF9E7 0%, #FEF9E7 100%);
+    background: linear-gradient(to bottom, #FEF9E7 0%, #FEF9E7 100%);
     background-size: 150% 150%;
     z-index: 3;
     opacity: 1;

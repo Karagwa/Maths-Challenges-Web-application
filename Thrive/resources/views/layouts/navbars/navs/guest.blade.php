@@ -12,7 +12,7 @@
             <ul class="navbar-nav">
                 <li class="nav-item">
                     <a href="{{ route('dashboard') }}" class="nav-link">
-                        <i class="nc-icon nc-chart-pie-35"></i> {{ __('Dashboard') }}
+                        <i class="nc-icon nc-chart-pie-35"></i> {{ __('Analytics') }}
                     </a>
                 </li>
                 <li class="nav-item @if($activePage == 'register') active @endif">

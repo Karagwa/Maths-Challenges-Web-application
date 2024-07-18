@@ -1,7 +1,7 @@
 @extends('layouts.app', ['activePage' => 'SignUp', 'title' => 'Thrive Mathematical challenge by Creative Tim & UPDIVISION'])
 
 @section('content')
-    <div class="full-page register-page section-image" data-color="" data-image="{{ asset('light-bootstrap/img/bg5.jpg') }}">
+    <div class="full-page register-page section-image" data-color="" data-image="{{ asset('light-bootstrap/img/image5.jpeg') }}">
         <div class="content">
             <div class="container">
                 <div class="card card-register card-plain text-center">
@@ -14,33 +14,14 @@
                                             <i class="nc-icon nc-circle-09"></i>
                                         </div>
                                     </div>
+                                    
                                     <div class="media-body">
                                         <h4>{{ __('Register Here') }}</h4>
                                         <p>{{ __('Welcome to our community! To ensure a smooth and enjoyable experience for our new users, please follow these steps to guide them through the registration process:') }}</p>
                                     </div>
                                 </div>
-                                <div class="media">
-                                    <div class="media-left">
-                                        <div class="icon">
-                                            <i class="nc-icon nc-preferences-circle-rotate"></i>
-                                        </div>
-                                    </div>
-                                    <div class="media-body">
-                                        <h4>{{ __('Already have an acount') }}</h4>
-                                        <p>{{ __('Please if this is not your first time kindly press on the login part in the navbar and exit this part') }}</p>
-                                    </div>
-                                </div>
-                                <div class="media">
-                                    <div class="media-left">
-                                        <div class="icon">
-                                            <i class="nc-icon nc-planet"></i>
-                                        </div>
-                                    </div>
-                                    <div class="media-body">
-                                        <h4>{{ __('Global Support') }}</h4>
-                                        <p>{{ __('Get ready to revolutionize the way you manage and analyze your data with our state-of-the-art dashboard. Designed with you in mind, our dashboard offers an array of powerful features that bring value and ease to your everyday tasks.') }}</p>
-                                    </div>
-                                </div>
+                               
+                                
                             </div>
                             <div class="col-md-4 mr-auto">
                                 <form method="POST" action="{{ route('register') }}">
@@ -56,7 +37,7 @@
                                             </div>
 
                                             <div class="form-group">
-                                                <input type="password" name="password" class="form-control" required >
+                                                <input type="password" name="password" class="form-control" placeholder="Password" required >
                                             </div>
                                             <div class="form-group">
                                                 <input type="password" name="password_confirmation" placeholder="Password Confirmation" class="form-control" required autofocus>

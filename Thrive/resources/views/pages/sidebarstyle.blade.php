@@ -7,7 +7,7 @@
     <style>
       /* Custom CSS for the main sidebar */
 .main-sidebar {
-    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%) !important;
+    
     padding: 20px;
     border-radius: 10px;
     color: white;
@@ -70,14 +70,7 @@
     padding-left: 30px;
 }
 
-.main-sidebar .nav-link.active.bg-danger {
-    background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%) !important;
-    color: white;
-}
 
-.main-sidebar .nav-link.active.bg-danger:hover {
-    background: linear-gradient(135deg, #ff4b2b 0%, #ff416c 100%) !important;
-}
 
     </style>
 </head>
