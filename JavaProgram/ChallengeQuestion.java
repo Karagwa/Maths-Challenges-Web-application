@@ -1,9 +1,9 @@
 import java.sql.*;
 import java.util.*;
 
-public class ChallengeQuestion {
+public class ChallengeQuestions {
 
-    private static final String D_URL = "jdbc:mysql://localhost:3306/humphrey";
+    private static final String D_URL = "jdbc:mysql://localhost:3306/challenges";
     private static final String user = "root";
     private static final String pass = "";
     private static Map<String, Integer> challengeCounts = new HashMap<>(); // hashmap keeps track of how many times a challenge has been selected
@@ -34,9 +34,38 @@ public class ChallengeQuestion {
             }
 
             if (canSelectChallenge(selectedChallengeNumber)) {
-                for (int i = 0; i < 10; i++) {
-                    retrieveAndDisplayQuestion(selectedChallengeNumber, scanner);
+                List<String> arrayQuestions = new ArrayList<>();
+                List<String> arrayAnswers = new ArrayList<>();
+                
+                // Retrieve questions and solutions for the challenge
+                retrieveQuestionsAndSolutions(selectedChallengeNumber, arrayQuestions, arrayAnswers);
+
+                int marks = 0;
+                for (int i = 0; i < arrayQuestions.size(); i++) {
+                    String question = arrayQuestions.get(i);
+                    String correctAnswer = arrayAnswers.get(i);
+
+                    // Present the question to the user
+                    System.out.println("Question " + (i + 1) + ": " + question);
+
+                    // Get the user's answer
+                    System.out.print("Your answer: ");
+                    String userAnswer = scanner.nextLine();
+
+                    // Mark the answer and update the score
+                    int questionScore = markAnswer(userAnswer, correctAnswer);
+                    marks += questionScore;
+
+                    // Show the result for the current question
+                    System.out.println("You scored: " + questionScore + " on this question.");
                 }
+
+                // Print the final score
+                //System.out.println("Final Score: " + marks);
+
+                // Update the total score in the Marks table
+                updateMarks(selectedChallengeNumber, marks);
+
                 incrementChallengeCount(selectedChallengeNumber);
             } else {
                 System.out.println("You have exceeded the maximum attempts for challenge: " + selectedChallengeNumber);
@@ -46,27 +75,40 @@ public class ChallengeQuestion {
         scanner.close();
     }
 
-    public static void retrieveAndDisplayQuestion(String challenge, Scanner scanner) throws SQLException {
+    public static void retrieveQuestionsAndSolutions(String challenge, List<String> arrayQuestions, List<String> arrayAnswers) throws SQLException {
         try (Connection conn = DriverManager.getConnection(D_URL, user, pass)) {
-            String sql = "SELECT Question FROM Questionsss WHERE ChallengeNumber = ? ORDER BY RAND() LIMIT 1";
+            String sql = "SELECT questions.questions, solutions.solutions " +
+                         "FROM questions  " +
+                         "JOIN solutions  ON questions.questionNo = solutions.questionNo " +
+                         "WHERE questions.ChallengeNumber = ? " +
+                         "ORDER BY RAND() LIMIT 10";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, challenge);
             ResultSet rs = stmt.executeQuery();
 
-            if (rs.next()) {
-                String question = rs.getString("Question");
-                System.out.println("Question: " + question);
+            while (rs.next()) {
+                String question = rs.getString("questions");
+                String solution = rs.getString("solutions");
 
-                System.out.print("Your answer: ");
-                String pupilAnswer = scanner.nextLine();
-                // Move on to the next question without providing feedback
-            } else {
-                System.out.println("No questions found for challenge: " + challenge);
+                arrayQuestions.add(question);
+                arrayAnswers.add(solution);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
+    public static int markAnswer(String userAnswer, String correctAnswer) {
+        if (userAnswer.equals(correctAnswer)) {
+            return 10;
+        } else if (userAnswer.isEmpty()) {
+            return 0;
+        } else {
+            return -3;
+        }
+    }
+
+    
 
     public static boolean canSelectChallenge(String challenge) {
         int count = challengeCounts.getOrDefault(challenge, 0);
@@ -136,7 +178,7 @@ public class ChallengeQuestion {
         return false;
     }
 
-    public static void resetChallengeCountsInDatabase() {
+     public static void resetChallengeCountsInDatabase() {
         String sql = "UPDATE ChallengeTable SET ChallengeCount = 0";
 
         try (Connection conn = DriverManager.getConnection(D_URL, user, pass);
@@ -146,6 +188,21 @@ public class ChallengeQuestion {
             System.out.println("Reset all challenge counts to 0");
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+    public static void updateMarks(String challengeNumber, int marks) throws SQLException {
+        final String D_URL = "jdbc:mysql://localhost:3306/challenges";
+        final String user = "root";
+        final String pass = "";
+
+        try (Connection connection = DriverManager.getConnection(D_URL, user, pass)) {
+            String sql = "INSERT INTO Marks (challengeNumber, marks) VALUES (?, ?) " +
+                         "ON DUPLICATE KEY UPDATE marks = VALUES(marks)";
+            try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+                pstmt.setString(1, challengeNumber);
+                pstmt.setInt(2, marks);
+                pstmt.executeUpdate();
+            }
         }
     }
 }
