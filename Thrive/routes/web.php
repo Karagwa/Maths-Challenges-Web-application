@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SchoolController;
 use App\Http\Controllers\RepresentativeController;
+use App\Http\Controllers\IncompleteChallengeController;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +27,8 @@ Route::delete('/schools/{id}', [SchoolController::class, 'delete'])->name('schoo
 Route::get('/fetch_representatives', [RepresentativeController::class, 'fetchRepresentatives']);
 Route::post('/add_representative', [RepresentativeController::class, 'addRepresentative']);
 Route::delete('/representatives/{id}', [RepresentativeController::class, 'destroy'])->name('representatives.delete');
+Route::get('IncompleteChallenges', [IncompleteChallengeController::class,'index'])->name('IncompleteChallenges');
+Route::get('/fetch_Incomplete_challenges', [IncompleteChallengeController::class, 'fetchIncompleteChallenges'])-> name('fetch_Incomplete_challenges');
 
 //Route::resource('schools', SchoolController::class);
 //Route::resource('representatives', RepresentativeController::class);
