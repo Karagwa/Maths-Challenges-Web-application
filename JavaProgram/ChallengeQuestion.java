@@ -1,7 +1,7 @@
 import java.sql.*;
 import java.util.*;
 
-public class ChallengeQuestions {
+public class ChallengeQuestion {
 
     private static final String D_URL = "jdbc:mysql://localhost:3306/challenges";
     private static final String user = "root";
