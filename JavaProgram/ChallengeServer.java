@@ -9,7 +9,7 @@ public class ChallengeServer {
     private static final String pass = "";
     private static Map<String, Integer> challengeCounts = new HashMap<>();
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         try (ServerSocket serverSocket = new ServerSocket(12357)) {
             System.out.println("Server started, waiting for client...");
 
@@ -24,31 +24,31 @@ public class ChallengeServer {
                     System.out.println("Client connected");
 
                     String command = in.readLine();
-                    if (command != null && command.startsWith("attemptchallenge")) {
-                        String[] parts = command.split(" ", 3);
-                        if (parts.length == 3) {
-                            String challengeNumber = parts[1].trim();
-                            String challengeName = parts[2].trim();
+                    if (command != null && command.startsWith("attemptChallenge")) {
+                        String[] parts = command.split(" ", 2);
+                        if (parts.length == 2) {
+                            String ChallengeNumber = parts[1].trim();
+                            
 
-                            if (!isValidChallenge(challengeNumber, challengeName)) {
+                            if (!DatabaseConnection.isValidChallenge(ChallengeNumber)) {
                                 out.println("Invalid details. Terminating connection.");
                                 continue;
                             }
 
-                            if (canSelectChallenge(challengeNumber)) {
+                            if (canSelectChallenge(ChallengeNumber)) {
                                 for (int i = 0; i < 10; i++) {
-                                    String question = retrieveQuestion(challengeNumber);
+                                    String question = retrieveQuestion(ChallengeNumber);
                                     if (question != null) {
                                         out.println("Question: " + question);
                                         in.readLine(); // Read the user's answer, but do nothing with it
                                     } else {
-                                        out.println("No questions found for challenge: " + challengeNumber);
+                                        out.println("No questions found for challenge: " + ChallengeNumber);
                                     }
                                 }
-                                incrementChallengeCount(challengeNumber);
+                                incrementChallengeCount(ChallengeNumber);
                                 out.println("Challenge completed.");
                             } else {
-                                out.println("You have exceeded the maximum attempts for challenge: " + challengeNumber);
+                                out.println("You have exceeded the maximum attempts for challenge: " + ChallengeNumber);
                             }
                         } else {
                             out.println("Invalid command format. Terminating connection.");
@@ -129,8 +129,8 @@ public class ChallengeServer {
         }
     }
 
-    public static boolean isValidChallenge(String challengeNumber, String challengeName) {
-        String sql = "SELECT COUNT(*) FROM ChallengeTable WHERE ChallengeNumber = ? AND ChallengeName = ?";
+    /*public static boolean isValidChallenge(String challengeNumber, String challengeName) {
+        String sql = "SELECT COUNT(*) FROM challenge WHERE ChallengeNumber = ? AND ChallengeName = ?";
 
         try (Connection conn = DriverManager.getConnection(D_URL, user, pass);
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -145,5 +145,5 @@ public class ChallengeServer {
             e.printStackTrace();
         }
         return false;
-    }
+    }*/
 }
