@@ -7,6 +7,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 
@@ -23,8 +26,9 @@ public class MainClient {
      * 
      * The client also handles the responses from the server, printing them to the console and taking appropriate actions
      * based on the responses.
+     * @throws SQLException 
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         String hostname = "localhost";
         int port = 2020;
 
@@ -88,7 +92,7 @@ public class MainClient {
         }
     }
 
-    private static String handleApplicantRegistration(BufferedReader in, PrintWriter out, Scanner sn) throws IOException {
+    private static String handleApplicantRegistration(BufferedReader in, PrintWriter out, Scanner sn) throws IOException, SQLException {
         System.out.println("Are you already registered? Enter 1 for yes or 0 for no");
         String isRegistered = sn.nextLine();
         out.println(isRegistered);
@@ -114,8 +118,71 @@ public class MainClient {
                     }
                     System.out.println(response);
                     
-                  
+                     
                 }
+                out.println(sn.nextLine());
+                
+
+
+                int score = 0;
+                long totalTime = 300000; // Total time for all questions (e.g., 60000 ms = 60 seconds)
+                int numberOfQuestions = 10; // Adjust this if you change the limit in the SQL query
+                long[] responseTimes = new long[numberOfQuestions];
+
+                String ChallengeNumber = in.readLine();
+
+                if(ChallengeNumber.startsWith("Invalid")){
+                    System.out.println(ChallengeNumber);
+                    return null;
+                }
+
+                List<String> questionsList = new ArrayList<>();
+                List<String> solutionsList = new ArrayList<>();
+                DatabaseConnection.retrieveQuestion(ChallengeNumber, questionsList, solutionsList);
+
+
+                DisplayTiming timerThread = new DisplayTiming();
+        timerThread.startTimer(totalTime);
+
+        Scanner scanner = new Scanner(System.in);
+
+        for (int i = 0; i < questionsList.size(); i++) {
+            if (timerThread.getRemainingTime() <= 0) {
+                System.out.println("\nTime is up!");
+                break;
+            }
+
+            String question = questionsList.get(i);
+            String solution = solutionsList.get(i);
+
+            System.out.println("Remaining Questions " + (numberOfQuestions - (i + 1)));
+            System.out.println("\nQuestion " + (i + 1) + ": " + question);
+
+            long startTime = System.currentTimeMillis();
+
+            System.out.print("Your answer: ");
+            String userAnswer = scanner.nextLine();
+
+            long endTime = System.currentTimeMillis();
+            responseTimes[i] = endTime - startTime;
+
+            int previousScore = score;
+            score = markAnswer(userAnswer, solution, score);
+
+            int questionScore = score - previousScore;
+            System.out.println("You scored: " + questionScore + " on this question.");
+        }
+
+        timerThread.stopTimer();
+        System.out.println("\nFinal Score: " + score);
+    
+
+
+
+
+
+
+
                 return null;
                 
             } else if ("0".equals(auth_response)) {
@@ -152,8 +219,8 @@ public class MainClient {
             return null;
         }
         return null;
-    }
 
+    }
     private static void handleSchoolRepresentativeLogin(BufferedReader in, PrintWriter out, Scanner sn) throws IOException {
         System.out.println("Enter your system username:");
         out.println(sn.nextLine());
@@ -178,4 +245,18 @@ public class MainClient {
         char[] passwordArray = console.readPassword();
         return new String(passwordArray);
     }
+    public static int markAnswer(String userAnswer, String solution, int score) {
+
+        if (userAnswer.equals(solution)) {
+            score += 10;
+        } else if (userAnswer.isEmpty()) {
+            score = score;
+        } else {
+            score -= 3;
+        }
+        return score;
+    }
+
 }
+
+

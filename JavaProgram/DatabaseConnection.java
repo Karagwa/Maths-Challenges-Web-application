@@ -347,7 +347,7 @@ public static String authenticateRepresentative(String username, String password
                 out.println("ChallengeNumber-" + ChallengeNumber+ "  ChallengeName- " + ChallengeName);
 
             }
-            out.println("Enter the command attempt number");
+            out.println("Enter the command (attemptChallenge challenge_no) to attempt the challenge");
             out.println("END");
         connection.close();
     }
@@ -371,21 +371,19 @@ public static String authenticateRepresentative(String username, String password
         return false;
     }
 
-    public static void retrieveQuestion(List<String> questionsList, List<String> solutionsList) throws SQLException {
-        final String D_URL = "jdbc:mysql://localhost:3306/challenges";
-        final String user = "root";
-        final String pass = "";
-
-        try (Connection conn = DriverManager.getConnection(D_URL, user, pass)) {
-            String sql = "SELECT questions.questions, solutions.solutions " +
-                    "FROM questions  " +
-                    "JOIN solutions  ON questions.QuestionNo = solutions.QuestionNo " +
-                    "ORDER BY RAND() LIMIT 10";
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
+    public static void retrieveQuestion(String ChallengeNo, List<String> questionsList, List<String> solutionsList) throws SQLException {
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            String sql = "SELECT Questions.Question_text, Solutions.solutions " +
+                         "FROM Questions " +
+                         "JOIN Solutions ON Questions.QuestionNo = Solutions.QuestionNo " +
+                         "WHERE Questions.ChallengeNumber = ? " +
+                         "ORDER BY RAND() LIMIT 10";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, ChallengeNo);
+            ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                String question = rs.getString("questions");
+                String question = rs.getString("Question_text");
                 String solution = rs.getString("solutions");
 
                 questionsList.add(question);
@@ -393,6 +391,7 @@ public static String authenticateRepresentative(String username, String password
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            throw e; // Optional: re-throw the exception if you want the caller to handle it
         }
     }
 
@@ -421,7 +420,7 @@ public static String authenticateRepresentative(String username, String password
         System.out.println("Connected to the database successfully!");
 
 
-        String sql = "UPDATE TotalMark SET ChallengeCount = ? WHERE ChallengeNumber = ?";
+        String sql = "UPDATE TotalMarks SET ChallengeCount = ? WHERE ChallengeNumber = ?";
 
     
         PreparedStatement stmt = connection.prepareStatement(sql);
@@ -442,7 +441,7 @@ public static String authenticateRepresentative(String username, String password
         System.out.println("Connected to the database successfully!");
 
 
-        String sql = "UPDATE TotalMark SET ChallengeCount = 0";
+        String sql = "UPDATE TotalMarks  SET ChallengeCount = 0";
 
         
         Statement stmt = connection.createStatement();
@@ -469,18 +468,7 @@ public static String authenticateRepresentative(String username, String password
         
     }
 
-    /*public static void updateMarks(int marks) throws SQLException {
-        Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD); 
-        System.out.println("Connected to the database successfully!");
-
-        String sql ="INSERT INTO Marks (marks) VALUES (?) " +
-                    "ON DUPLICATE KEY UPDATE marks = VALUES(marks)";
-        PreparedStatement pstmt = connection.prepareStatement(sql);
-        pstmt.setInt(1, marks);
-        pstmt.executeUpdate();
-         
-       
-    }*/
+   
  
 
  
