@@ -5,13 +5,16 @@
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -23,6 +26,8 @@ public class DatabaseConnection {
     private static final String DB_URL = "jdbc:mysql://localhost:3306/Thrive";
     private static final String DB_USER = "root";
     private static final String DB_PASSWORD = "yourpassword";
+
+    private static Map<String, Integer> challengeCounts = new HashMap<>(); 
 
 
 
@@ -322,6 +327,7 @@ public static String authenticateRepresentative(String username, String password
         connection.close();
           
     }
+
     public static void getChallenges(BufferedReader in, PrintWriter out)throws SQLException,IOException{
         Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD); 
         System.out.println("Connected to the database successfully!");
@@ -345,6 +351,136 @@ public static String authenticateRepresentative(String username, String password
             out.println("END");
         connection.close();
     }
+
+    public static boolean isValidChallenge(String ChallengeNumber) throws SQLException {
+        Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD); 
+        System.out.println("Connected to the database successfully!");
+
+        String sql = "SELECT COUNT(*) FROM challenge WHERE ChallengeNumber = ? ";
+
+
+        PreparedStatement stmt = connection.prepareStatement(sql);
+        stmt.setString(1, ChallengeNumber);
+        ResultSet rs = stmt.executeQuery();
+
+        if (rs.next()) {
+            return rs.getInt(1) > 0;
+        }
+        
+
+        return false;
+    }
+
+    public static void retrieveQuestion(List<String> questionsList, List<String> solutionsList) throws SQLException {
+        final String D_URL = "jdbc:mysql://localhost:3306/challenges";
+        final String user = "root";
+        final String pass = "";
+
+        try (Connection conn = DriverManager.getConnection(D_URL, user, pass)) {
+            String sql = "SELECT questions.questions, solutions.solutions " +
+                    "FROM questions  " +
+                    "JOIN solutions  ON questions.QuestionNo = solutions.QuestionNo " +
+                    "ORDER BY RAND() LIMIT 10";
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+
+            while (rs.next()) {
+                String question = rs.getString("questions");
+                String solution = rs.getString("solutions");
+
+                questionsList.add(question);
+                solutionsList.add(solution);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void loadChallengeCountsFromDatabase() throws SQLException {
+        Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD); 
+        System.out.println("Connected to the database successfully!");
+
+
+        String sql = "SELECT ChallengeNumber, ChallengeCount FROM TotalMark";
+
+        
+        Statement stmt = connection.createStatement();
+        ResultSet rs = stmt.executeQuery(sql);
+
+        while (rs.next()) {
+            String challengeNumber = rs.getString("ChallengeNumber");
+            int challengeCount = rs.getInt("ChallengeCount");
+            challengeCounts.put(challengeNumber, challengeCount);
+            System.out.println("Loaded challenge " + challengeNumber + " with count " + challengeCount);
+        }
+        
+    }
+
+    public static void updateChallengeCountInDatabase(String challenge, int count) throws SQLException {
+        Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD); 
+        System.out.println("Connected to the database successfully!");
+
+
+        String sql = "UPDATE TotalMark SET ChallengeCount = ? WHERE ChallengeNumber = ?";
+
+    
+        PreparedStatement stmt = connection.prepareStatement(sql);
+        stmt.setInt(1, count);
+        stmt.setString(2, challenge);
+
+        int rowsAffected = stmt.executeUpdate();
+        if (rowsAffected > 0) {
+            System.out.println("Updated challenge count for " + challenge + " to " + count);
+        } else {
+            System.out.println("Challenge " + challenge + " not found in the database.");
+        }
+        
+    }
+
+    public static void resetChallengeCountsInDatabase() throws SQLException{
+        Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD); 
+        System.out.println("Connected to the database successfully!");
+
+
+        String sql = "UPDATE TotalMark SET ChallengeCount = 0";
+
+        
+        Statement stmt = connection.createStatement();
+
+        stmt.executeUpdate(sql);
+        System.out.println("Reset all challenge counts to 0");
+        
+    }
+
+    public static void updateMarks(String challengeNumber, int marks) throws SQLException {
+        Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD); 
+        System.out.println("Connected to the database successfully!");
+
+        
+        
+        String sql ="INSERT INTO TotalMark (ChallengeNumber, Score) VALUES (?, ?) " +
+                    "ON DUPLICATE KEY UPDATE Score = VALUES(Score)";
+
+
+        PreparedStatement pstmt = connection.prepareStatement(sql);
+        pstmt.setString(1, challengeNumber);
+        pstmt.setInt(2, marks);
+        pstmt.executeUpdate();
+        
+    }
+
+    /*public static void updateMarks(int marks) throws SQLException {
+        Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD); 
+        System.out.println("Connected to the database successfully!");
+
+        String sql ="INSERT INTO Marks (marks) VALUES (?) " +
+                    "ON DUPLICATE KEY UPDATE marks = VALUES(marks)";
+        PreparedStatement pstmt = connection.prepareStatement(sql);
+        pstmt.setInt(1, marks);
+        pstmt.executeUpdate();
+         
+       
+    }*/
  
 
  

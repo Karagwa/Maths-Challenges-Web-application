@@ -14,12 +14,12 @@ public class ChallengeClient {
             Scanner scanner = new Scanner(System.in)
         ) {
 
-            System.out.println("Enter command - attemptchallenge ChallengeNumber ChallengeName");
+            System.out.println("Enter command - attemptChallenge ChallengeNumber ");
             String command = scanner.nextLine();
             
 
             // Validate input format
-            if (command.matches("attemptchallenge \\d+ \\w+")) {
+            if (command.matches("attemptChallenge \\d+ \\w+")) {
                 out.println(command);    
 
                 String response;

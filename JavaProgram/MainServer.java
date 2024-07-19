@@ -75,6 +75,8 @@ public class MainServer {
             String ChallengeCommand = in.readLine();
             if ("viewChallenges".equals(ChallengeCommand)) {
                 DatabaseConnection.getChallenges(in, out);
+
+                
             } else {
                 out.println("Invalid Command. Please try again.");
                 out.println("END");

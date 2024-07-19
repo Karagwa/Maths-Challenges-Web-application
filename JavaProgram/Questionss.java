@@ -12,7 +12,13 @@ import java.util.*;
             // Retrieve questions and solutions
             List<String> questionsList = new ArrayList<>();
             List<String> solutionsList = new ArrayList<>();
-            retrieveQuestion(questionsList, solutionsList);
+            //retrieveQuestion(questionsList, solutionsList);
+            questionsList.add("1+1=");
+            questionsList.add("2+2");
+            questionsList.add("3+3");
+            solutionsList.add("2");
+            solutionsList.add("4");
+            solutionsList.add("6");
 
 
             // Start the timer
@@ -108,7 +114,7 @@ import java.util.*;
                 }
             }
         }
-       /** public void updateMarks(int questionNo, int score, int questionscore) throws SQLException {
+        public void updateMarks(int questionNo, int score, int questionscore) throws SQLException {
             final String D_URL = "jdbc:mysql://localhost:3306/challenges";
             final String user = "root";
             final String pass = "";
@@ -120,5 +126,5 @@ import java.util.*;
             pstmt.setInt(2,score);
             pstmt.setInt(3, questionscore);
             pstmt.executeUpdate();
-        }**/
+        }
     }

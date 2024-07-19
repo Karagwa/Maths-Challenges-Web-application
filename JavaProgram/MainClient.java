@@ -41,7 +41,7 @@ public class MainClient {
             // Read response from server
             String response = in.readLine();
             if ("Are you already registered? Enter 1 for yes or 0 for no".equals(response)) {
-                String applicantresponse =handleApplicantRegistration(in, out, sn);
+                handleApplicantRegistration(in, out, sn);
                 
             } else if ("Enter your system username:".equals(response)) {
               
@@ -113,6 +113,7 @@ public class MainClient {
                         break;
                     }
                     System.out.println(response);
+                    
                   
                 }
                 return null;
