@@ -155,12 +155,11 @@ public class MainClient {
             String question = questionsList.get(i);
             String solution = solutionsList.get(i);
 
-            System.out.println("Remaining Questions " + (numberOfQuestions - (i + 1)));
-            System.out.println("\nQuestion " + (i + 1) + ": " + question);
+            System.out.println("\n\nRemaining Questions " + (numberOfQuestions - (i + 1)));
+            System.out.println("Question " + (i + 1) + ": " + question);
 
             long startTime = System.currentTimeMillis();
 
-            System.out.print("Your answer: ");
             String userAnswer = scanner.nextLine();
 
             long endTime = System.currentTimeMillis();
@@ -170,7 +169,7 @@ public class MainClient {
             score = markAnswer(userAnswer, solution, score);
 
             int questionScore = score - previousScore;
-            System.out.println("You scored: " + questionScore + " on this question.");
+            //System.out.println("You scored: " + questionScore + " on this question.");
         }
 
         timerThread.stopTimer();

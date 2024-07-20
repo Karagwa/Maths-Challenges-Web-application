@@ -32,7 +32,7 @@ public class DisplayTiming extends Thread {
             long remainingTime = totalTime - elapsedTime;
             System.out.print("\rRemaining time: " + remainingTime + " ms    ");
             try {
-                Thread.sleep(100); // Update every 100 ms
+                Thread.sleep(3000); // Update every 3second which is 3000 ms
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
