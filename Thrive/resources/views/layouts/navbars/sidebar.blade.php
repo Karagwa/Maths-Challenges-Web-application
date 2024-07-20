@@ -122,9 +122,9 @@ Tip 2: you can also add an image using data-image tag
                 </a>
             </li>
             <li class="nav-item @if($activePage == 'typography') active @endif">
-                <a class="nav-link" href="{{route('page.index', 'typography')}}">
+                <a class="nav-link" href="{{route('page.index', 'challenge')}}">
                     <i class="nc-icon nc-paper-2"></i>
-                    <p>{{ __("Upload Necessary Qns") }}</p>
+                    <p>{{ __("Upload Challenges") }}</p>
                 </a>
             </li>
             <li class="nav-item @if($activePage == 'icons') active @endif">
