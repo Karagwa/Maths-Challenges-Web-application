@@ -5,6 +5,8 @@ use App\Http\Controllers\SchoolController;
 use App\Http\Controllers\RepresentativeController;
 use App\Http\Controllers\IncompleteChallengeController;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\ChallengeController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -61,6 +63,8 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('{page}', ['as' => 'page.index', 'uses' => 'App\Http\Controllers\PageController@index']);
 });
 
+
+//Challenge routes
 Route::get('/challenges', [ChallengeController::class, 'index'])->name('challenges.index');
 Route::post('/challenges/store', [ChallengeController::class, 'store'])->name('challenges.store');
 

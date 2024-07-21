@@ -17,13 +17,13 @@
                     <div class="card strpied-tabled-with-hover">
                         <div class="card-header ">
                             <h4 class="card-title">UPLOAD CHALLENGES</h4>
-                            <p class="card-category">please enter the challenge information</p>
+                            <p class="card-category">Please enter the challenge information</p>
                         </div>
                         
                         <form method="POST" action="{{ route('challenges.store') }}" style="width: 800px; margin: 0 auto;">
                             @csrf
                             <br>
-                            Challenge Number <input type="number" name="ChallengeNo" id="ChallengeNo" autocomplete="off">
+                            Challenge Number <input type="number" name="ChallengeNumber" id="ChallengeNumber" autocomplete="off">
                             <br><br>
                             Challenge Name <input type="text" name="ChallengeName" id="ChallengeName" autocomplete="name">
                             <br><br>

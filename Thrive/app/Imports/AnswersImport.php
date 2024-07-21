@@ -34,7 +34,7 @@ class AnswersImport implements ToCollection, WithChunkReading
             ];
         }
 
-        Answer::upsert($data, ['QuestionNo'], ['Answer', 'ChallengeNo']);
+        Answer::upsert($data, ['QuestionNo'], ['Answer', 'ChallengeNumber']);
     }
 
     public function chunkSize(): int
