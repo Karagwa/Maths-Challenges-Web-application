@@ -170,7 +170,20 @@
     .then(data => {
         console.log(data);
     })
+
 }
+
+
+document.getElementById('challengeForm').addEventListener('submit', function(event) {
+    var openingDate = new Date(document.getElementById('OpeningDate').value);
+    var closingDate = new Date(document.getElementById('ClosingDate').value);
+    
+    if (openingDate >= closingDate) {
+        alert('The opening date should be less than the closing date.');
+        event.preventDefault();
+    }
+});
+
     </script>
 </body>
 </html>
