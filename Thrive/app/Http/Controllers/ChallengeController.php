@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Challenge;
+use App\Models\Mark;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 
 class ChallengeController extends Controller
@@ -35,8 +38,8 @@ class ChallengeController extends Controller
      * @return \Illuminate\Http\Response
      */
     
-public function store(Request $request)
-{
+    public function store(Request $request)
+    {
     $request->validate([
         'ChallengeNumber' => 'required|integer',
         'ChallengeName' => 'required|string',
@@ -61,4 +64,43 @@ public function store(Request $request)
     
         
     
-}}
+    }
+
+    public function showYearlyChallengeResults()
+    {
+        // Get the current year
+        $currentYear = Carbon::now()->year;
+
+        // Fetch closed challenges for the current year
+        $closedChallenges = Challenge::whereYear('ClosingDate', $currentYear)
+            ->where('ClosingDate', '<', Carbon::now())
+            ->pluck('ChallengeNumber');
+
+        // Calculate average marks per school for the closed challenges of the current year
+        $schoolsAvgMarks = Mark::select('regno', DB::raw('AVG(TotalScore) as avg_marks'))
+            ->whereIn('ChallengeNumber', $closedChallenges)
+            ->groupBy('regno')
+            ->with('school')
+            ->get();
+
+        // Sort and rank all schools
+        $rankedSchools = $schoolsAvgMarks->sortByDesc('avg_marks');
+
+        // Get top 10 and bottom 10 schools
+        $top10Schools = $rankedSchools->take(10);
+        $bottom10Schools = $rankedSchools->reverse()->take(10);
+
+        // Calculate worst performing schools for each ended challenge
+        $worstSchoolsPerChallenge = Challenge::whereIn('ChallengeNumber', $closedChallenges)
+            ->with(['marks' => function ($query) {
+                $query->with('school')
+                    ->select('ChallengeNumber', 'regno', DB::raw('AVG(TotalScore) as avg_marks'))
+                    ->groupBy('ChallengeNumber', 'regno')
+                    ->orderBy('avg_marks', 'asc')
+                    ->take(10);
+            }])
+            ->get();
+
+        return view('best_worst_yearly_results', compact('rankedSchools', 'top10Schools', 'bottom10Schools', 'worstSchoolsPerChallenge'));
+    }
+}

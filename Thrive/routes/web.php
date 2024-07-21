@@ -5,6 +5,8 @@ use App\Http\Controllers\SchoolController;
 use App\Http\Controllers\RepresentativeController;
 use App\Http\Controllers\IncompleteChallengeController;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\ChallengeController;
+use App\Http\Controllers\ParticipantController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,6 +45,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/best-students', [ParticipantController::class, 'index']);
+
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
@@ -71,3 +75,5 @@ Route::post('/import', [App\Http\Controllers\QuestionController::class, 'import'
 //answer routes
 Route::get('/answer/upload', [App\Http\Controllers\AnswerController::class, 'index']);
 Route::post('/upload', [App\Http\Controllers\AnswerController::class, 'upload'])->name('upload');
+
+

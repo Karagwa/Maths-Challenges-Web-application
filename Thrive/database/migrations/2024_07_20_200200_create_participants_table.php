@@ -13,18 +13,21 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('totalscore', function (Blueprint $table) {
+        Schema::create('participants', function (Blueprint $table) {
             //$table->id();
-            //$table->timestamps();
+            //$table->timestamps();$table->string('Username');
             $table->string('Username');
-            $table->foreign('Username')->references('Username')->on('participant')->onDelete('cascade');
+            $table->primary('Username');
+            $table->string('Firstname');
+            $table->string('Lastname');
+            $table->string('EmailAddress');
+            $table->date('Date_of_Birth');
             $table->string('regno');
             $table->foreign('regno')->references('regno')->on('schools')->onDelete('cascade');
-            $table->integer('ChallengeNumber');
-            $table->foreign('ChallengeNumber')->references('ChallengeNumber')->on('challenges')->onDelete('cascade');
-            $table->integer('TotalScore');
-            $table->integer('ChallengeCount');
-            
+            //$table->string('image');
+            $table->binary('Image'); // Store image as BLOB
+            $table->timestamps();
+
         });
     }
 
@@ -35,6 +38,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('totalscore');
+        Schema::dropIfExists('participants');
     }
 };

@@ -14,4 +14,9 @@ class Challenge extends Model
     {
         return $this->hasMany(Question::class);
     }
+
+    public function marks()
+    {
+        return $this->hasMany(Mark::class, 'ChallengeNumber', 'ChallengeNumber');
+    }
 }
