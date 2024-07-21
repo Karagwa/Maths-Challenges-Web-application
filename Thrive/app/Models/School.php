@@ -16,7 +16,14 @@ class School extends Model
     {
         return $this->hasMany(Representative::class);
     }
+
+    public function marks()
+    {
+        return $this->hasMany(Mark::class, 'regno', 'regno');
+    }
 }// app/Models/School.php
+
+
 
 
 

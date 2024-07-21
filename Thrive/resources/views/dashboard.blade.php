@@ -1,75 +1,22 @@
-@extends('layouts.app', ['activePage' => 'Analysis', 'title' => 'Thrive Mathematical challenge by Thrive challenges & Fantastic Five', 'navName' => 'Dashboard', 'activeButton' => 'laravel'])
-
+@extends('layouts.app', ['activePage' => 'Analysis', 'title' => 'Thrive Mathematical challenge by Thrive challenges & Fantastic Five', 'navName' => 'Analysis Board', 'activeButton' => 'laravel'])
+<?php 
+$years = ['2019', '2020', '2021', '2022', '2023'];
+$schools = ['School A', 'School B', 'School C', 'School D', 'School E'];
+$rankings = [
+    'School A' => [1, 2, 3, 1, 2],
+    'School B' => [2, 1, 1, 3, 1],
+    'School C' => [3, 3, 2, 2, 4],
+    'School D' => [4, 5, 4, 5, 3],
+    'School E' => [5, 4, 5, 4, 5]
+];
+?>
 @section('content')
     <div class="content">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="card ">
-                        <div class="card-header ">
-                            <h4 class="card-title">{{ __('Email Statistics') }}</h4>
-                            <p class="card-category">{{ __('Last Campaign Performance') }}</p>
-                        </div>
-                        <div class="card-body ">
-                            <div id="chartPreferences" class="ct-chart ct-perfect-fourth"></div>
-                            <div class="legend">
-                                <i class="fa fa-circle text-info"></i> {{ __('Open') }}
-                                <i class="fa fa-circle text-danger"></i> {{ __('Bounce') }}
-                                <i class="fa fa-circle text-warning"></i> {{ __('Unsubscribe') }}
-                            </div>
-                            <hr>
-                            <div class="stats">
-                                <i class="fa fa-clock-o"></i> {{ __('Campaign sent 2 days ago') }}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-8">
-                    <div class="card ">
-                        <div class="card-header ">
-                            <h4 class="card-title">{{ __('Users Behavior') }}</h4>
-                            <p class="card-category">{{ __('24 Hours performance') }}</p>
-                        </div>
-                        <div class="card-body ">
-                            <div id="chartHours" class="ct-chart"></div>
-                        </div>
-                        <div class="card-footer ">
-                            <div class="legend">
-                                <i class="fa fa-circle text-info"></i> {{ __('Open') }}
-                                <i class="fa fa-circle text-danger"></i> {{ __('Click') }}
-                                <i class="fa fa-circle text-warning"></i> {{ __('Click Second Time') }}
-                            </div>
-                            <hr>
-                            <div class="stats">
-                                <i class="fa fa-history"></i> {{ __('Updated 3 minutes ago') }}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="card ">
-                        <div class="card-header ">
-                            <h4 class="card-title">{{ __('2017 Sales') }}</h4>
-                            <p class="card-category">{{ __('All products including Taxes') }}</p>
-                        </div>
-                        <div class="card-body ">
-                            <div id="chartActivity" class="ct-chart"></div>
-                        </div>
-                        <div class="card-footer ">
-                            <div class="legend">
-                                <i class="fa fa-circle text-info"></i> {{ __('Tesla Model S') }}
-                                <i class="fa fa-circle text-danger"></i> {{ __('BMW 5 Series') }}
-                            </div>
-                            <hr>
-                            <div class="stats">
-                                <i class="fa fa-check"></i> {{ __('Data information certified') }}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="container">
+        <h4>A GRAPH SHOWING THE HISTORY RANKINGS OF THE PARTICIPATING SCHOOLS.</h4>
+        <div style="width: 800px;">
+            <canvas id="myChart"></canvas>
+        </div>
+        
                     <h4>List of Students that didn't complete the challenges</h4>
                     <div class="card-body table-full-width table-responsive">
                         <table class="table table-hover" id="tb2">
@@ -84,14 +31,12 @@
                             </tbody>
                         </table>
                     </div>
-                </div>
                 <script>
                     document.addEventListener('DOMContentLoaded', function () {
                         fetchIncomplete();
                     });
                 </script>
-            </div>
-        </div>
+         
     </div>
 @endsection
 
@@ -126,5 +71,55 @@
                 })
                 .catch(error => console.error('Error fetching data:', error));
         }
+        // PHP data arrays to JavaScript
+        const labels = <?php echo json_encode($years); ?>;
+        const schoolNames = <?php echo json_encode($schools); ?>;
+        const rankings = <?php echo json_encode($rankings); ?>;
+        
+        const colors = [
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(255, 159, 64, 0.2)',
+            'rgba(255, 205, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(54, 162, 235, 0.2)'
+        ];
+        
+        const borderColors = [
+            'rgb(255, 99, 132)',
+            'rgb(255, 159, 64)',
+            'rgb(255, 205, 86)',
+            'rgb(75, 192, 192)',
+            'rgb(54, 162, 235)'
+        ];
+        
+        const datasets = schoolNames.map((school, index) => ({
+            label: school,
+            data: rankings[school],
+            backgroundColor: colors[index],
+            borderColor: borderColors[index],
+            borderWidth: 1
+        }));
+        
+        const data = {
+            labels: labels,
+            datasets: datasets
+        };
+        
+        const config = {
+            type: 'bar',
+            data: data,
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        };
+        
+        var myChart = new Chart(
+            document.getElementById('myChart'),
+            config
+        );
     </script>
 @endpush
