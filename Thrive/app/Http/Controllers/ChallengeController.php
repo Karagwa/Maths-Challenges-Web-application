@@ -101,6 +101,6 @@ class ChallengeController extends Controller
             }])
             ->get();
 
-        return view('best_worst_yearly_results', compact('rankedSchools', 'top10Schools', 'bottom10Schools', 'worstSchoolsPerChallenge'));
+        return view('pages.rankings', compact('rankedSchools', 'top10Schools', 'bottom10Schools', 'worstSchoolsPerChallenge'));
     }
 }

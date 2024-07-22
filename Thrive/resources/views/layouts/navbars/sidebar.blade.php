@@ -127,10 +127,10 @@ Tip 2: you can also add an image using data-image tag
                     <p>{{ __("Upload Challenges") }}</p>
                 </a>
             </li>
-            <li class="nav-item @if($activePage == 'icons') active @endif">
-                <a class="nav-link" href="{{route('page.index', 'icons')}}">
-                    <i class="nc-icon nc-atom"></i>
-                    <p>{{ __("Winners") }}</p>
+            <li class="nav-item @if($activePage == 'rankings') active @endif">
+                <a class="nav-link" href="{{route('rankings', 'rankings')}}">
+                <i class="nc-icon nc-bullet-list-67"></i>
+                    <p>{{ __("School Rankings") }}</p>
                 </a>
             </li>
           
