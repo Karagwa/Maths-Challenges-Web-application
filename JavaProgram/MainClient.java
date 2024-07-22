@@ -124,7 +124,7 @@ public class MainClient {
                 
 
 
-                int score = 0;
+                int TotalScore = 0;
                 long totalTime = 300000; // Total time for all questions (e.g., 60000 ms = 60 seconds)
                 int numberOfQuestions = 10; // Adjust this if you change the limit in the SQL query
                 long[] responseTimes = new long[numberOfQuestions];
@@ -138,7 +138,8 @@ public class MainClient {
 
                 List<String> questionsList = new ArrayList<>();
                 List<String> solutionsList = new ArrayList<>();
-                DatabaseConnection.retrieveQuestion(ChallengeNumber, questionsList, solutionsList);
+                List<Integer> questionNumbers = new ArrayList<>();
+                DatabaseConnection.retrieveQuestion(ChallengeNumber, questionsList, solutionsList,questionNumbers);
 
 
                 DisplayTiming timerThread = new DisplayTiming();
@@ -152,32 +153,33 @@ public class MainClient {
                 break;
             }
 
+            int questionNo = questionNumbers.get(i);
             String question = questionsList.get(i);
             String solution = solutionsList.get(i);
 
-            System.out.println("Remaining Questions " + (numberOfQuestions - (i + 1)));
-            System.out.println("\nQuestion " + (i + 1) + ": " + question);
+            System.out.println("\n\nRemaining Questions " + (numberOfQuestions - (i + 1)));
+            System.out.println("Question " + (i + 1) + ": " + question);
 
             long startTime = System.currentTimeMillis();
 
-            System.out.print("Your answer: ");
             String userAnswer = scanner.nextLine();
 
             long endTime = System.currentTimeMillis();
             responseTimes[i] = endTime - startTime;
 
-            int previousScore = score;
-            score = markAnswer(userAnswer, solution, score);
+            int questionScore = markAnswer(userAnswer, solution, TotalScore);
+            TotalScore += questionScore;
 
-            int questionScore = score - previousScore;
-            System.out.println("You scored: " + questionScore + " on this question.");
+            DatabaseConnection.updateQuestionScore(ChallengeNumber, questionNo, questionScore);
+            
         }
 
         timerThread.stopTimer();
-        System.out.println("\nFinal Score: " + score);
+        System.out.println("\nFinal Score: " + TotalScore);
     
 
-
+       
+        DatabaseConnection.updateMarks(ChallengeNumber, TotalScore);
 
 
 
@@ -245,16 +247,16 @@ public class MainClient {
         char[] passwordArray = console.readPassword();
         return new String(passwordArray);
     }
-    public static int markAnswer(String userAnswer, String solution, int score) {
+    public static int markAnswer(String userAnswer, String solution, int marks) {
 
         if (userAnswer.equals(solution)) {
-            score += 10;
+            marks += 10;
         } else if (userAnswer.isEmpty()) {
-            score = score;
+            marks = marks;
         } else {
-            score -= 3;
+            marks -= 3;
         }
-        return score;
+        return marks;
     }
 
 }

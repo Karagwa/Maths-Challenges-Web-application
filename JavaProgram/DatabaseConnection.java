@@ -28,7 +28,8 @@ public class DatabaseConnection {
     private static final String DB_PASSWORD = "yourpassword";
 
     private static Map<String, Integer> challengeCounts = new HashMap<>(); 
-
+    private static String authenticatedUsername;
+    private static String authenticatedRegistrationNumber;
 
 
 public static String authenticateRepresentative(String username, String password) {
@@ -45,6 +46,7 @@ public static String authenticateRepresentative(String username, String password
             if (rs.next()) {
                 System.out.println("User authenticated successfully!");
                 return "1";
+                
             } else {
                 System.out.println("Invalid username or password.");
                 return "0";
@@ -78,6 +80,9 @@ public static String authenticateRepresentative(String username, String password
            if (rs.next()) {
                System.out.println("User authenticated successfully!");
                out.println("1");
+              
+                authenticatedUsername = username;
+                authenticatedRegistrationNumber = registrationNumber;
            } else {
                System.out.println("Invalid username or password.");
                out.println("0");
@@ -371,9 +376,9 @@ public static String authenticateRepresentative(String username, String password
         return false;
     }
 
-    public static void retrieveQuestion(String ChallengeNo, List<String> questionsList, List<String> solutionsList) throws SQLException {
+    public static void retrieveQuestion(String ChallengeNo, List<String> questionsList, List<String> solutionsList,List<Integer> questionNumbers) throws SQLException {
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String sql = "SELECT Questions.Question_text, Solutions.solutions " +
+            String sql = "SELECT questions.questionNo,Questions.Question_text, Solutions.solutions " +
                          "FROM Questions " +
                          "JOIN Solutions ON Questions.QuestionNo = Solutions.QuestionNo " +
                          "WHERE Questions.ChallengeNumber = ? " +
@@ -383,9 +388,11 @@ public static String authenticateRepresentative(String username, String password
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
+                int questionNo = rs.getInt("questionNo");
                 String question = rs.getString("Question_text");
                 String solution = rs.getString("solutions");
 
+                questionNumbers.add(questionNo);
                 questionsList.add(question);
                 solutionsList.add(solution);
             }
@@ -450,23 +457,46 @@ public static String authenticateRepresentative(String username, String password
         System.out.println("Reset all challenge counts to 0");
         
     }
-
-    public static void updateMarks(String challengeNumber, int marks) throws SQLException {
-        Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD); 
-        System.out.println("Connected to the database successfully!");
-
-        
-        
-        String sql ="INSERT INTO TotalMark (ChallengeNumber, Score) VALUES (?, ?) " +
-                    "ON DUPLICATE KEY UPDATE Score = VALUES(Score)";
-
-
-        PreparedStatement pstmt = connection.prepareStatement(sql);
-        pstmt.setString(1, challengeNumber);
-        pstmt.setInt(2, marks);
-        pstmt.executeUpdate();
-        
+    
+    public static void updateQuestionScore(String challengeNumber, int questionNo, int questionScore) throws SQLException {
+        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            String sql = "INSERT INTO QuestionScores (challengeNumber, username, questionNo, questionScore) VALUES (?, ?, ?, ?) " +
+                         "ON DUPLICATE KEY UPDATE questionScore = VALUES(questionScore)";
+            try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+                pstmt.setString(1, challengeNumber);
+                pstmt.setString(2, authenticatedUsername);
+                pstmt.setInt(3, questionNo);
+                pstmt.setInt(4, questionScore);
+                pstmt.executeUpdate();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
+
+    public static void updateMarks(String challengeNumber, int TotalScore) throws SQLException {
+        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            // Get current challenge count
+           // int challengeCount = getChallengeCount(authenticatedUsername, challengeNumber);
+
+            // Increment challenge count
+           // challengeCount++;
+
+            String sql = "INSERT INTO Marks (challengeNumber, username, registrationNumber, TotalScore, challengeCount) VALUES (?, ?, ?, ?, ?) " +
+                         "ON DUPLICATE KEY UPDATE marks = VALUES(marks), challengeCount = VALUES(challengeCount)";
+            try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+                pstmt.setString(1, challengeNumber);
+                pstmt.setString(2, authenticatedUsername);
+                pstmt.setString(3, authenticatedRegistrationNumber);
+                pstmt.setInt(4, TotalScore);
+                //pstmt.setInt(5, challengeCount);
+                pstmt.executeUpdate();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 
    
  
