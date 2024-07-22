@@ -48,7 +48,7 @@ Route::get('/', function () {
 });
 
 //best 2 participants routes
-Route::get('/best-students', [ParticipantController::class, 'index']);
+Route::get('/best-students', [ParticipantController::class, 'index'])->name("best_two");
 
 
 

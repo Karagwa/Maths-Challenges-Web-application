@@ -11,8 +11,8 @@
         <div class="collapse navbar-collapse justify-content-end" id="navbar">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a href="{{ route('dashboard') }}" class="nav-link">
-                        <i class="nc-icon nc-chart-pie-35"></i> {{ __('Analytics') }}
+                    <a href="{{ route('best_two') }}" class="nav-link">
+                    <i class="nc-icon nc-atom"></i>{{ __('Best Two') }}
                     </a>
                 </li>
                 <li class="nav-item @if($activePage == 'register') active @endif">

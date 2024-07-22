@@ -97,7 +97,7 @@ class ChallengeController extends Controller
                     ->select('ChallengeNumber', 'regno', DB::raw('AVG(TotalScore) as avg_marks'))
                     ->groupBy('ChallengeNumber', 'regno')
                     ->orderBy('avg_marks', 'asc')
-                    ->take(10);
+                    ->take(5);
             }])
             ->get();
 
