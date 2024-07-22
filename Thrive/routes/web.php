@@ -7,6 +7,7 @@ use App\Http\Controllers\IncompleteChallengeController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ChallengeController;
 use App\Http\Controllers\ParticipantController;
+use App\Http\Controllers\RankingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,6 +35,7 @@ Route::get('/fetch_Incomplete_challenges', [IncompleteChallengeController::class
 
 //school rankings routes
 Route::get('/rankings', [ChallengeController::class, 'showYearlyChallengeResults'])->name('rankings');
+Route::get('/fetch_rankings', [RankingController::class, 'fetchRankings']);
 //Route::resource('schools', SchoolController::class);
 //Route::resource('representatives', RepresentativeController::class);
 
