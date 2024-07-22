@@ -146,6 +146,8 @@ public class MainClient {
         timerThread.startTimer(totalTime);
 
         Scanner scanner = new Scanner(System.in);
+        long challengeStartTime = System.currentTimeMillis();
+
 
         for (int i = 0; i < questionsList.size(); i++) {
             if (timerThread.getRemainingTime() <= 0) {
@@ -175,7 +177,11 @@ public class MainClient {
         }
 
         timerThread.stopTimer();
+        long challengeEndTime = System.currentTimeMillis();
+        long totalTimeTaken = challengeEndTime - challengeStartTime;
         System.out.println("\nFinal Score: " + TotalScore);
+        CreatePDF.reportpdf(responseTimes, questionsList, solutionsList, TotalScore, totalTimeTaken);
+        
     
 
        
