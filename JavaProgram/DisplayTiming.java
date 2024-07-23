@@ -33,7 +33,7 @@ public class DisplayTiming extends Thread {
             long remainingSeconds = remainingTime / 1000; // Convert milliseconds to seconds
             System.out.print("\rRemaining time: " + remainingSeconds + " seconds    ");
             try {
-                Thread.sleep(2000); // Update every 2 seconds
+                Thread.sleep(5000); // Update every 5 seconds
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }

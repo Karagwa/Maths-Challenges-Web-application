@@ -125,7 +125,7 @@ public class MainClient {
 
 
                 int TotalScore = 0;
-                long totalTime = 300000; // Total time for all questions (e.g., 60000 ms = 60 seconds)
+                long totalTime = 60000; // Total time for all questions (e.g., 60000 ms = 60 seconds)
                 int numberOfQuestions = 10; // Adjust this if you change the limit in the SQL query
                 long[] responseTimes = new long[numberOfQuestions];
 
@@ -168,12 +168,13 @@ public class MainClient {
 
             long endTime = System.currentTimeMillis();
             responseTimes[i] = endTime - startTime;
-
-            int questionScore = markAnswer(userAnswer, solution, TotalScore);
-            TotalScore += questionScore;
-
-            DatabaseConnection.updateQuestionScore(ChallengeNumber, questionNo, questionScore);
+            int previousScore = TotalScore;
+            TotalScore = markAnswer(userAnswer, solution, TotalScore);
+            int questionScore = TotalScore-previousScore;
             
+
+           DatabaseConnection.updateQuestionScore(ChallengeNumber, questionNo, questionScore);
+           DatabaseConnection.updateMarks(ChallengeNumber, TotalScore);
         }
 
         timerThread.stopTimer();
@@ -185,7 +186,7 @@ public class MainClient {
     
 
        
-        DatabaseConnection.updateMarks(ChallengeNumber, TotalScore);
+       
 
 
 
