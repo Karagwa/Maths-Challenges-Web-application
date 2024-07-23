@@ -4,11 +4,12 @@ import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
 
 import java.io.FileOutputStream;
+import java.sql.SQLException;
 import java.util.List;
 
 
 public class CreatePDF {
-    public static void reportpdf(long[] responsetime, List<String> questionsList, List<String> solutionlist, int score, long totaltime) {
+    public static void reportpdf(long[] responsetime, List<String> questionsList, List<String> solutionlist, int score, long totaltime, String username,List<String> userAnswers) throws SQLException {
         // Step 1: Create a Document instance
         Document document = new Document();
         
@@ -24,18 +25,28 @@ public class CreatePDF {
             document.add(new Paragraph(" "));
             
             document.add(new Paragraph("Score: " + score));
-            document.add(new Paragraph("Total Time: " + totaltime + " seconds"));
+            document.add(new Paragraph("Total Time: " + totaltime/1000 + " seconds"));
             document.add(new Paragraph(" "));
             
             for (int i = 0; i < questionsList.size(); i++) {
-                document.add(new Paragraph("Question " + (i + 1) + ": " + questionsList.get(i)));
-                document.add(new Paragraph("Solution: " + solutionlist.get(i)));
-                document.add(new Paragraph("Response Time: " + responsetime[i]/1000 + " seconds"));
-                document.add(new Paragraph(" "));
+                if(solutionlist.get(i)==userAnswers.get(i)){
+                    document.add(new Paragraph("Question " + (i + 1) + ": " + questionsList.get(i)));
+                    document.add(new Paragraph("You got the correct answer"));
+                    document.add(new Paragraph("Your Answer: "+ userAnswers.get(i)));
+                    document.add(new Paragraph("Response Time: " + responsetime[i]/1000 + " seconds"));
+                    document.add(new Paragraph(" "));
+                }else{
+                    document.add(new Paragraph("Question " + (i + 1) + ": " + questionsList.get(i)));
+                    document.add(new Paragraph("You fialed this one:"));
+                    document.add(new Paragraph("Your Answer: "+ userAnswers.get(i)));
+                    document.add(new Paragraph("The correct solution is : " + solutionlist.get(i)));
+                    document.add(new Paragraph("Response Time: " + responsetime[i]/1000 + " seconds"));
+                    document.add(new Paragraph(" "));
+                }
             }
             
             // Optional: Add some alignment to center
-            Paragraph footer = new Paragraph("End of Report");
+            Paragraph footer = new Paragraph("End of Report\n Thanks for Attending");
             footer.setAlignment(Element.ALIGN_CENTER);
             document.add(footer);
             
@@ -47,7 +58,7 @@ public class CreatePDF {
         }
         
         System.out.println("PDF report created successfully!");
-        String participant_Email = DatabaseConnection.checkApplicantEmail();
+        String participant_Email = DatabaseConnection.checkApplicantEmail(username);
         PDFEmailSender.sendEmailWithAttachment(participant_Email, "The report of the Thrive Challenge", "Thank You for attempting the challenge. Here is the report of the challenge.","ChallengeReport1.pdf");
     }
 
