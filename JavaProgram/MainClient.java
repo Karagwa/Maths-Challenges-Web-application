@@ -221,11 +221,16 @@ public class MainClient {
 
                 return null;
                 
-            } else if ("0".equals(auth_response)) {
+            } else if ("2".equals(auth_response)) {
+                System.out.println("Sadly,you were rejected :(");
+                return null;
+            } else if("0".equals(auth_response)) {
                 System.out.println("Invalid username or password\nTry again");
                 return null;
-            } else {
-                System.out.println(auth_response); 
+
+                
+            }else{
+                System.out.println(auth_response);
                 return null;
             }
             
