@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link ref=Thrive\public\light-bootstrap\css\light-bootstrap-dashboard.css>
     <title>CHALLENGE UPLOAD</title>
     <style>
         #challengeForm {
@@ -63,7 +64,7 @@
                             <br>
                             Number of questions<input type="number" name="NumberOfPresentedQuestions" id="NumberOfPresentedQuestions" autocomplete="off">
                             <br>
-                            <button type="submit">Upload Challenge Details</button>
+                            <button type="submit" id="submitButton">Upload Challenge Details</button>
  
                            <div class="card-body table-full-width table-responsive">
                             <table class="table table-hover table-striped" id="tb1">
@@ -183,35 +184,21 @@
     
 @endsection
 <script>
-    function addChallenge() {
-    const formData = new FormData(document.forms.sample);
-    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-    fetch('/uploadChallenges', {
-        method: 'POST',
-        headers: {
-            'X-CSRF-TOKEN': csrfToken
-        },
-        body: formData
-    })
-    .then(response => response.text())
-    
-    .then(data => {
-        console.log(data);
-    })
+document.addEventListener('DOMContentLoaded', function() {
+    const submitButton = document.getElementById('submitButton');
 
-}
-
-
-document.getElementById('challengeForm').addEventListener('submit', function(event) {
+  submitButton.addEventListener('click', function(event) {
     var openingDate = new Date(document.getElementById('OpeningDate').value);
     var closingDate = new Date(document.getElementById('ClosingDate').value);
 
     console.log('Opening Date:', openingDate);
     console.log('Closing Date:', closingDate);
-    if (openingDate >= closingDate) {
-        alert('The opening date should be less than the closing date.');
-        event.preventDefault();
+    if (openingDate > closingDate) {
+      alert('The opening date should be before the closing date.');
+      event.preventDefault(); // Prevent form submission if validation fails
     }
+  });
+
 });
 
     </script>
