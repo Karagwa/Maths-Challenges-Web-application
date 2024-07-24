@@ -110,6 +110,34 @@ public static String authenticateRepresentative(String username, String password
 
 
    }
+
+   public static boolean isUserRejected(String username, String registrationNumber) throws SQLException {
+        boolean isRejected = false;
+
+        //Setting up the connection to the database
+        Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD); 
+        System.out.println("Connected to the database successfully!");
+
+        // Check if the user is in the rejected table
+        String sqlRejected = "SELECT * FROM rejected WHERE Username = ? AND School_Registration_Number = ?";
+        PreparedStatement pstmtRejected = connection.prepareStatement(sqlRejected);
+        pstmtRejected.setString(1, username);
+        pstmtRejected.setString(2, registrationNumber);
+        ResultSet rsRejected = pstmtRejected.executeQuery();
+
+        if (rsRejected.next()) {
+            isRejected = true;
+            
+        } 
+        rsRejected.close();
+        pstmtRejected.close();
+        connection.close();
+
+        return isRejected;
+
+    }
+
+    
    public static String checkRepresentativeEmail(String registrationNumber){
         try {
 

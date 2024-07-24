@@ -1,4 +1,5 @@
 import java.io.*;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -76,7 +77,7 @@ public class Applicant {
 
     
     //This is the method used to create object of an applicant to store the applicant detail into the file
-    public static void newApplicant(BufferedReader in, PrintWriter out) throws IOException{
+    public static void newApplicant(BufferedReader in, PrintWriter out) throws IOException,SQLException{
 
         out.println("Welcome To Thrive Math Competition");
         out.println("To Register, enter the following command, and mind to skip a space where indicated:");
@@ -103,19 +104,31 @@ public class Applicant {
                 String registrationNumber = responses[5];
                 String imagePath = responses[6];
 
-                try {
-                    Applicant applicant = new Applicant(username, firstname, lastname, email, dateOfBirth, registrationNumber, imagePath);
-                    out.println("Applicant registered successfully\nPlease wait to be verified by your School Representative\nYou will recieve an email when verified\nThank you\n:)");
-                    Applicant.fileHandler(applicant);
-                    // Add logic to save the applicant to the database
-                } catch (IOException e) {
-                    out.println("Failed to save image as BLOB.");
-                    e.printStackTrace();
+                // Check if the user is rejected
+                boolean isRejected = DatabaseConnection.isUserRejected(username, registrationNumber);
+
+                if (isRejected) {
+                    out.println("You have been rejected before  and cannot register again with this same school.");
                     
-                } catch (DateTimeParseException e) {
-                    out.println("Failed to parse date of birth. Please try again and write a correct date");
-                    e.printStackTrace();
+                } else {
+                    try {
+                        Applicant applicant = new Applicant(username, firstname, lastname, email, dateOfBirth, registrationNumber, imagePath);
+                        out.println("Applicant registered successfully\nPlease wait to be verified by your School Representative\nYou will recieve an email when verified\nThank you\n:)");
+                        Applicant.fileHandler(applicant);
+                        // Add logic to save the applicant to the database
+                    } catch (IOException e) {
+                        out.println("Failed to save image as BLOB.");
+                        e.printStackTrace();
+                        
+                    } catch (DateTimeParseException e) {
+                        out.println("Failed to parse date of birth. Please try again and write a correct date");
+                        e.printStackTrace();
+                    }
+                    
                 }
+
+
+                
                 
             } else {
                 out.println("Invalid command format. Please ensure you provide all required fields.");

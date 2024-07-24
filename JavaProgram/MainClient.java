@@ -244,10 +244,15 @@ public class MainClient {
 
             String registrationResponse;
             while ((registrationResponse = in.readLine()) != null) {
-                System.out.println(registrationResponse);
+                //System.out.println(registrationResponse);
                 if (registrationResponse.startsWith("Applicant registered successfully")) {
                     System.out.println("You have registered successfully.\nPlease wait to be confirmed by your school representative\nThank you :)");
                     return null;
+                    
+                }else if(registrationResponse.equals("You have been rejected before  and cannot register again with this same school.")){
+                    System.out.println(registrationResponse);
+                    return null;
+
                 }else{
                     System.out.println(registrationResponse);
                     System.out.println("Please try again:");
