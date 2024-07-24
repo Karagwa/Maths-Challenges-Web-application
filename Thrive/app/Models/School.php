@@ -9,8 +9,8 @@ class School extends Model
 {
     use HasFactory;
 
-    
-    protected $fillable = ['name', 'district', 'regno'];
+    protected $table = 'schools';
+    protected $fillable = ['id','name', 'district', 'regno'];
 
     public function representatives()
     {

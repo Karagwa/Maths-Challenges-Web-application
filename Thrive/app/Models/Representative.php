@@ -9,7 +9,7 @@ class Representative extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['username','name', 'email','regno','password'];
+    protected $fillable = ['id','username','name', 'email','regno','password'];
 
     public function school()
     {

@@ -15,14 +15,14 @@ return new class extends Migration
     public function up()
     {
         Schema::create('representatives', function (Blueprint $table) {
-            //$table->id();
+            $table->id();
             $table->string('username');
             $table->string('name');
             $table->string('email');
-            $table->primary('email');
+            
             $table->string('regno');
             $table->string('password');
-            $table->foreign('regno')->references('regno')->on('schools')->onDelete('cascade');
+            //$table->foreign('regno')->references('regno')->on('schools')->onDelete('cascade');
             $table->timestamps();
             
         });

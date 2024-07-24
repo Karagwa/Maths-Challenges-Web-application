@@ -134,7 +134,7 @@
                         <form method="POST" name="sample2">
                         @csrf
                             <br>
-                            ID <input type="number" name="id" id="id" autocomplete="off">
+                            <input type="hidden" name="id" id="id" autocomplete="off">
                             Username <input type="text" name="username" id="username" autocomplete="on">
                             Name <input type="text" name="name2" id="name2" autocomplete="on">
                             Email <input type="email" name="email" id="email" autocomplete="on">
@@ -145,12 +145,15 @@
                         <div class="card-body table-full-width table-responsive">
                             <table class="table table-hover" id="tb2">
                                 <thead>
-                                    <th>ID</th>
+                                    <tr>
+                                    <th>#</th>
                                     <th>Username</th>
                                     <th>Name of the representative</th>
                                     <th>Email of the representative</th>
                                     <th>Regno</th>
                                     <th>Password</th>
+                                    <th>Actions</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
                                 </tbody>
@@ -171,32 +174,36 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
-function fetchReps() {
-    fetch('/fetch_representatives')
-        .then(response => response.text())
-        .then(data => {
-            const rows = data.split('\n');
-            const tbody = document.getElementById('tb2').getElementsByTagName('tbody')[0];
-            tbody.innerHTML = '';
-            rows.forEach(row => {
-                const columns = row.split('|');
-                if (columns.length === 5) {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>${columns[0]}</td>
-                        <td>${columns[1]}</td>
-                        <td>${columns[2]}</td>
-                        <td>${columns[3]}</td>
-                        <td>${columns[4]}</td>
-                        
-                        <td><button onclick="removeRow(${columns[0]}, 'representative')">Delete</button></td>
-                    `;
-                    tbody.appendChild(tr);
-                }
-            });
-        })
-        .catch(error => console.error('Error fetching data:', error));
-}
+f function fetchReps() {
+        fetch('/fetch_representatives')
+            .then(response => response.text())
+            .then(data => {
+                const rows = data.split('\n');
+                const tbody = document.getElementById('tb2').getElementsByTagName('tbody')[0];
+                tbody.innerHTML = '';
+                rows.forEach((row, index) => {
+                    const columns = row.split('|');
+                    if (columns.length === 6) {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${index + 1}</td>
+                            <td>${columns[1]}</td>
+                            <td>${columns[2]}</td>
+                            <td>${columns[3]}</td>
+                            <td>${columns[4]}</td>
+                            <td>${columns[5]}</td>
+                            <td>
+                                <button class="btn btn-info btn-sm" onclick="editRep('${columns[0]}')"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button>
+                                <button class="btn btn-danger btn-sm" onclick="deleteRep('${columns[0]}')"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+                            </td>
+                        `;
+                        tbody.appendChild(tr);
+                    }
+                });
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    }
+
 
 
 function addRep() {
@@ -223,25 +230,38 @@ function addRep() {
     .catch(error => console.error('Error adding representative:', error));
 }
 
-function removeRow(id, type) {
+function editRep(id) {
+        window.location.href = `/representative/${id}/edit`;
+    }
+
+    function deleteRep(id) {
     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-    fetch(`/representatives/${id}`, {
-        method: 'DELETE',
-        headers: {
-            'X-CSRF-TOKEN': csrfToken
-        }
-    })
-    .then(response => response.text())
-    .then(data => {
-        const [status, message] = data.split('|');
-        if (status === 'success') {
-            fetchReps();
-        } else {
-            alert(message);
-        }
-    })
-    .catch(error => console.error('Error deleting data:', error));
+    if (confirm('Are you sure you want to delete this representative?')) {
+        fetch(`/representative/${encodeURIComponent(id)}`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.text();
+            }
+            throw new Error('Network response was not ok.');
+        })
+        .then(data => {
+            if (data.includes('success')) {
+                fetchReps();
+            } else {
+                alert('Failed to delete representative');
+            }
+        })
+        .catch(error => {
+            console.error('Error deleting representative:', error);
+            alert('Failed to delete representative: ' + error.message);
+        });
+    }
 }
 
 </script>

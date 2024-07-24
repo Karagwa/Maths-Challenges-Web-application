@@ -135,7 +135,7 @@
                         @csrf    
 
                             <br>
-                            <input type="number" name="id" id="id" autocomplete="off" placeholder="ID"><br>
+                            <input type="hidden" name="id" id="id" autocomplete="off"><br>
                             <input type="text" name="name" id="name" autocomplete="name" placeholder="Name"><br>
                             <input type="text" name="district" id="district" autocomplete="address-level2" placeholder="District"><br>
                             <input type="text" name="regno" id="regno" autocomplete="off" placeholder="Registration Number"> <br>
@@ -144,13 +144,14 @@
                             <div class="card-body table-full-width table-responsive">
                                 <table class="table table-hover table-striped" id="tb1">
                                     <thead>
-                                       
-                                        <th>ID</th>
+                                        <tr>
                                         
+                                        <th>#</th>
                                         <th>Name</th>
                                         <th>District</th>
                                         <th>School Registration Number</th>
-                                        
+                                        <th>Actions</th>
+                                        </tr>
                                     </thead>
                                     <tbody>
                           
@@ -180,17 +181,20 @@ function fetchSchools() {
             const rows = data.split('\n');
             const tbody = document.getElementById('tb1').getElementsByTagName('tbody')[0];
             tbody.innerHTML = '';
-            rows.forEach(row => {
-                const columns = row.split('|');
-                if (columns.length === 4) {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>${columns[0]}</td>
+            rows.forEach((row, index) => {
+                    const columns = row.split('|');
+                    if (columns.length === 4) {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${index + 1}</td>
                         <td>${columns[1]}</td>
                         <td>${columns[2]}</td>
                         <td>${columns[3]}</td>
                         
-                        <td><button onclick="removeRow(${columns[0]}, 'school')">Delete</button></td>
+                        <td>
+                                <button class="btn btn-info btn-sm" onclick="editSchool('${columns[0]}')"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button>
+                                <button class="btn btn-danger btn-sm" onclick="deleteSchool('${columns[0]}')"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+                            </td>>
                     `;
                     tbody.appendChild(tr);
                 }
@@ -222,27 +226,36 @@ function addSchool() {
     .catch(error => console.error('Fetch schools error:', error));
 }
 
-function removeSchool(id) {
-    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+function editSchool(id) {
+        window.location.href = `/school/${id}/edit`;
+    }
+function deleteSchool(id) {
+        console.log("Deleting school with regno:", id);  
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-    fetch(`/schools/${id}`, {
-        method: 'DELETE',
-        headers: {
-            'X-CSRF-TOKEN': csrfToken
+        if (confirm('Are you sure you want to delete this school?')) {
+            fetch(`/school/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.text();
+                }
+                throw new Error('Network response was not ok.');
+            })
+            .then(data => {
+                if (data.includes('success')) {
+                    fetchSchools();
+                } else {
+                    alert('Failed to delete school');
+                }
+            })
+            .catch(error => console.error('Error deleting school:', error));
         }
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.text();
-    })
-    .then(data => {
-        // Handle success or error response
-    })
-    .catch(error => console.error('Error deleting school:', error));
-}
-
+    }
 
 </script>
 </body>

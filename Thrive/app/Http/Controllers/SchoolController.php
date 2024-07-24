@@ -6,6 +6,19 @@ use App\Models\School;
 
 class SchoolController extends Controller
 {
+
+
+   public function index()
+   {
+    
+       try {
+           $schools = School::all();
+           return view('pages.table', compact('schools'));
+       } catch (\Exception $e) {
+           return response()->json(['error' => 'Failed to fetch schools: ' . $e->getMessage()], 500);
+       }
+   
+   }
     public function fetchSchools()
     {
         $schools = School::all();
@@ -31,17 +44,43 @@ class SchoolController extends Controller
         return response("success|School added successfully", 200)->header('Content-Type', 'text/plain');
     }
 
-    
-    public function delete($id)
+    public function edit($id)
     {
-     try {
-        $school = School::findOrFail($id);
-        $school->delete();
-
-        return response("success|School deleted successfully", 200)->header('Content-Type', 'text/plain');
-    } catch (\Exception $e) {
-        return response("error|Failed to delete school: " . $e->getMessage(), 500)->header('Content-Type', 'text/plain');
+        $school = School::find($id); // Use find to get the school by its primary key
+        if (!$school) {
+            return redirect()->route('school.index')->with('error', 'School not found');
+        }
+        return view('pages.editing', compact('school')); // Use compact to pass the school variable
     }
+    
+    public function update(Request $request, $id)
+    {
+        try {
+            $school = School::find($id);
+            if (!$school) {
+                return redirect()->route('school.index')->with('error', 'School not found');
+            }
+    
+            $school->update($request->all());
+    
+            return redirect()->route('school.index')->with('success', 'School updated successfully');
+        } catch (\Exception $e) {
+            return redirect()->route('school.index')->with('error', 'Failed to update school: ' . $e->getMessage());
+        }
+    }
+
+    public function destroy($id)
+    {
+        try {
+            $school = School::find($id);
+            if (!$school) {
+                return redirect()->route('school.index')->with('error', 'School not found');
+            }
+            $school->delete();
+            return redirect()->route('school.index')->with('success', 'School deleted successfully');
+        } catch (\Exception $e) {
+            return redirect()->route('school.index')->with('error', 'Failed to delete school: ' . $e->getMessage());
+        }
     }
 }
 
