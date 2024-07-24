@@ -170,7 +170,7 @@
                         </a>
                     </li>
                     <li class="nav-item ">
-                        <a class="nav-link" href="{{route('page.index', 'icons')}}">
+                        <a class="nav-link" href="{{route('page.index', 'rankings')}}">
                             <i class="nc-icon nc-atom"></i>
                             <p>{{ __("Icons") }}</p>
                         </a>

@@ -30,9 +30,10 @@ public class DisplayTiming extends Thread {
         while (running.get()) {
             elapsedTime = System.currentTimeMillis() - startTime;
             long remainingTime = totalTime - elapsedTime;
-            System.out.print("\rRemaining time: " + remainingTime + " ms    ");
+            long remainingSeconds = remainingTime / 1000; // Convert milliseconds to seconds
+            System.out.print("\rRemaining time: " + remainingSeconds + " seconds    ");
             try {
-                Thread.sleep(100); // Update every 100 ms
+                Thread.sleep(5000); // Update every 5 seconds
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
@@ -40,4 +41,3 @@ public class DisplayTiming extends Thread {
         System.out.println(); // Move to the next line after stopping
     }
 }
-

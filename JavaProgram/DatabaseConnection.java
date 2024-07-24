@@ -28,7 +28,8 @@ public class DatabaseConnection {
     private static final String DB_PASSWORD = "yourpassword";
 
     private static Map<String, Integer> challengeCounts = new HashMap<>(); 
-
+    public static String authenticatedUsername;
+    public static String authenticatedRegistrationNumber;
 
 
 public static String authenticateRepresentative(String username, String password) {
@@ -45,6 +46,7 @@ public static String authenticateRepresentative(String username, String password
             if (rs.next()) {
                 System.out.println("User authenticated successfully!");
                 return "1";
+                
             } else {
                 System.out.println("Invalid username or password.");
                 return "0";
@@ -78,9 +80,26 @@ public static String authenticateRepresentative(String username, String password
            if (rs.next()) {
                System.out.println("User authenticated successfully!");
                out.println("1");
+              
+                DatabaseConnection.authenticatedUsername = username;
+                DatabaseConnection.authenticatedRegistrationNumber = registrationNumber;
            } else {
-               System.out.println("Invalid username or password.");
-               out.println("0");
+
+                String sqlRejected = "SELECT * FROM rejected WHERE Username = ? AND School_Registration_Number = ?";
+                PreparedStatement pstmtRejected = connection.prepareStatement(sqlRejected);
+                pstmtRejected.setString(1, username);
+                pstmtRejected.setString(2, registrationNumber);
+                ResultSet rsRejected = pstmtRejected.executeQuery();
+
+                if (rsRejected.next()) {
+                    System.out.println("User is in the rejected table.");
+                    out.println("2");
+                } else {
+                    System.out.println("Invalid username or registration number.");
+                    out.println("0");
+                    
+                }
+
            }
 
 
@@ -371,9 +390,9 @@ public static String authenticateRepresentative(String username, String password
         return false;
     }
 
-    public static void retrieveQuestion(String ChallengeNo, List<String> questionsList, List<String> solutionsList) throws SQLException {
+    public static void retrieveQuestion(String ChallengeNo, List<String> questionsList, List<String> solutionsList,List<Integer> questionNumbers) throws SQLException {
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String sql = "SELECT Questions.Question_text, Solutions.solutions " +
+            String sql = "SELECT Questions.QuestionNo,Questions.Question_text, Solutions.solutions " +
                          "FROM Questions " +
                          "JOIN Solutions ON Questions.QuestionNo = Solutions.QuestionNo " +
                          "WHERE Questions.ChallengeNumber = ? " +
@@ -383,9 +402,11 @@ public static String authenticateRepresentative(String username, String password
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
+                int questionNo = rs.getInt("QuestionNo");
                 String question = rs.getString("Question_text");
                 String solution = rs.getString("solutions");
 
+                questionNumbers.add(questionNo);
                 questionsList.add(question);
                 solutionsList.add(solution);
             }
@@ -450,23 +471,141 @@ public static String authenticateRepresentative(String username, String password
         System.out.println("Reset all challenge counts to 0");
         
     }
+    
+    public static void updateQuestionScore(String challengeNumber, int questionNo, int questionScore) throws SQLException {
+        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            String sql = "INSERT INTO QuestionScores (challengeNumber, questionNo, questionScore) VALUES (?, ?, ?) " +
+                         "ON DUPLICATE KEY UPDATE questionScore = VALUES(questionScore)";
+            try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+                pstmt.setString(1, challengeNumber);
+                
+                pstmt.setInt(2, questionNo);
+                pstmt.setInt(3, questionScore);
+                pstmt.executeUpdate();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
-    public static void updateMarks(String challengeNumber, int marks) throws SQLException {
+    public static void updateMarks(String challengeNumber, int Marks) throws SQLException {
+        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            // Get current challenge count
+           // int challengeCount = getChallengeCount(authenticatedUsername, challengeNumber);
+
+            // Increment challenge count
+           // challengeCount++;
+
+            String sql = "INSERT INTO TotalMarks (challengeNumber, Marks) VALUES (?, ?) " +
+                         "ON DUPLICATE KEY UPDATE marks = VALUES(marks)";
+            try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+                pstmt.setString(1, challengeNumber);
+                
+                
+                pstmt.setInt(2, Marks);
+                //pstmt.setInt(5, challengeCount);
+                pstmt.executeUpdate();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static String checkApplicantEmail(String username) throws SQLException {
+        try {
+
+
+        //Setting up the connection to the database
         Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD); 
         System.out.println("Connected to the database successfully!");
-
         
-        
-        String sql ="INSERT INTO TotalMark (ChallengeNumber, Score) VALUES (?, ?) " +
-                    "ON DUPLICATE KEY UPDATE Score = VALUES(Score)";
 
+        //Setting up my object to send and excute the sql statements
+        //i will use preparedStatements to prevent sql injection
 
+        String sql = "SELECT EmailAddress FROM participant WHERE Username = ?";
         PreparedStatement pstmt = connection.prepareStatement(sql);
-        pstmt.setString(1, challengeNumber);
-        pstmt.setInt(2, marks);
-        pstmt.executeUpdate();
+        pstmt.setString(1, username);
+        ResultSet rs = pstmt.executeQuery();
+
+            // Process the results
+        rs.next();
+        String email = rs.getString("EmailAddress");
+
+        return email;
+
+
         
+        } catch (SQLException e) {
+        e.printStackTrace();
+
+        return null;
+        }
+
     }
+
+
+
+    //  Fetching user information from the database using the username ast the parameter
+
+
+    public static List<String> getUserInfo(String username) throws SQLException {
+        try {
+            List<String> userInfo = new ArrayList<>();
+
+
+        //Setting up the connection to the database
+        Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD); 
+        System.out.println("Connected to the database successfully!");
+        
+
+        //Setting up my object to send and excute the sql statements
+        //i will use preparedStatements to prevent sql injection
+
+        String sql = "SELECT username,firstname,last FROM participant WHERE Username = ?";
+        PreparedStatement pstmt = connection.prepareStatement(sql);
+        pstmt.setString(1, username);
+        ResultSet resultSet = pstmt.executeQuery();
+
+            // Process the results
+            if (resultSet.next()) {
+                userInfo.add(resultSet.getString("username"));
+                userInfo.add(resultSet.getString("firstname"));
+                userInfo.add(resultSet.getString("lastname"));
+            }
+            return userInfo;
+       
+
+
+        
+        } catch (SQLException e) {
+        e.printStackTrace();
+        return null;
+
+        
+        }
+        
+
+    }
+
+    //this is to insert into the incomplete challenges table
+
+    public static void updateInChallenge(String username, String firstName, String lastName) throws SQLException {
+        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+     
+            String sql = "INSERT INTO incomplete_challenges (username, firstname, lastname) VALUES (?, ?, ?)";
+            try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+                pstmt.setString(1, username);
+                pstmt.setString(2, firstName);
+                pstmt.setString(3, lastName);
+
+                pstmt.executeUpdate();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 
    
  

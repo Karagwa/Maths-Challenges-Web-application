@@ -7,6 +7,7 @@ use App\Http\Controllers\IncompleteChallengeController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ChallengeController;
 use App\Http\Controllers\ParticipantController;
+use App\Http\Controllers\RankingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,6 +33,9 @@ Route::delete('/representatives/{id}', [RepresentativeController::class, 'destro
 Route::get('IncompleteChallenges', [IncompleteChallengeController::class,'index'])->name('IncompleteChallenges');
 Route::get('/fetch_Incomplete_challenges', [IncompleteChallengeController::class, 'fetchIncompleteChallenges'])-> name('fetch_Incomplete_challenges');
 
+//school rankings routes
+Route::get('/rankings', [ChallengeController::class, 'showYearlyChallengeResults'])->name('rankings');
+Route::get('/fetch_rankings', [RankingController::class, 'fetchRankings']);
 //Route::resource('schools', SchoolController::class);
 //Route::resource('representatives', RepresentativeController::class);
 
@@ -45,7 +49,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/best-students', [ParticipantController::class, 'index']);
+//best 2 participants routes
+Route::get('/best-students', [ParticipantController::class, 'index'])->name("best_two");
+
+
 
 Auth::routes();
 
@@ -60,6 +67,7 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::patch('profile', ['as' => 'profile.update', 'uses' => 'App\Http\Controllers\ProfileController@update']);
 	Route::patch('profile/password', ['as' => 'profile.password', 'uses' => 'App\Http\Controllers\ProfileController@password']);
 });
+
 
 Route::group(['middleware' => 'auth'], function () {
 	Route::get('{page}', ['as' => 'page.index', 'uses' => 'App\Http\Controllers\PageController@index']);
@@ -77,5 +85,3 @@ Route::post('/import', [App\Http\Controllers\QuestionController::class, 'import'
 //answer routes
 Route::get('/answer/upload', [App\Http\Controllers\AnswerController::class, 'index']);
 Route::post('/upload', [App\Http\Controllers\AnswerController::class, 'upload'])->name('upload');
-
-

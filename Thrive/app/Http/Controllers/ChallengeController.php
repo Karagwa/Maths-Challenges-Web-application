@@ -97,10 +97,10 @@ class ChallengeController extends Controller
                     ->select('ChallengeNumber', 'regno', DB::raw('AVG(TotalScore) as avg_marks'))
                     ->groupBy('ChallengeNumber', 'regno')
                     ->orderBy('avg_marks', 'asc')
-                    ->take(10);
+                    ->take(5);
             }])
             ->get();
 
-        return view('best_worst_yearly_results', compact('rankedSchools', 'top10Schools', 'bottom10Schools', 'worstSchoolsPerChallenge'));
+        return view('pages.rankings', compact('rankedSchools', 'top10Schools', 'bottom10Schools', 'worstSchoolsPerChallenge'));
     }
 }
