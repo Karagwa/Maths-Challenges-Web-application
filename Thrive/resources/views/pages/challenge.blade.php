@@ -6,7 +6,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>CHALLENGE UPLOAD</title>
-    <!-- Your other head elements -->
+    <style>
+        #challengeForm {
+            width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        #challengeForm input[type="number"],
+        #challengeForm input[type="text"],
+        #challengeForm input[type="date"] {
+            display: block;
+            margin: 5px auto;
+        }
+        #ChallengeNumber, #ChallengeDuration, #NumberOfPresentedQuestions, #ChallengeName, #OpeningDate, #ClosingDate {
+            width: 50%; 
+        }
+        
+        
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+    </style>
+    
 </head>
 <body>
 @section('content')
@@ -16,25 +44,25 @@
                 <div class="col-md-12">
                     <div class="card strpied-tabled-with-hover">
                         <div class="card-header ">
-                            <h4 class="card-title">UPLOAD CHALLENGES</h4>
-                            <p class="card-category">Please enter the challenge information</p>
+                            <h3 class="card-title" style="text-align:center; padding-top:50px">UPLOAD CHALLENGES</h3>
+                            <p class="card-category" style="text-align:center">Please enter the challenge information</p>
                         </div>
                         
-                        <form method="POST" action="{{ route('challenges.store') }}" style="width: 800px; margin: 0 auto;">
+                        <form method="POST" action="{{ route('challenges.store') }}" style="width: 800px; margin: 0 auto" id= "challengeForm">
                             @csrf
                             <br>
                             Challenge Number <input type="number" name="ChallengeNumber" id="ChallengeNumber" autocomplete="off">
-                            <br><br>
+                            <br>
                             Challenge Name <input type="text" name="ChallengeName" id="ChallengeName" autocomplete="name">
-                            <br><br>
+                            <br>
                             Opening Date <input type="date" name="OpeningDate" id="OpeningDate">
-                            <br><br>
+                            <br>
                             Closing Date <input type="date" name="ClosingDate" id="ClosingDate">
-                            <br><br>
+                            <br>
                             Challenge Duration (in minutes)<input type="number" name="ChallengeDuration" id="ChallengeDuration">
-                            <br><br>
-                            Number of questions<input type="number" name="NumberOfPresentedQuestions" id="NumberOfPresentedQuestions" autocomplete="off"> <br> 
-                            <br><br>
+                            <br>
+                            Number of questions<input type="number" name="NumberOfPresentedQuestions" id="NumberOfPresentedQuestions" autocomplete="off">
+                            <br>
                             <button type="submit">Upload Challenge Details</button>
  
                            <div class="card-body table-full-width table-responsive">
@@ -72,17 +100,17 @@
                         </div>
                     @endif
                     <div class="card strpied-tabled-with-hover">
-                        <div class="card-header ">
-                            <h4 class="card-title">UPLOAD QUESTIONS</h4>
-                            <p class="card-category">please enter an excel file with the questions</p>
+                        <div class="card-header " style="text-align:center;">
+                            <h3 class="card-title">UPLOAD QUESTIONS</h3>
+                            <p class="card-category">Please enter an excel file with the questions</p>
                         </div>
-                        
+                        <div class="form-container">
+                            
                         <form method="POST"  action="{{ url('import') }}" style="width: 800px; margin: 0 auto;" enctype="multipart/form-data">
                             @csrf
                         <br>
-                        <br>
-                        <br>
-                            Upload Questions File <input type="file" name="import_questions" autocomplete="off">
+                        
+                            <b>Upload Questions File: </b><input type="file" name="import_questions" autocomplete="off">
                             <br>
                             <br>
                             
@@ -116,17 +144,17 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="card strpied-tabled-with-hover">
-                        <div class="card-header ">
-                            <h4 class="card-title">UPLOAD ANSWERS</h4>
-                            <p class="card-category">please enter an excel file with answers</p>
+                        <div class="card-header" style="text-align:center;">
+                            <h3 class="card-title">UPLOAD ANSWERS</h3>
+                            <p class="card-category">Please enter an excel file with answers</p>
                         </div>
                         
-                        <form method="POST" action="{{ url('upload') }}"style="width: 800px; margin: 0 auto;" enctype="multipart/form-data">
+                        <form method="POST" action="{{ url('upload') }}"style="width: 800px; margin: 0 auto;" enctype="multipart/form-data" style="text-align:center;">
                             @csrf
                         <br>
                             
                             
-                            Upload Answers File <input type="file"  name="import_answers" autocomplete="off" required>
+                            <b>Upload Answers File:</b> <input type="file"  name="import_answers" autocomplete="off" required >
                             <br>
                             <br>
                            <button type="submit">Upload Answers</button>
@@ -170,7 +198,22 @@
     .then(data => {
         console.log(data);
     })
+
 }
+
+
+document.getElementById('challengeForm').addEventListener('submit', function(event) {
+    var openingDate = new Date(document.getElementById('OpeningDate').value);
+    var closingDate = new Date(document.getElementById('ClosingDate').value);
+
+    console.log('Opening Date:', openingDate);
+    console.log('Closing Date:', closingDate);
+    if (openingDate >= closingDate) {
+        alert('The opening date should be less than the closing date.');
+        event.preventDefault();
+    }
+});
+
     </script>
 </body>
 </html>

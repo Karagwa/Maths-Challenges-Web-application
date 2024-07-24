@@ -84,8 +84,22 @@ public static String authenticateRepresentative(String username, String password
                 DatabaseConnection.authenticatedUsername = username;
                 DatabaseConnection.authenticatedRegistrationNumber = registrationNumber;
            } else {
-               System.out.println("Invalid username or password.");
-               out.println("0");
+
+                String sqlRejected = "SELECT * FROM rejected WHERE Username = ? AND School_Registration_Number = ?";
+                PreparedStatement pstmtRejected = connection.prepareStatement(sqlRejected);
+                pstmtRejected.setString(1, username);
+                pstmtRejected.setString(2, registrationNumber);
+                ResultSet rsRejected = pstmtRejected.executeQuery();
+
+                if (rsRejected.next()) {
+                    System.out.println("User is in the rejected table.");
+                    out.println("2");
+                } else {
+                    System.out.println("Invalid username or registration number.");
+                    out.println("0");
+                    
+                }
+
            }
 
 
