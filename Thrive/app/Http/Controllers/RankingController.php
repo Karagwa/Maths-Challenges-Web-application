@@ -12,7 +12,7 @@ class RankingController extends Controller
         $years = DB::table('school_rankings')->distinct()->pluck('year');
 
         // Fetch distinct school names
-        $schools = DB::table('school_rankings')->distinct()->pluck('school');
+        $schools = DB::table('school_rankings')->distinct()->pluck('School');
 
         // Initialize an array to hold rankings
         $rankings = [];
@@ -22,7 +22,7 @@ class RankingController extends Controller
             $schoolRankings = DB::table('school_rankings')
                 ->where('school', $school)
                 ->orderBy('year')
-                ->pluck('ranking');
+                ->pluck('Average');
             $rankings[$school] = $schoolRankings;
         }
 

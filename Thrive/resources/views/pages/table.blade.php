@@ -131,7 +131,7 @@
                             <p class="card-category">Please enter the information of the schools</p>
                         </div>
                         
-                        <form method="GET"  name="sample" style="width: 800px;">
+                        <form   name="sample" style="width: 800px;">
                         @csrf    
 
                             <br>

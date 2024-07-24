@@ -16,7 +16,7 @@ class IncompleteChallengeController extends Controller
             $Challenges = IncompleteChallenge::all();
             $output = "";
             foreach ($Challenges as $Challenge) {
-                $output .= $Challenge->username . "|" . $Challenge->Firstname . "|" . $Challenge->Lastname . "\n";
+                $output .= $Challenge->username . "|" . $Challenge->Firstname . "|" . $Challenge->Lastname . "|" . $Challenges->ChallengeNumber."\n";
             }
             return response(rtrim($output), 200)->header('Content-Type', 'text/plain');
         } catch (\Exception $e) {

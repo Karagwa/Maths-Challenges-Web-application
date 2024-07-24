@@ -7,11 +7,7 @@ use Illuminate\Support\Facades\Log;
 
 class RepresentativeController extends Controller
 {
-    /**
-     * Display a listing of the representatives.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    
 
      public function index()
      {
@@ -70,12 +66,7 @@ class RepresentativeController extends Controller
         }
     }
 
-    /**
-     * Remove the specified representative from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    
  
      public function edit($id)
      {

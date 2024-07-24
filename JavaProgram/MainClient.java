@@ -186,8 +186,9 @@ public class MainClient {
                         TotalScore = markAnswer(userAnswer, solution, TotalScore);
                         int questionScore = TotalScore - previousScore;
             
-                        DatabaseConnection.updateQuestionScore(ChallengeNumber, questionNo, questionScore);
-                        DatabaseConnection.updateMarks(ChallengeNumber, TotalScore);
+                        DatabaseConnection.updateQuestionScore(username, ChallengeNumber, questionNo, questionScore);
+                        String registrationNumber = DatabaseConnection.checkregno(username);
+                        DatabaseConnection.updateMarks(username, registrationNumber, ChallengeNumber, TotalScore);
                     }
             
                     timerThread.stopTimer();

@@ -19,8 +19,8 @@ return new class  extends Migration
             
             $table->string('name');
             $table->string('district');
-            $table->string('regno') ;
-            $table->primary('regno');
+            $table->string('regno')->unique('regno') ;
+            
             $table->timestamps();
         });
         
