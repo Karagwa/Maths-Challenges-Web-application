@@ -103,4 +103,47 @@ class ChallengeController extends Controller
 
         return view('pages.rankings', compact('rankedSchools', 'top10Schools', 'bottom10Schools', 'worstSchoolsPerChallenge'));
     }
+
+
+    public function showQuestionAnaltics()
+    {
+        $challenges = Challenge::with(['questionScores.question', 'questions'])->get();
+        $topAndBottomQuestions = [];
+
+        foreach ($challenges as $challenge) {
+            $questionScores = $challenge->questionScores;
+            $averageScores = $questionScores->groupBy('questionnumber')->map(function ($scores) {
+                return $scores->avg('questionscore');
+            });
+
+            $sortedScores = $averageScores->sortDesc();
+            $top3Questions = $sortedScores->take(3)->keys();
+            $bottom3Questions = $sortedScores->reverse()->take(3)->keys();
+
+            $topAndBottomQuestions[$challenge->challengename] = [
+                'top' => $top3Questions->map(function ($questionNumber) use ($challenge, $averageScores) {
+                    $question = $challenge->questions->where('questionnumber', $questionNumber)->first()->question;
+                    return [
+                        'question' => $question,
+                        'average_score' => $averageScores[$questionNumber]
+                    ];
+                }),
+                'bottom' => $bottom3Questions->map(function ($questionNumber) use ($challenge, $averageScores) {
+                    $question = $challenge->questions->where('questionnumber', $questionNumber)->first()->question;
+                    return [
+                        'question' => $question,
+                        'average_score' => $averageScores[$questionNumber]
+                    ];
+                }),
+            ];
+        }
+
+        return view('pages.questionanalytics', compact('topAndBottomQuestions'));
+    }
+
+
+
+
 }
+
+

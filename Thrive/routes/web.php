@@ -52,6 +52,9 @@ Route::get('/fetch_rankings', [RankingController::class, 'fetchRankings']);
 //Route::resource('schools', SchoolController::class);
 //Route::resource('representatives', RepresentativeController::class);
 
+//question analytics routes
+Route::get('/questionanalytics', [ChallengeController::class, 'showQuestionAnaltics'])->name('questions');
+
 
 
 

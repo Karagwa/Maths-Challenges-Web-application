@@ -133,6 +133,12 @@ Tip 2: you can also add an image using data-image tag
                     <p>{{ __("School Rankings") }}</p>
                 </a>
             </li>
+            <li class="nav-item @if($activePage == 'questionanalytics') active @endif">
+                <a class="nav-link" href="{{route('questions', 'rankings')}}">
+                <i class="nc-icon nc-atom"></i>
+                    <p>{{ __("Question Analytics") }}</p>
+                </a>
+            </li>
           
             
            

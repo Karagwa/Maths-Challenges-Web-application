@@ -19,4 +19,11 @@ class Challenge extends Model
     {
         return $this->hasMany(Mark::class, 'ChallengeNumber', 'ChallengeNumber');
     }
+
+    public function questionScores()
+    {
+        return $this->hasMany(QuestionScore::class, 'challengenumber', 'challengenumber');
+    }
+
+    
 }

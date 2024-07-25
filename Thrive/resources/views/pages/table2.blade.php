@@ -174,7 +174,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
-f function fetchReps() {
+ function fetchReps() {
         fetch('/fetch_representatives')
             .then(response => response.text())
             .then(data => {
