@@ -431,6 +431,28 @@ public static String authenticateRepresentative(String username, String password
         }
     }
 
+    public static  long getChallengeDuration(String challengeNumber) throws SQLException{
+        Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD); 
+        System.out.println("Connected to the database successfully!");
+
+
+        String sql = "SELECT ChallengeDuration FROM challenges WHERE ChallengeNumber = ?";
+        long durationInMillis = 0;
+
+        PreparedStatement pstmt = connection.prepareStatement(sql);
+        pstmt.setString(1, challengeNumber);
+        ResultSet rs = pstmt.executeQuery();
+
+        if (rs.next()) {
+            int durationInMinutes = rs.getInt("ChallengeDuration");
+            durationInMillis = durationInMinutes * 60 * 1000; // Convert minutes to milliseconds
+        }
+
+        return durationInMillis;
+
+
+    }
+
    
     
     public static void updateQuestionScore(String challengeNumber, int questionNo, int questionScore) throws SQLException {

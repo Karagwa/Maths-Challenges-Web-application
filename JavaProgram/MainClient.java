@@ -129,96 +129,98 @@ public class MainClient {
                 if (ChallengeNumber.startsWith("Invalid")) {
                     System.out.println(ChallengeNumber);
                     return null;
-                }if(DatabaseConnection.hasAttemptedChallenge(username, regno, ChallengeNumber)){
+                }
+                
+                if(DatabaseConnection.hasAttemptedChallenge(username, regno, ChallengeNumber)){
                     System.out.println("You have already attempted this challenge. Terminating connection");
                     return null;
 
                 }else{
                     int attemptCount = 0;
-                int maxAttempts = 3;
-                List<Set<String>> attemptQuestions = new ArrayList<>();
-                Scanner scanner = new Scanner(System.in);
+                    int maxAttempts = 3;
+                    List<Set<String>> attemptQuestions = new ArrayList<>();
+                    Scanner scanner = new Scanner(System.in);
 
-                while (attemptCount < maxAttempts) {
-                    attemptCount++;
-                    Set<String> currentAttemptQuestions = new HashSet<>();
+                    while (attemptCount < maxAttempts) {
+                        attemptCount++;
+                        Set<String> currentAttemptQuestions = new HashSet<>();
 
-                    int TotalScore = 0;
-                    long totalTime = 60000; // Total time for all questions (e.g., 60000 ms = 60 seconds)
-                    int numberOfQuestions = 10; // Adjust this if you change the limit in the SQL query
-                    long[] responseTimes = new long[numberOfQuestions];
+                        int TotalScore = 0;
+                        long totalTime = DatabaseConnection.getChallengeDuration(ChallengeNumber); // Total time for all questions (e.g., 60000 ms = 60 seconds)
+                        int numberOfQuestions = 10; // Adjust this if you change the limit in the SQL query
+                        long[] responseTimes = new long[numberOfQuestions];
 
-                    List<String> questionsList = new ArrayList<>();
-                    List<String> solutionsList = new ArrayList<>();
-                    List<Integer> questionNumbers = new ArrayList<>();
-                    List<String> userAnswers = new ArrayList<>();
-                    DatabaseConnection.retrieveQuestion(ChallengeNumber, questionsList, solutionsList, questionNumbers);
+                        List<String> questionsList = new ArrayList<>();
+                        List<String> solutionsList = new ArrayList<>();
+                        List<Integer> questionNumbers = new ArrayList<>();
+                        List<String> userAnswers = new ArrayList<>();
+                        DatabaseConnection.retrieveQuestion(ChallengeNumber, questionsList, solutionsList, questionNumbers);
 
-                    DisplayTiming timerThread = new DisplayTiming();
-                    timerThread.startTimer(totalTime);
+                        DisplayTiming timerThread = new DisplayTiming();
+                        timerThread.startTimer(totalTime);
 
-                    long challengeStartTime = System.currentTimeMillis();
+                        long challengeStartTime = System.currentTimeMillis();
 
-                    for (int i = 0; i < questionsList.size(); i++) {
-                        if (timerThread.getRemainingTime() <= 0) {
-                            System.out.println("\nTime is up!");
-                            List<String> userInfo = DatabaseConnection.getUserInfo(username);
-                            String Username = userInfo.get(0);
-                            String firstName = userInfo.get(1);
-                            String lastName = userInfo.get(2);
-                            DatabaseConnection.updateInChallenge(Username, firstName, lastName, ChallengeNumber);
+                        for (int i = 0; i < questionsList.size(); i++) {
+                            if (timerThread.getRemainingTime() <= 0) {
+                                System.out.println("\nTime is up!");
+                                List<String> userInfo = DatabaseConnection.getUserInfo(username);
+                                String Username = userInfo.get(0);
+                                String firstName = userInfo.get(1);
+                                String lastName = userInfo.get(2);
+                                DatabaseConnection.updateInChallenge(Username, firstName, lastName, ChallengeNumber);
+                                break;
+                            }
+
+                            int questionNo = questionNumbers.get(i);
+                            String question = questionsList.get(i);
+                            String solution = solutionsList.get(i);
+
+                            currentAttemptQuestions.add(question);
+
+                            System.out.println("\n\nRemaining Questions " + (numberOfQuestions - (i + 1)));
+                            System.out.println("Question " + (i + 1) + ": " + question);
+
+                            long startTime = System.currentTimeMillis();
+
+                            String userAnswer = scanner.nextLine();
+                            userAnswers.add(userAnswer);
+
+                            long endTime = System.currentTimeMillis();
+                            responseTimes[i] = endTime - startTime;
+                            int previousScore = TotalScore;
+                            TotalScore = markAnswer(userAnswer, solution, TotalScore);
+                            int questionScore = TotalScore - previousScore;
+
+                            DatabaseConnection.updateQuestionScore(ChallengeNumber, questionNo, questionScore);
+                            String registrationNumber = DatabaseConnection.checkregno(username);
+                            DatabaseConnection.updateMarks(username, registrationNumber, ChallengeNumber, TotalScore);
+                        }
+
+                        timerThread.stopTimer();
+
+                        long challengeEndTime = System.currentTimeMillis();
+                        long totalTimeTaken = challengeEndTime - challengeStartTime;
+                        System.out.println("\nFinal Score: " + TotalScore);
+                        String endTime = DatabaseConnection.checkEndDate(ChallengeNumber);
+                        CreatePDF.reportpdf(responseTimes, questionsList, solutionsList, TotalScore, totalTimeTaken, username, userAnswers, endTime);
+
+                        attemptQuestions.add(currentAttemptQuestions);
+
+                        if (attemptCount >= maxAttempts) {
+                            System.out.println("You have reached the maximum number of attempts.");
                             break;
                         }
 
-                        int questionNo = questionNumbers.get(i);
-                        String question = questionsList.get(i);
-                        String solution = solutionsList.get(i);
-
-                        currentAttemptQuestions.add(question);
-
-                        System.out.println("\n\nRemaining Questions " + (numberOfQuestions - (i + 1)));
-                        System.out.println("Question " + (i + 1) + ": " + question);
-
-                        long startTime = System.currentTimeMillis();
-
-                        String userAnswer = scanner.nextLine();
-                        userAnswers.add(userAnswer);
-
-                        long endTime = System.currentTimeMillis();
-                        responseTimes[i] = endTime - startTime;
-                        int previousScore = TotalScore;
-                        TotalScore = markAnswer(userAnswer, solution, TotalScore);
-                        int questionScore = TotalScore - previousScore;
-
-                        DatabaseConnection.updateQuestionScore(ChallengeNumber, questionNo, questionScore);
-                        String registrationNumber = DatabaseConnection.checkregno(username);
-                        DatabaseConnection.updateMarks(username, registrationNumber, ChallengeNumber, TotalScore);
+                        System.out.println("Do you want to attempt the challenge again? (yes/no)");
+                        String userResponse = scanner.nextLine();
+                        if (userResponse.equalsIgnoreCase("no")) {
+                            break;
+                        }
+                        System.out.println("\n\n\nNew Attempt\n\n");
                     }
 
-                    timerThread.stopTimer();
-
-                    long challengeEndTime = System.currentTimeMillis();
-                    long totalTimeTaken = challengeEndTime - challengeStartTime;
-                    System.out.println("\nFinal Score: " + TotalScore);
-                    String endTime = DatabaseConnection.checkEndDate(ChallengeNumber);
-                    CreatePDF.reportpdf(responseTimes, questionsList, solutionsList, TotalScore, totalTimeTaken, username, userAnswers, endTime);
-
-                    attemptQuestions.add(currentAttemptQuestions);
-
-                    if (attemptCount >= maxAttempts) {
-                        System.out.println("You have reached the maximum number of attempts.");
-                        break;
-                    }
-
-                    System.out.println("Do you want to attempt the challenge again? (yes/no)");
-                    String userResponse = scanner.nextLine();
-                    if (userResponse.equalsIgnoreCase("no")) {
-                        break;
-                    }
-                    System.out.println("\n\n\nNew Attempt\n\n");
-                }
-
-                calculateRecurringQuestions(attemptQuestions,ChallengeNumber);
+                        calculateRecurringQuestions(attemptQuestions,ChallengeNumber);
                         return null;
                 }
 
