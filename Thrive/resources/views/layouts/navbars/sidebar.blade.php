@@ -88,7 +88,8 @@ Tip 1: You can change the color of the sidebar using: data-color="purple | blue 
 Tip 2: you can also add an image using data-image tag
 -->
     <div class="sidebar-wrapper">
-        <div class="logo">
+        <div class="logo" >
+            <img src="{{ asset('light-bootstrap/img/apple-icon.png') }}" alt="logo" height="60" width="50" align="left">
             <a href="http://www.creative-tim.com" class="simple-text">
                 {{ __("Thrive Challenges") }}
             </a>

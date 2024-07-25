@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('questionscores', function (Blueprint $table) {
             $table->integer('ChallengeNumber');
+            $table->primary('ChallengeNumber');
             $table->integer('QuestionNo');
             $table->integer('questionScore');
 

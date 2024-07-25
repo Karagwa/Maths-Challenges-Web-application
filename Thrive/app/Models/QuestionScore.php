@@ -9,6 +9,7 @@ class QuestionScore extends Model
 {
     use HasFactory;
     protected $table = 'questionscores'; // tablename
+    protected $primaryKey = 'ChallengeNumber';
 
     protected $fillable = ['ChallengeNumber', 'QuestionNo', 'questionScore'];
 
