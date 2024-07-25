@@ -26,20 +26,19 @@ use App\Http\Controllers\RankingController;
 Route::get('/schools', [SchoolController::class, 'index'])->name('school.index');
 Route::get('/fetch_schools', [SchoolController::class, 'fetchSchools']);
 Route::post('/add_school', [SchoolController::class, 'addSchool']);
-Route::delete('/school/{regno}', [SchoolController::class, 'destroy'])->name('school.destroy');
 
+Route::post('/school/{id}', [SchoolController::class, 'update']);
 
-Route::get('/school/{id}/edit', [SchoolController::class, 'edit']);
-Route::patch('/school/{id}', [SchoolController::class, 'update']);
+Route::delete('/school/{id}', [SchoolController::class, 'destroy'])->name('school.destroy');
+   
+
 
 
 Route::get('/representatives', [RepresentativeController::class, 'index'])->name('representative.index');
 Route::get('/fetch_representatives', [RepresentativeController::class, 'fetchRepresentatives']);
 Route::post('/add_representative', [RepresentativeController::class, 'addRepresentative']);
-Route::delete('/representative/{id}', [RepresentativeController::class, 'destroy']);
-
-Route::get('/representative/{id}/edit', [RepresentativeController::class, 'edit']);
-Route::patch('/representative/{id}', [RepresentativeController::class, 'update']);
+Route::delete('/representative/{id}', [RepresentativeController::class, 'destroy'])->name('representative.destroy');
+Route::post('/representative/{id}', [RepresentativeController::class, 'update']);
 
 
 
@@ -49,8 +48,7 @@ Route::get('/fetch_Incomplete_challenges', [IncompleteChallengeController::class
 //school rankings routes
 Route::get('/rankings', [ChallengeController::class, 'showYearlyChallengeResults'])->name('rankings');
 Route::get('/fetch_rankings', [RankingController::class, 'fetchRankings']);
-//Route::resource('schools', SchoolController::class);
-//Route::resource('representatives', RepresentativeController::class);
+
 
 //question analytics routes
 Route::get('/questionanalytics', [ChallengeController::class, 'showQuestionAnaltics'])->name('questions');

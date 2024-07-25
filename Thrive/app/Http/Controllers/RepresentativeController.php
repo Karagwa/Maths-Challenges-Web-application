@@ -24,7 +24,7 @@ class RepresentativeController extends Controller
             $representatives = Representative::all();
             $output = "";
             foreach ($representatives as $representative) {
-                $output .= $representative->id . "|" . $representative->username . "|" . $representative->name . "|" . $representative->email . "|" . $representative->regno . "\n";
+                $output .= $representative->id . "|" . $representative->username . "|" . $representative->name . "|" . $representative->email . "|" . $representative->regno . "|" . $representative->password. "\n";
             }
             return response(rtrim($output), 200)->header('Content-Type', 'text/plain');
         } catch (\Exception $e) {
@@ -69,14 +69,17 @@ class RepresentativeController extends Controller
     
  
      public function edit($id)
-     {
-         $representative = Representative::where('id', $id)->first();
-         if (!$representative) {
-             return redirect()->route('representative.index')->with('error', 'rep not found');
-         }
-         return view('pages.editing2', compact('representative'));
-     }
+{
+    
+   $representative = Representative::where('id', $id)->firstOrFail();
      
+    
+  if (!$representative) {
+    return redirect()->route('representative.index')->with('error', 'rep not found');
+  }
+  return view('pages.editing2', compact('representative'));
+}
+
      public function update(Request $request, $id)
      {
          try {
@@ -101,16 +104,18 @@ class RepresentativeController extends Controller
     try {
         $representative= Representative::find($id);
         if (!$representative) {
-            return redirect()->route('representative.index')->with('error', 'Representative not found');
+            return response("error|Rep not found", 404)->header('Content-Type', 'text/plain');
         }
         $representative->delete();
-        return redirect()->route('representative.index')->with('success', 'representaive deleted successfully');
+        return response("success|Representative deleted successfully", 200)->header('Content-Type', 'text/plain');
     } catch (\Exception $e) {
-        return redirect()->route('representative.index')->with('error', 'Failed to delete representative: ' . $e->getMessage());
+        return response("error|Failed to delete representative: " . $e->getMessage(), 500)->header('Content-Type', 'text/plain');
     }
     
     
     
 }
-}
+} 
+    
+
 ?>

@@ -19,12 +19,9 @@ return new class extends Migration
             $table->string('username');
             $table->string('name');
             $table->string('email');
-            
             $table->string('regno');
             $table->string('password');
-            //$table->foreign('regno')->references('regno')->on('schools')->onDelete('cascade');
             $table->timestamps();
-            
         });
     }
 
