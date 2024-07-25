@@ -21,7 +21,6 @@ return new class extends Migration
             $table->string('email');
             $table->string('regno');
             $table->string('password');
-            $table->timestamps();
         });
     }
 

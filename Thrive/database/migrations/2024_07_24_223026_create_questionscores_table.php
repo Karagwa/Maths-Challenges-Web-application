@@ -17,7 +17,6 @@ return new class extends Migration
             $table->integer('ChallengeNumber');
             $table->integer('QuestionNo');
             $table->integer('questionScore');
-            $table->timestamps();
 
             $table->foreign('ChallengeNumber')->references('ChallengeNumber')->on('challenges')->onDelete('cascade');
             $table->foreign('QuestionNo')->references('QuestionNo')->on('questions')->onDelete('cascade');

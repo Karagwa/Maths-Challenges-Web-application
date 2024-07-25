@@ -17,7 +17,6 @@ return new class extends Migration
             $table->integer('QuestionNo')->primary();
             $table->string('Question');
             $table->integer('ChallengeNumber')->references('ChallengeNumber')->on('challenges');
-            $table->timestamps();
         });
     }
 

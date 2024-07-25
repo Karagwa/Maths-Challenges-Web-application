@@ -14,8 +14,6 @@ return new class extends Migration
     public function up()
     {
         Schema::create('participants', function (Blueprint $table) {
-            //$table->id();
-            //$table->timestamps();$table->string('Username');
             $table->string('Username');
             $table->primary('Username');
             $table->string('Firstname');
@@ -24,9 +22,7 @@ return new class extends Migration
             $table->date('Date_of_Birth');
             $table->string('regno');
             $table->foreign('regno')->references('regno')->on('schools')->onDelete('cascade');
-            //$table->string('image');
             $table->binary('Image'); // Store image as BLOB
-            $table->timestamps();
 
         });
     }
