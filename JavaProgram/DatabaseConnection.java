@@ -500,15 +500,15 @@ public static String authenticateRepresentative(String username, String password
         
     }
     
-    public static void updateQuestionScore(String challengeNumber, int questionNo, int questionScore) throws SQLException {
+    public static void updateQuestionScore(String username, String challengeNumber, int questionNo, int questionScore) throws SQLException {
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             String sql = "INSERT INTO QuestionScores (challengeNumber, questionNo, questionScore) VALUES (?, ?, ?) " +
                          "ON DUPLICATE KEY UPDATE questionScore = VALUES(questionScore)";
             try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-                pstmt.setString(1, challengeNumber);
-                
-                pstmt.setInt(2, questionNo);
-                pstmt.setInt(3, questionScore);
+                pstmt.setString(1,username);
+                pstmt.setString(2, challengeNumber);
+                pstmt.setInt(3, questionNo);
+                pstmt.setInt(4, questionScore);
                 pstmt.executeUpdate();
             }
         } catch (SQLException e) {
@@ -516,7 +516,7 @@ public static String authenticateRepresentative(String username, String password
         }
     }
 
-    public static void updateMarks(String challengeNumber, int Marks) throws SQLException {
+    public static void updateMarks(String username,String registrationNumber,String challengeNumber, int Marks) throws SQLException {
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             // Get current challenge count
            // int challengeCount = getChallengeCount(authenticatedUsername, challengeNumber);
@@ -527,10 +527,12 @@ public static String authenticateRepresentative(String username, String password
             String sql = "INSERT INTO TotalMarks (challengeNumber, Marks) VALUES (?, ?) " +
                          "ON DUPLICATE KEY UPDATE marks = VALUES(marks)";
             try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-                pstmt.setString(1, challengeNumber);
-                
-                
-                pstmt.setInt(2, Marks);
+               
+               
+                pstmt.setString(1,username);
+                pstmt.setString(2,registrationNumber);
+                pstmt.setString(3, challengeNumber);
+                pstmt.setInt(4, Marks);
                 //pstmt.setInt(5, challengeCount);
                 pstmt.executeUpdate();
             }
@@ -613,6 +615,36 @@ public static String authenticateRepresentative(String username, String password
         
         }
         
+
+    }
+     public static String checkregno(String username) throws SQLException {
+try{
+        //Setting up the connection to the database
+        Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD); 
+        System.out.println("Connected to the database successfully!");
+        
+
+        //Setting up my object to send and excute the sql statements
+        //i will use preparedStatements to prevent sql injection
+
+        String sql = "SELECT School_Registration_Number FROM participant WHERE Username = ?";
+        PreparedStatement pstmt = connection.prepareStatement(sql);
+        pstmt.setString(1, username);
+        ResultSet rs = pstmt.executeQuery();
+
+            // Process the results
+        rs.next();
+        String registrationNumber = rs.getString("EmailAddress");
+
+        return registrationNumber;
+
+
+        
+        } catch (SQLException e) {
+        e.printStackTrace();
+
+        return null;
+        }
 
     }
 

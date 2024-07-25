@@ -131,7 +131,7 @@
                             <h4 class="card-title">REPRESENTATIVE INFORMATION</h4>
                             <p class="card-category">Please enter the information of the representative below</p>
                         </div>
-                        <form method="POST" name="sample2">
+                        <form  name="sample2">
                         @csrf
                             <br>
                             <input type="hidden" name="id" id="id" autocomplete="off">
@@ -183,7 +183,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 tbody.innerHTML = '';
                 rows.forEach((row, index) => {
                     const columns = row.split('|');
-                    if (columns.length === 6) {
+                    if (columns.length === 5) {
                         const tr = document.createElement('tr');
                         tr.innerHTML = `
                             <td>${index + 1}</td>
@@ -191,7 +191,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             <td>${columns[2]}</td>
                             <td>${columns[3]}</td>
                             <td>${columns[4]}</td>
-                            <td>${columns[5]}</td>
+                            
                             <td>
                                 <button class="btn btn-info btn-sm" onclick="editRep('${columns[0]}')"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button>
                                 <button class="btn btn-danger btn-sm" onclick="deleteRep('${columns[0]}')"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
