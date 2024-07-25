@@ -1,7 +1,8 @@
 <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute">
     <div class="container">
         <div class="navbar-wrapper">
-            <a class="navbar-brand" style="color: white;" href="#pablo">{{ __('THRIVE MATHEMATICAL CHALLENGES') }}</a>
+          
+            <a class="navbar-brand" style="color: white;" href="#pablo">  <img src="{{ asset('light-bootstrap/img/apple-icon.png') }}" alt="logo" height="35" width="40" align="left">{{ __(' THRIVE MATHEMATICAL CHALLENGES') }}</a>
             <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-bar burger-lines"></span>
                 <span class="navbar-toggler-bar burger-lines"></span>

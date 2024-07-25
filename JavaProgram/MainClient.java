@@ -187,7 +187,7 @@ public class MainClient {
                 TotalScore = markAnswer(userAnswer, solution, TotalScore);
                 int questionScore = TotalScore - previousScore;
 
-                DatabaseConnection.updateQuestionScore(username, ChallengeNumber, questionNo, questionScore);
+                DatabaseConnection.updateQuestionScore(ChallengeNumber, questionNo, questionScore);
                 String registrationNumber = DatabaseConnection.checkregno(username);
                 DatabaseConnection.updateMarks(username, registrationNumber, ChallengeNumber, TotalScore);
             }

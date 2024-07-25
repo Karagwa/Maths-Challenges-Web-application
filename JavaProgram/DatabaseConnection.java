@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 public class DatabaseConnection {
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/Thrive";
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/Maths_Thrive";
     private static final String DB_USER = "root";
     private static final String DB_PASSWORD = "yourpassword";
 
@@ -170,38 +170,7 @@ public static String authenticateRepresentative(String username, String password
 
     }
 
-    public static void validateSchool(String registrationNumber,BufferedReader in, PrintWriter out){
-        try {
-
-            //Setting up the connection to the database
-            Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD); 
-            System.out.println("Connected to the database successfully!");
-            
- 
-            //Setting up my object to send and excute the sql statements
-            //i will use preparedStatements to prevent sql injection
- 
-            String sql = "SELECT name FROM schools WHERE username = ?";
-            PreparedStatement pstmt = connection.prepareStatement(sql);
-            pstmt.setString(1, registrationNumber);
-            ResultSet rs = pstmt.executeQuery();
- 
-              // Process the results
-            if (rs.next()) {
-                System.out.println("Valid school.");
-                out.println("1");
-            } else {
-                System.out.println("invalid school registration number");
-                out.println("0");
-            }
- 
- 
-            
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
+   
 
     public static void addParticipant(String filePath,String targetUsername) throws IOException,SQLException{
         Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD); 
@@ -444,71 +413,17 @@ public static String authenticateRepresentative(String username, String password
         }
     }
 
-    /*public static void loadChallengeCountsFromDatabase() throws SQLException {
-        Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD); 
-        System.out.println("Connected to the database successfully!");
-
-
-        String sql = "SELECT ChallengeNumber, ChallengeCount FROM marks";
-
-        
-        Statement stmt = connection.createStatement();
-        ResultSet rs = stmt.executeQuery(sql);
-
-        while (rs.next()) {
-            String challengeNumber = rs.getString("ChallengeNumber");
-            int challengeCount = rs.getInt("ChallengeCount");
-            challengeCounts.put(challengeNumber, challengeCount);
-            System.out.println("Loaded challenge " + challengeNumber + " with count " + challengeCount);
-        }
-        
-    }*/
-
-    /*public static void updateChallengeCountInDatabase(String challenge, int count) throws SQLException {
-        Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD); 
-        System.out.println("Connected to the database successfully!");
-
-
-        String sql = "UPDATE TotalMarks SET ChallengeCount = ? WHERE ChallengeNumber = ?";
-
+   
     
-        PreparedStatement stmt = connection.prepareStatement(sql);
-        stmt.setInt(1, count);
-        stmt.setString(2, challenge);
-
-        int rowsAffected = stmt.executeUpdate();
-        if (rowsAffected > 0) {
-            System.out.println("Updated challenge count for " + challenge + " to " + count);
-        } else {
-            System.out.println("Challenge " + challenge + " not found in the database.");
-        }
-        
-    }*/
-
-    /*public static void resetChallengeCountsInDatabase() throws SQLException{
-        Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD); 
-        System.out.println("Connected to the database successfully!");
-
-
-        String sql = "UPDATE TotalMarks  SET ChallengeCount = 0";
-
-        
-        Statement stmt = connection.createStatement();
-
-        stmt.executeUpdate(sql);
-        System.out.println("Reset all challenge counts to 0");
-        
-    }*/
-    
-    public static void updateQuestionScore(String username, String challengeNumber, int questionNo, int questionScore) throws SQLException {
+    public static void updateQuestionScore(String challengeNumber, int questionNo, int questionScore) throws SQLException {
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             String sql = "INSERT INTO questionscores (ChallengeNumber, QuestionNo, questionScore) VALUES (?, ?, ?) " +
                          "ON DUPLICATE KEY UPDATE questionScore = VALUES(questionScore)";
             try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-                pstmt.setString(1,username);
-                pstmt.setString(2, challengeNumber);
-                pstmt.setInt(3, questionNo);
-                pstmt.setInt(4, questionScore);
+            
+                pstmt.setString(1, challengeNumber);
+                pstmt.setInt(2, questionNo);
+                pstmt.setInt(3, questionScore);
                 pstmt.executeUpdate();
             }
         } catch (SQLException e) {
@@ -518,11 +433,7 @@ public static String authenticateRepresentative(String username, String password
 
     public static void updateMarks(String username,String registrationNumber,String challengeNumber, int Marks) throws SQLException {
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            // Get current challenge count
-           // int challengeCount = getChallengeCount(authenticatedUsername, challengeNumber);
-
-            // Increment challenge count
-           // challengeCount++;
+            
 
             String sql = "INSERT INTO marks (Username,regno,ChallengeNumber, TotalScore) VALUES (?, ?, ?, ?) " +
                          "ON DUPLICATE KEY UPDATE TotalScore = VALUES(TotalScore)";
@@ -634,7 +545,7 @@ public static String authenticateRepresentative(String username, String password
 
                     // Process the results
                 rs.next();
-                String registrationNumber = rs.getString("EmailAddress");
+                String registrationNumber = rs.getString("regno");
 
                 return registrationNumber;
 
