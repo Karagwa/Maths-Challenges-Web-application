@@ -418,6 +418,24 @@ public static String authenticateRepresentative(String username, String password
         return false;
     }
 
+    public static boolean hasAttemptedChallenge(String username, String schoolRegNo, String challengeNumber) throws SQLException {
+        Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD); 
+        System.out.println("Connected to the database successfully!");
+
+
+        String sql = "SELECT 1 FROM marks WHERE Username = ? AND regno = ? AND ChallengeNumber = ? LIMIT 1";
+        PreparedStatement stmt = connection.prepareStatement(sql);
+        stmt.setString(1, username);
+        stmt.setString(2, schoolRegNo);
+        stmt.setString(3, challengeNumber);
+
+        try (ResultSet rs = stmt.executeQuery()) {
+            return rs.next(); // If there is at least one result, return true
+        }
+        
+    }
+
+
     public static void retrieveQuestion(String ChallengeNo, List<String> questionsList, List<String> solutionsList,List<Integer> questionNumbers) throws SQLException {
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             String sql = "SELECT questions.QuestionNo,questions.Question, answers.Answer " +
