@@ -28,7 +28,7 @@ public class Applicant {
      * @param applicant The Applicant object containing the information to be written to the file.
      * @throws IOException If there is an error creating or writing to the file.
      */
-    public static void fileHandler(Applicant applicant) throws IOException {
+    public static void fileHandler(Applicant applicant,PrintWriter out) throws IOException {
         File file = new File("Temp.csv");
         
         if(file.createNewFile()){
@@ -48,7 +48,7 @@ public class Applicant {
         if (repEmail!= null) {
             Email.notifyRep(repEmail);
         }else{
-            System.out.println("No Representative Found");
+            out.println("No representative found for this school registration number.Enter a correct school registration number");
         }
     }
 
@@ -114,7 +114,7 @@ public class Applicant {
                     try {
                         Applicant applicant = new Applicant(username, firstname, lastname, email, dateOfBirth, registrationNumber, imagePath);
                         out.println("Applicant registered successfully\nPlease wait to be verified by your School Representative\nYou will recieve an email when verified\nThank you\n:)");
-                        Applicant.fileHandler(applicant);
+                        Applicant.fileHandler(applicant,out);
                         // Add logic to save the applicant to the database
                     } catch (IOException e) {
                         out.println("Failed to save image as BLOB.");
