@@ -70,7 +70,7 @@ public static String authenticateRepresentative(String username, String password
            //Setting up my object to send and excute the sql statements
            //i will use preparedStatements to prevent sql injection
 
-           String sql = "SELECT * FROM participant WHERE Username = ? AND School_Registration_Number = ?";
+           String sql = "SELECT * FROM participants WHERE Username = ? AND regno = ?";
            PreparedStatement pstmt = connection.prepareStatement(sql);
            pstmt.setString(1, username);
            pstmt.setString(2, registrationNumber);
@@ -85,7 +85,7 @@ public static String authenticateRepresentative(String username, String password
                 DatabaseConnection.authenticatedRegistrationNumber = registrationNumber;
            } else {
 
-                String sqlRejected = "SELECT * FROM rejected WHERE Username = ? AND School_Registration_Number = ?";
+                String sqlRejected = "SELECT * FROM rejected WHERE Username = ? AND regno = ?";
                 PreparedStatement pstmtRejected = connection.prepareStatement(sqlRejected);
                 pstmtRejected.setString(1, username);
                 pstmtRejected.setString(2, registrationNumber);
@@ -119,7 +119,7 @@ public static String authenticateRepresentative(String username, String password
         System.out.println("Connected to the database successfully!");
 
         // Check if the user is in the rejected table
-        String sqlRejected = "SELECT * FROM rejected WHERE Username = ? AND School_Registration_Number = ?";
+        String sqlRejected = "SELECT * FROM rejected WHERE Username = ? AND regno = ?";
         PreparedStatement pstmtRejected = connection.prepareStatement(sqlRejected);
         pstmtRejected.setString(1, username);
         pstmtRejected.setString(2, registrationNumber);
@@ -149,14 +149,14 @@ public static String authenticateRepresentative(String username, String password
         //Setting up my object to send and excute the sql statements
         //i will use preparedStatements to prevent sql injection
 
-        String sql = "SELECT Email FROM representative WHERE SchRegNo = ?";
+        String sql = "SELECT email FROM representatives WHERE regno = ?";
         PreparedStatement pstmt = connection.prepareStatement(sql);
         pstmt.setString(1, registrationNumber);
         ResultSet rs = pstmt.executeQuery();
 
             // Process the results
         rs.next();
-        String email = rs.getString("Email");
+        String email = rs.getString("email");
 
         return email;
 
@@ -181,7 +181,7 @@ public static String authenticateRepresentative(String username, String password
             //Setting up my object to send and excute the sql statements
             //i will use preparedStatements to prevent sql injection
  
-            String sql = "SELECT SchName FROM School WHERE username = ?";
+            String sql = "SELECT name FROM schools WHERE username = ?";
             PreparedStatement pstmt = connection.prepareStatement(sql);
             pstmt.setString(1, registrationNumber);
             ResultSet rs = pstmt.executeQuery();
@@ -240,7 +240,7 @@ public static String authenticateRepresentative(String username, String password
                 
 
                 //confirm with the database actual fielnames-to  do dont forget!!!!!!!!!
-                String sql ="INSERT INTO participant (Username,Firstname,Lastname, EmailAddress,Date_of_birth,School_Registration_Number,Image) VALUES (?,?,?,?,?,?,?)";
+                String sql ="INSERT INTO participants (Username,Firstname,Lastname, EmailAddress,Date_of_birth,regno,Image) VALUES (?,?,?,?,?,?,?)";
 
                 PreparedStatement statement=connection.prepareStatement(sql);
 
@@ -327,7 +327,7 @@ public static String authenticateRepresentative(String username, String password
                 
 
                 //confirm with the database actual fielnames-to  do dont forget!!!!!!!!!
-                String sql ="INSERT INTO rejected (Username,Firstname,Lastname, EmailAddress,Date_of_birth,School_Registration_Number,Image) VALUES (?,?,?,?,?,?,?)";
+                String sql ="INSERT INTO rejected (Username,Firstname,Lastname, EmailAddress,Date_of_birth,regno,Image) VALUES (?,?,?,?,?,?,?)";
 
                 PreparedStatement statement=connection.prepareStatement(sql);
 
@@ -380,7 +380,7 @@ public static String authenticateRepresentative(String username, String password
         System.out.println("Connected to the database successfully!");
         
         LocalDate today = LocalDate.now();
-        String sql="SELECT ChallengeNumber,ChallengeName FROM challenge WHERE ClosingDate >= ?";
+        String sql="SELECT ChallengeNumber,ChallengeName FROM challenges WHERE ClosingDate >= ?";
 
         PreparedStatement pstmt = connection.prepareStatement(sql); //prevents sql injections
         pstmt.setDate(1, java.sql.Date.valueOf(today));
@@ -403,7 +403,7 @@ public static String authenticateRepresentative(String username, String password
         Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD); 
         System.out.println("Connected to the database successfully!");
 
-        String sql = "SELECT COUNT(*) FROM challenge WHERE ChallengeNumber = ? ";
+        String sql = "SELECT COUNT(*) FROM challenges WHERE ChallengeNumber = ? ";
 
 
         PreparedStatement stmt = connection.prepareStatement(sql);
@@ -420,10 +420,10 @@ public static String authenticateRepresentative(String username, String password
 
     public static void retrieveQuestion(String ChallengeNo, List<String> questionsList, List<String> solutionsList,List<Integer> questionNumbers) throws SQLException {
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String sql = "SELECT Questions.QuestionNo,Questions.Question_text, Solutions.solutions " +
-                         "FROM Questions " +
-                         "JOIN Solutions ON Questions.QuestionNo = Solutions.QuestionNo " +
-                         "WHERE Questions.ChallengeNumber = ? " +
+            String sql = "SELECT questions.QuestionNo,questions.Question, answers.Answer " +
+                         "FROM questions " +
+                         "JOIN answers ON questions.QuestionNo = answers.QuestionNo " +
+                         "WHERE questions.ChallengeNumber = ? " +
                          "ORDER BY RAND() LIMIT 10";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, ChallengeNo);
@@ -431,8 +431,8 @@ public static String authenticateRepresentative(String username, String password
 
             while (rs.next()) {
                 int questionNo = rs.getInt("QuestionNo");
-                String question = rs.getString("Question_text");
-                String solution = rs.getString("solutions");
+                String question = rs.getString("Question");
+                String solution = rs.getString("Answer");
 
                 questionNumbers.add(questionNo);
                 questionsList.add(question);
@@ -444,12 +444,12 @@ public static String authenticateRepresentative(String username, String password
         }
     }
 
-    public static void loadChallengeCountsFromDatabase() throws SQLException {
+    /*public static void loadChallengeCountsFromDatabase() throws SQLException {
         Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD); 
         System.out.println("Connected to the database successfully!");
 
 
-        String sql = "SELECT ChallengeNumber, ChallengeCount FROM TotalMark";
+        String sql = "SELECT ChallengeNumber, ChallengeCount FROM marks";
 
         
         Statement stmt = connection.createStatement();
@@ -462,9 +462,9 @@ public static String authenticateRepresentative(String username, String password
             System.out.println("Loaded challenge " + challengeNumber + " with count " + challengeCount);
         }
         
-    }
+    }*/
 
-    public static void updateChallengeCountInDatabase(String challenge, int count) throws SQLException {
+    /*public static void updateChallengeCountInDatabase(String challenge, int count) throws SQLException {
         Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD); 
         System.out.println("Connected to the database successfully!");
 
@@ -483,9 +483,9 @@ public static String authenticateRepresentative(String username, String password
             System.out.println("Challenge " + challenge + " not found in the database.");
         }
         
-    }
+    }*/
 
-    public static void resetChallengeCountsInDatabase() throws SQLException{
+    /*public static void resetChallengeCountsInDatabase() throws SQLException{
         Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD); 
         System.out.println("Connected to the database successfully!");
 
@@ -498,11 +498,11 @@ public static String authenticateRepresentative(String username, String password
         stmt.executeUpdate(sql);
         System.out.println("Reset all challenge counts to 0");
         
-    }
+    }*/
     
     public static void updateQuestionScore(String username, String challengeNumber, int questionNo, int questionScore) throws SQLException {
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String sql = "INSERT INTO QuestionScores (challengeNumber, questionNo, questionScore) VALUES (?, ?, ?) " +
+            String sql = "INSERT INTO questionscores (ChallengeNumber, QuestionNo, questionScore) VALUES (?, ?, ?) " +
                          "ON DUPLICATE KEY UPDATE questionScore = VALUES(questionScore)";
             try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
                 pstmt.setString(1,username);
@@ -524,8 +524,8 @@ public static String authenticateRepresentative(String username, String password
             // Increment challenge count
            // challengeCount++;
 
-            String sql = "INSERT INTO TotalMarks (challengeNumber, Marks) VALUES (?, ?) " +
-                         "ON DUPLICATE KEY UPDATE marks = VALUES(marks)";
+            String sql = "INSERT INTO marks (Username,regno,ChallengeNumber, TotalScore) VALUES (?, ?, ?, ?) " +
+                         "ON DUPLICATE KEY UPDATE TotalScore = VALUES(TotalScore)";
             try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
                
                
@@ -553,7 +553,7 @@ public static String authenticateRepresentative(String username, String password
         //Setting up my object to send and excute the sql statements
         //i will use preparedStatements to prevent sql injection
 
-        String sql = "SELECT EmailAddress FROM participant WHERE Username = ?";
+        String sql = "SELECT EmailAddress FROM participants WHERE Username = ?";
         PreparedStatement pstmt = connection.prepareStatement(sql);
         pstmt.setString(1, username);
         ResultSet rs = pstmt.executeQuery();
@@ -592,16 +592,16 @@ public static String authenticateRepresentative(String username, String password
         //Setting up my object to send and excute the sql statements
         //i will use preparedStatements to prevent sql injection
 
-        String sql = "SELECT username,firstname,last FROM participant WHERE Username = ?";
+        String sql = "SELECT Username,Firstname,Lastname FROM participants WHERE Username = ?";
         PreparedStatement pstmt = connection.prepareStatement(sql);
         pstmt.setString(1, username);
         ResultSet resultSet = pstmt.executeQuery();
 
             // Process the results
             if (resultSet.next()) {
-                userInfo.add(resultSet.getString("username"));
-                userInfo.add(resultSet.getString("firstname"));
-                userInfo.add(resultSet.getString("lastname"));
+                userInfo.add(resultSet.getString("Username"));
+                userInfo.add(resultSet.getString("Firstname"));
+                userInfo.add(resultSet.getString("Lastname"));
             }
             return userInfo;
        
@@ -627,7 +627,7 @@ public static String authenticateRepresentative(String username, String password
                 //Setting up my object to send and excute the sql statements
                 //i will use preparedStatements to prevent sql injection
 
-                String sql = "SELECT School_Registration_Number FROM participant WHERE Username = ?";
+                String sql = "SELECT regno FROM participants WHERE Username = ?";
                 PreparedStatement pstmt = connection.prepareStatement(sql);
                 pstmt.setString(1, username);
                 ResultSet rs = pstmt.executeQuery();
@@ -653,7 +653,7 @@ public static String authenticateRepresentative(String username, String password
     public static void updateInChallenge(String username, String firstName, String lastName,String ChallengeNumber) throws SQLException {
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
      
-            String sql = "INSERT INTO incomplete_challenges (username, firstname, lastname,ChallengeNumber) VALUES (?, ?, ?,?)";
+            String sql = "INSERT INTO incomplete_challenges (username, Firstname, Lastname,ChallengeNumber) VALUES (?, ?, ?,?)";
             try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
                 pstmt.setString(1, username);
                 pstmt.setString(2, firstName);
@@ -695,14 +695,14 @@ public static String authenticateRepresentative(String username, String password
         //Setting up my object to send and excute the sql statements
         //i will use preparedStatements to prevent sql injection
 
-        String sql = "SELECT EndDate FROM participant WHERE ChallengeNumber = ?";
+        String sql = "SELECT ClosingDate FROM challenges WHERE ChallengeNumber = ?";
         PreparedStatement pstmt = connection.prepareStatement(sql);
         pstmt.setString(1, ChallengeNumber);
         ResultSet rs = pstmt.executeQuery();
 
             // Process the results
         rs.next();
-        String EndDate = rs.getString("EndDate");
+        String EndDate = rs.getString("ClosingDate");
 
         return EndDate;
 

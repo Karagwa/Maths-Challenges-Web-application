@@ -21,7 +21,6 @@ return new class extends Migration
             $table->integer('ChallengeNumber');
             $table->foreign('ChallengeNumber')->references('ChallengeNumber')->on('challenges')->onDelete('cascade');
             $table->integer('TotalScore');
-            $table->integer('ChallengeCount');
         });
     }
 
