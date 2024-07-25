@@ -1,5 +1,6 @@
 import java.io.File;
 import java.util.Properties;
+
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
@@ -89,14 +90,7 @@ public class PDFEmailSender {
         }
     }
 
-    public static void main(String[] args) {
-        // Sample data for testing
-        String to = "recipient@example.com";
-        String subject = "Here is your PDF file";
-        String bodyText = "Please find the attached PDF file.";
-        String filePath = "path/to/yourfile.pdf";
 
-        // Send the email with attachment
-        sendEmailWithAttachment(to, subject, bodyText, filePath);
-    }
+    
+
 }

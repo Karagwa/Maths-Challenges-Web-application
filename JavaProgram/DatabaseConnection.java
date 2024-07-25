@@ -618,7 +618,75 @@ public static String authenticateRepresentative(String username, String password
 
     }
      public static String checkregno(String username) throws SQLException {
-try{
+        try{
+                //Setting up the connection to the database
+                Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD); 
+                System.out.println("Connected to the database successfully!");
+                
+
+                //Setting up my object to send and excute the sql statements
+                //i will use preparedStatements to prevent sql injection
+
+                String sql = "SELECT School_Registration_Number FROM participant WHERE Username = ?";
+                PreparedStatement pstmt = connection.prepareStatement(sql);
+                pstmt.setString(1, username);
+                ResultSet rs = pstmt.executeQuery();
+
+                    // Process the results
+                rs.next();
+                String registrationNumber = rs.getString("EmailAddress");
+
+                return registrationNumber;
+
+
+                
+                } catch (SQLException e) {
+                e.printStackTrace();
+
+                return null;
+                }
+
+            }
+
+    //this is to insert into the incomplete challenges table
+
+    public static void updateInChallenge(String username, String firstName, String lastName,String ChallengeNumber) throws SQLException {
+        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+     
+            String sql = "INSERT INTO incomplete_challenges (username, firstname, lastname,ChallengeNumber) VALUES (?, ?, ?,?)";
+            try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+                pstmt.setString(1, username);
+                pstmt.setString(2, firstName);
+                pstmt.setString(3, lastName);
+                pstmt.setString(4, ChallengeNumber);
+
+                pstmt.executeUpdate();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void updateRecuring(double percentageRecurring, String challengeNumber) throws SQLException {
+        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+     
+            String sql = "INSERT INTO RecurringQuestion (ChallengeNumber,RecurringPercentage) VALUES (?, ?)";
+            try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+                pstmt.setString(1, challengeNumber);
+                pstmt.setFloat(2, (float) percentageRecurring);
+
+
+                pstmt.executeUpdate();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static String checkEndDate(String ChallengeNumber) throws SQLException {
+        try {
+
+
         //Setting up the connection to the database
         Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD); 
         System.out.println("Connected to the database successfully!");
@@ -627,16 +695,16 @@ try{
         //Setting up my object to send and excute the sql statements
         //i will use preparedStatements to prevent sql injection
 
-        String sql = "SELECT School_Registration_Number FROM participant WHERE Username = ?";
+        String sql = "SELECT EndDate FROM participant WHERE ChallengeNumber = ?";
         PreparedStatement pstmt = connection.prepareStatement(sql);
-        pstmt.setString(1, username);
+        pstmt.setString(1, ChallengeNumber);
         ResultSet rs = pstmt.executeQuery();
 
             // Process the results
         rs.next();
-        String registrationNumber = rs.getString("EmailAddress");
+        String EndDate = rs.getString("EndDate");
 
-        return registrationNumber;
+        return EndDate;
 
 
         
@@ -648,23 +716,6 @@ try{
 
     }
 
-    //this is to insert into the incomplete challenges table
-
-    public static void updateInChallenge(String username, String firstName, String lastName) throws SQLException {
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-     
-            String sql = "INSERT INTO incomplete_challenges (username, firstname, lastname) VALUES (?, ?, ?)";
-            try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-                pstmt.setString(1, username);
-                pstmt.setString(2, firstName);
-                pstmt.setString(3, lastName);
-
-                pstmt.executeUpdate();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 
 
    
@@ -673,3 +724,4 @@ try{
  
 
 }
+
