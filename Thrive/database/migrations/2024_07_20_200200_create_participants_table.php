@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('regno');
             $table->foreign('regno')->references('regno')->on('schools')->onDelete('cascade');
             $table->binary('Image'); // Store image as BLOB
+            $table->timestamps();
 
         });
     }
