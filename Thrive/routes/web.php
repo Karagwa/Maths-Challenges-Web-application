@@ -43,7 +43,8 @@ Route::post('/representative/{id}', [RepresentativeController::class, 'update'])
 
 
 Route::get('IncompleteChallenges', [IncompleteChallengeController::class,'index'])->name('IncompleteChallenges');
-Route::get('/fetch_Incomplete_challenges', [IncompleteChallengeController::class, 'fetchIncompleteChallenges'])-> name('fetch_Incomplete_challenges');
+Route::get('/fetch_Incomplete_challenges', [IncompleteChallengeController::class, 'fetchIncompleteChallenges'])->name('fetch_Incomplete_challenges');
+Route::get('/fetch_Repetition_percentages', [IncompleteChallengeController::class, 'fetchRepetitionPercentages'])->name('fetch_Repetition_percentages');
 
 //school rankings routes
 Route::get('/rankings', [ChallengeController::class, 'showYearlyChallengeResults'])->name('rankings');

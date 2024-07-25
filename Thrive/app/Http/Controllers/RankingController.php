@@ -22,7 +22,7 @@ class RankingController extends Controller
             $schoolRankings = DB::table('school_rankings')
                 ->where('school', $school)
                 ->orderBy('year')
-                ->pluck('ranking');
+                ->pluck('rankings');
             $rankings[$school] = $schoolRankings;
         }
 

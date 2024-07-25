@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Repetition extends Model
 {
+    protected $table = 'repetitions';
     use HasFactory;
     protected $fillable = [
         'challenge_number',

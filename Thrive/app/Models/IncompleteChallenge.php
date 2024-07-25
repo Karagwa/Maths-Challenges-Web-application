@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class IncompleteChallenge extends Model
 {
+    protected $table = 'incomplete_challenges';
     use HasFactory;
-    protected $fillable = ['username','Firstname','Lastname'];
+    protected $fillable = ['username','Firstname','Lastname','ChallengeNumber'];
 }

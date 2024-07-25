@@ -20,7 +20,7 @@ return new class extends Migration
             $table->integer('questionScore');
 
             $table->foreign('ChallengeNumber')->references('ChallengeNumber')->on('challenges')->onDelete('cascade');
-            $table->foreign('QuestionNo')->references('QuestionNo')->on('questions')->onDelete('cascade');
+            //$table->foreign('QuestionNo')->references('QuestionNo')->on('questions')->onDelete('cascade');
         });
     }
 

@@ -24,18 +24,19 @@
         </div>
 
         <h4>Repetition Percentages</h4>
-        <div class="card-body table-full-width table-responsive">
-            <table class="table table-hover" id="tb3">
-                <thead>
-                    <tr>
-                        <th>Repetition Percentage</th>
-                        <th>Challenge Number</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-        </div>
+            <div class="card-body table-full-width table-responsive">
+                <table class="table table-hover" id="tb3">
+                    <thead>
+                        <tr>
+                            <th>Repetition Percentage</th>
+                            <th>Challenge Number</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+
         
         <script>
             document.addEventListener('DOMContentLoaded', function () {
@@ -55,50 +56,52 @@
         });
 
         function fetchIncomplete() {
-            fetch('/fetch_Incomplete_challenges')
-                .then(response => response.text())
-                .then(data => {
-                    const rows = data.split('\n');
-                    const tbody = document.getElementById('tb2').getElementsByTagName('tbody')[0];
-                    tbody.innerHTML = '';
-                    rows.forEach(row => {
-                        const columns = row.split('|');
-                        if (columns.length === 4) {
-                            const tr = document.createElement('tr');
-                            tr.innerHTML = `
-                                <td>${columns[0]}</td>
-                                <td>${columns[1]}</td>
-                                <td>${columns[2]}</td>
-                                <td>${columns[3]}</td>
-                            `;
-                            tbody.appendChild(tr);
-                        }
-                    });
-                })
-                .catch(error => console.error('Error fetching data:', error));
-        }
+    fetch('/fetch_Incomplete_challenges')
+        .then(response => response.text())
+        .then(data => {
+            console.log(data); // Log the data for debugging
+            const rows = data.split('\n');
+            const tbody = document.getElementById('tb2').getElementsByTagName('tbody')[0];
+            tbody.innerHTML = '';
+            rows.forEach(row => {
+                const columns = row.split('|');
+                if (columns.length === 4) {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${columns[0]}</td>
+                        <td>${columns[1]}</td>
+                        <td>${columns[2]}</td>
+                        <td>${columns[3]}</td>
+                    `;
+                    tbody.appendChild(tr);
+                }
+            });
+        })
+        .catch(error => console.error('Error fetching data:', error));
+}
 
         function fetchRepetitions() {
-            fetch('/fetch_Repetition_percentages')
-                .then(response => response.text())
-                .then(data => {
-                    const rows = data.split('\n');
-                    const tbody = document.getElementById('tb3').getElementsByTagName('tbody')[0];
-                    tbody.innerHTML = '';
-                    rows.forEach(row => {
-                        const columns = row.split('|');
-                        if (columns.length === 2) {
-                            const tr = document.createElement('tr');
-                            tr.innerHTML = `
-                                <td>${columns[0]}</td>
-                                <td>${columns[1]}</td>
-                            `;
-                            tbody.appendChild(tr);
-                        }
-                    });
-                })
-                .catch(error => console.error('Error fetching data:', error));
-        }
+    fetch('/fetch_Repetition_percentages')
+        .then(response => response.text())
+        .then(data => {
+            console.log(data); // Add this line to log the data
+            const rows = data.split('\n');
+            const tbody = document.getElementById('tb3').getElementsByTagName('tbody')[0];
+            tbody.innerHTML = '';
+            rows.forEach(row => {
+                const columns = row.split('|');
+                if (columns.length === 2) {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${columns[0]}</td>
+                        <td>${columns[1]}</td>
+                    `;
+                    tbody.appendChild(tr);
+                }
+            });
+        })
+        .catch(error => console.error('Error fetching data:', error));
+}
 
         document.addEventListener('DOMContentLoaded', function () {
             fetch('/fetch_rankings')
