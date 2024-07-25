@@ -21,7 +21,6 @@ return new class extends Migration
             $table->integer('ChallengeDuration');
             $table->integer('NumberOfPresentedQuestions');
 
-            $table->timestamps();
         });
     }
 
