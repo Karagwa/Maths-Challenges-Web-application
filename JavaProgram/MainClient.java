@@ -30,6 +30,14 @@ public class MainClient {
      * based on the responses.
      * @throws SQLException 
      */
+
+    public static String Red = "\u001b[31m";
+    public static String Green = "\u001b[32m";
+    public static String Reset ="\u001b[0m";
+    public static String Blue="\u001b[94m";
+    public static String Yellow ="\u001b[33m";
+    public static String boldText = "\033[0m";
+    public static String Magenta ="\u001b[35m";
     public static void main(String[] args) throws SQLException {
         String hostname = "localhost";
         int port = 2020;
@@ -39,8 +47,9 @@ public class MainClient {
              BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
              Scanner sn = new Scanner(System.in)) {
 
-            System.out.println("Are you an applicant or a school representative?");
-            System.out.println("Enter 1 if you are an applicant or Enter 2 if you are a School Representative");
+            System.out.println();
+            System.out.println("\tAre you an applicant or a school representative?");
+            System.out.println(Yellow +" To Login,Enter 1 if you are an applicant or Enter 2 if you are a School Representative"+Reset);
             String userType = sn.nextLine();
             out.println(userType);
 
@@ -54,7 +63,7 @@ public class MainClient {
                 handleSchoolRepresentativeLogin(in, out, sn);
                 String auth = in.readLine();
                 if ("Welcome To Thrive Math Competition".equals(auth)) {
-                    System.out.println(auth+"\nEnter the viewApplicant command to view the applicants");
+                    System.out.println(auth+ Yellow+"\nEnter the viewApplicant command to view the applicants"+Reset);
                     //Add logic to view the challenges and everything
                     out.println(sn.nextLine());
                     StringBuilder receivedData = new StringBuilder();
@@ -67,23 +76,23 @@ public class MainClient {
                     }
 
                     if ("Invalid command".equals(receivedData.toString())) {
-                        System.out.println(receivedData.toString());
+                        System.out.println(Red+receivedData.toString()+Reset);
                     } else {
                         System.out.println(receivedData.toString());
                         String confirmationResponse = "";
                         do{
-                        System.out.println("To confirm any applicant,enter the command (confirm yes/no username) or enter Exit to exit the program");
+                        System.out.println(Yellow+"To confirm any applicant,enter the command (confirm yes/no username) or enter Exit to exit the program"+Reset);
                         String command=sn.nextLine();
                         out.println(command); 
                         confirmationResponse =in.readLine();
                         System.out.println(confirmationResponse);
                         }while(!confirmationResponse.equals("Exit"));
-                        System.out.println("Thank you for using the Thrive Math Competition");
+                        System.out.println("\t \t \tThank you for using the Thrive Math Competition");
 
 
                     }
                 } else {
-                    System.out.println("Invalid username or password\nTry again");
+                    System.out.println(Red+"Invalid username or password\nTry again"+Reset);
                 }
             } else {
                 System.out.println("Unexpected response from server: " + response);
@@ -95,7 +104,8 @@ public class MainClient {
     }
 
     private static String handleApplicantRegistration(BufferedReader in, PrintWriter out, Scanner sn) throws IOException, SQLException {
-        System.out.println("Are you already registered? Enter 1 for yes or 0 for no");
+        System.out.println(" \t Are you already registered?: ");
+        System.out.println(Yellow+"Enter 1 for yes or 0 for no"+Reset);
         String isRegistered = sn.nextLine();
         out.println(isRegistered);
 
@@ -110,9 +120,9 @@ public class MainClient {
 
             String auth_response = in.readLine(); // Final response from server
             if ("1".equals(auth_response)) {
-                System.out.println("Welcome to the Thrive Mathematics challenge");
+                System.out.println(Magenta+" \t \t \t WELCOME TO  THRIVE MATHEMATICS CHALLENGE"+Reset);
                 //Add logic to view the challenges and everything
-                System.out.println("Enter the command (viewChallenges) to view the valid Challenges");
+                System.out.println(Yellow+"Enter the command (viewChallenges) to view the valid Challenges"+Reset);
                 out.println(sn.nextLine());
                 while (true) {
                     String response = in.readLine();
@@ -132,7 +142,7 @@ public class MainClient {
                 }
                 
                 if(DatabaseConnection.hasAttemptedChallenge(username, regno, ChallengeNumber)){
-                    System.out.println("You have already attempted this challenge. Terminating connection");
+                    System.out.println(Red +"You have already attempted this challenge. Terminating connection"+Reset);
                     return null;
 
                 }else{
@@ -212,7 +222,7 @@ public class MainClient {
                             break;
                         }
 
-                        System.out.println("Do you want to attempt the challenge again? (yes/no)");
+                        System.out.println(Yellow+"Do you want to attempt the challenge again? (yes/no)"+Reset);
                         String userResponse = scanner.nextLine();
                         if (userResponse.equalsIgnoreCase("no")) {
                             break;
@@ -228,7 +238,7 @@ public class MainClient {
                 
                 
             } else if ("2".equals(auth_response)) {
-                System.out.println("Sadly,you were rejected :(");
+                System.out.println(Red+"Sadly,you were rejected :("+Reset);
                 return null;
             } else if("0".equals(auth_response)) {
                 System.out.println("Invalid username or password\nTry again");
@@ -251,15 +261,15 @@ public class MainClient {
             while ((registrationResponse = in.readLine()) != null) {
                 //System.out.println(registrationResponse);
                 if (registrationResponse.startsWith("Applicant registered successfully")) {
-                    System.out.println("You have registered successfully.\nPlease wait to be confirmed by your school representative\nThank you :)");
+                    System.out.println(Green +"You have registered successfully.\nPlease wait to be confirmed by your school representative\nThank you :)"+Reset);
                     return null;
                     
                 }else if(registrationResponse.equals("You have been rejected before  and cannot register again with this same school.")){
-                    System.out.println(registrationResponse);
+                    System.out.println(Red+registrationResponse+Reset);
                     return null;
 
                 }else{
-                    System.out.println(registrationResponse);
+                    System.out.println(Red+registrationResponse+Reset);
                     System.out.println("Please try again:");
                     return null;
                     //we have to make it iterative so the user can try to enter the command again
@@ -267,14 +277,14 @@ public class MainClient {
                 }
             }
         } else {
-            System.out.println("Invalid input. Please try again.");
+            System.out.println(Red+"Invalid input. Please try again."+Reset);
             return null;
         }
         return null;
 
     }
     private static void handleSchoolRepresentativeLogin(BufferedReader in, PrintWriter out, Scanner sn) throws IOException {
-        System.out.println("Enter your system username:");
+        System.out.println(Yellow+"Enter your system username:"+Reset);
         out.println(sn.nextLine());
     
         System.out.println(in.readLine()); // Expecting "Enter the password"
@@ -282,14 +292,14 @@ public class MainClient {
         if (password != null) {
             out.println(password);
         } else {
-            System.out.println("Unable to read the password.");
+            System.out.println(Red+"Unable to read the password."+Reset);
         }
     }
     
     public static String getPasswordFromConsole() {
         Console console = System.console();
         if (console == null) {
-            System.out.println("No console available");
+            System.out.println(Red+"No console available"+Reset);
             return null;
         }
     
