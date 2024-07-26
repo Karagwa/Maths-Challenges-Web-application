@@ -79,8 +79,8 @@ public class Applicant {
     //This is the method used to create object of an applicant to store the applicant detail into the file
     public static void newApplicant(BufferedReader in, PrintWriter out) throws IOException,SQLException{
 
-        out.println("Welcome To Thrive Math Competition");
-        out.println("To Register, enter the following command, and mind to skip a space where indicated:");
+        out.println(MainClient.Magenta+"\t \t \t WELCOME TO THRIVE MATH COMPETITION!!!!"+MainClient.Reset);
+        out.println(MainClient.Yellow +"To Register, enter the following command, and mind to skip a space where indicated:"+MainClient.Reset);
         out.println("Register: username\t firstname\t lastname\t emailAddress\t date_of_birth(yyyy-mm-dd)\t school_registration\t location_of_image");
       // Read the response from the client
         String response = in.readLine();
