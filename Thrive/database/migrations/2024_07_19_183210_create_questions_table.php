@@ -14,8 +14,8 @@ return new class extends Migration
     public function up()
     {
         Schema::create('questions', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('QuestionNo');
+            
+            $table->integer('QuestionNo')->primary();
             $table->string('Question');
             $table->integer('ChallengeNumber')->references('ChallengeNumber')->on('challenges');
             $table->timestamps();
