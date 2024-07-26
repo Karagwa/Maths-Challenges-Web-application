@@ -22,7 +22,7 @@ public class CreatePDF {
     
         try {
             // Step 2: Create a PdfWriter instance
-            PdfWriter.getInstance(document, new FileOutputStream("ChallengeReports/ChallengeReport1.pdf"));
+            PdfWriter.getInstance(document, new FileOutputStream("ChallengeReport1.pdf"));
     
             // Step 3: Open the document
             document.open();
@@ -73,7 +73,7 @@ public class CreatePDF {
 
             
             // This sends the email with the report attachment to the applicant immediately
-            //PDFEmailSender.sendEmailWithAttachment(participantEmail, "The report of the Thrive Challenge", "Thank you for attempting the challenge. Here is the report of the challenge.", "ChallengeReport1.pdf");
+            PDFEmailSender.sendEmailWithAttachment(participantEmail, "The report of the Thrive Challenge", "Thank you for attempting the challenge. Here is the report of the challenge.", "ChallengeReport1.pdf");
 
 
 
@@ -82,7 +82,7 @@ public class CreatePDF {
 
             
             // This sends the email with the report attachment to the applicant after the challenge is over
-            scheduleEmailWithAttachment(participantEmail, "The report of the Thrive Challenge", "Thank you for attempting the challenge. Here is the report of the challenge.", "ChallengeReport1.pdf", "2025-01-01");
+            //scheduleEmailWithAttachment(participantEmail, "The report of the Thrive Challenge", "Thank you for attempting the challenge. Here is the report of the challenge.", "ChallengeReport1.pdf", "2025-01-01");
 
 
 

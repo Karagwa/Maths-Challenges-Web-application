@@ -14,13 +14,13 @@ return new class extends Migration
     public function up()
     {
         Schema::create('questionscores', function (Blueprint $table) {
+            $table->id();
             $table->integer('ChallengeNumber');
-            $table->primary('ChallengeNumber');
             $table->integer('QuestionNo');
             $table->integer('questionScore');
 
             $table->foreign('ChallengeNumber')->references('ChallengeNumber')->on('challenges')->onDelete('cascade');
-            //$table->foreign('QuestionNo')->references('QuestionNo')->on('questions')->onDelete('cascade');
+            $table->foreign('QuestionNo')->references('QuestionNo')->on('questions')->onDelete('cascade');
         });
     }
 

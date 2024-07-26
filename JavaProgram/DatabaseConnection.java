@@ -621,7 +621,7 @@ public static String authenticateRepresentative(String username, String password
     public static void updateRecuring(double percentageRecurring, String challengeNumber) throws SQLException {
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
      
-            String sql = "INSERT INTO RecurringQuestion (ChallengeNumber,RecurringPercentage) VALUES (?, ?)";
+            String sql = "INSERT INTO repetitions (ChallengeNumber,RecurringPercentage) VALUES (?, ?)";
             try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
                 pstmt.setString(1, challengeNumber);
                 pstmt.setFloat(2, (float) percentageRecurring);

@@ -1,12 +1,14 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\Question;
 
 use Illuminate\Http\Request;
 use App\Models\Challenge;
 use App\Models\Mark;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+
 
 
 class ChallengeController extends Controller
@@ -107,7 +109,7 @@ class ChallengeController extends Controller
 
     public function showQuestionAnaltics()
     {
-        $challenges = Challenge::with(['questionScores.question', 'questions'])->get();
+        $challenges = Question::with(['questionScores.question', 'questions'])->get();
         $topAndBottomQuestions = [];
 
         foreach ($challenges as $challenge) {
