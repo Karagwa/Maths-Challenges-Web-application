@@ -2,13 +2,7 @@
 
 <title>Yearly Challenge Results</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f8f9fa;
-            color: #343a40;
-        }
+        
         table {
             width: 100%;
             border-collapse: collapse;

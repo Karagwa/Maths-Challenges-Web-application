@@ -6,7 +6,7 @@
                     <a href="https://www.creative-tim.com" class="nav-link" target="_blank">{{ __('Thrive challenges') }}</a>
                 </li>
                 <li>
-                    <a href="https://www.updivision.com" class="nav-link" target="_blank">{{ __('Fantastic Five') }}</a>
+                    <a href="https://www.updivision.com" class="nav-link" target="_blank">{{ __('IES') }}</a>
                 </li>
                 <li>
                     <a href="https://www.creative-tim.com/presentation" class="nav-link" target="_blank">{{ __('About Us') }}</a>
@@ -20,7 +20,7 @@
                 <script>
                     document.write(new Date().getFullYear())
                 </script>
-                <a href="http://www.creative-tim.com">{{ __('Thrive Challenges') }}</a> &amp; <a href="https://www.updivision.com">{{ __('Fantastic Five') }}</a> {{ __(', success comes with those that work for it') }}
+                <a href="http://www.creative-tim.com">{{ __('Thrive Challenges') }}</a> &amp; <a href="https://www.updivision.com">{{ __('International Education Services') }}</a> {{ __(', Math made easy') }}
             </p>
         </nav>
     </div>

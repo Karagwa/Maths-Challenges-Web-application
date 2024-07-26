@@ -68,21 +68,21 @@
         </ol>
         <div class="carousel-inner">
             <div class="carousel-item active">
-                <img src="{{ asset('light-bootstrap/img/image3.jpeg') }}" alt="First slide">
+                <img src="{{ asset('images/math1.jpg') }}" alt="First slide">
                 <div class="carousel-caption d-none d-md-block">
-                    <h1>{{ __('Welcome to Thrive Mathematics Competition. This page is for only Administrators') }}</h1>
+                    <h1>{{ __('Welcome to Thrive Mathematics Challenges. This page is for only Administrators') }}</h1>
                 </div>
             </div>
             <div class="carousel-item">
-                <img src="{{ asset('light-bootstrap/img/image1.jpeg') }}" alt="Second slide">
+                <img src="{{ asset('images/numbers.jpeg') }}"alt="Second slide">
                 <div class="carousel-caption d-none d-md-block">
                     <h1>{{ __('Thank you for your dedication. Let’s work together to create an outstanding learning environment for our students.') }}</h1>
                 </div>
             </div>
             <div class="carousel-item">
-                <img src="{{ asset('light-bootstrap/img/image2.jpeg') }}" alt="Third slide">
+                <img src="{{ asset('images/math1.jpg') }}" alt="Third slide">
                 <div class="carousel-caption d-none d-md-block">
-                    <h1>{{ __(' Welcome to the admin portal. Your expertise is invaluable to us, and we’re excited to work together to enhance the student experience.') }}</h1>
+                    <h1>{{ __(' Welcome to the admin portal. Your expertise is invaluable to us, and we are excited to work with you to enhance the student experience.') }}</h1>
                 </div>
             </div>
         </div>
