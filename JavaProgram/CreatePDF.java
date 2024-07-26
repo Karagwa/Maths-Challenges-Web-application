@@ -16,59 +16,83 @@ import java.util.concurrent.TimeUnit;
 
 
 public class CreatePDF {
-    public static void reportpdf(long[] responsetime, List<String> questionsList, List<String> solutionlist, int score, long totaltime, String username,List<String> userAnswers, String Date) throws SQLException {
+    public static void reportpdf(long[] responseTime, List<String> questionsList, List<String> solutionList, int score, long totalTime, String username, List<String> userAnswers, String date) throws SQLException {
         // Step 1: Create a Document instance
         Document document = new Document();
-        
+    
         try {
             // Step 2: Create a PdfWriter instance
-            PdfWriter.getInstance(document, new FileOutputStream("ChallengeReport1.pdf"));
-            
+            PdfWriter.getInstance(document, new FileOutputStream("ChallengeReports/ChallengeReport1.pdf"));
+    
             // Step 3: Open the document
             document.open();
-            
+    
             // Step 4: Add the challenge report details
             document.add(new Paragraph("Challenge Report"));
             document.add(new Paragraph(" "));
-            
+    
             document.add(new Paragraph("Score: " + score));
-            document.add(new Paragraph("Total Time: " + totaltime/1000 + " seconds"));
+            document.add(new Paragraph("Total Time: " + totalTime / 1000 + " seconds"));
             document.add(new Paragraph(" "));
-            
+    
             for (int i = 0; i < questionsList.size(); i++) {
-                if(solutionlist.get(i)==userAnswers.get(i)){
+                if (solutionList.get(i).equals(userAnswers.get(i))) {
                     document.add(new Paragraph("Question " + (i + 1) + ": " + questionsList.get(i)));
                     document.add(new Paragraph("You got the correct answer"));
-                    document.add(new Paragraph("Your Answer: "+ userAnswers.get(i)));
-                    document.add(new Paragraph("Response Time: " + responsetime[i]/1000 + " seconds"));
+                    document.add(new Paragraph("Your Answer: " + userAnswers.get(i)));
+                    document.add(new Paragraph("Response Time: " + responseTime[i] / 1000 + " seconds"));
                     document.add(new Paragraph(" "));
-                }else{
+                } else {
                     document.add(new Paragraph("Question " + (i + 1) + ": " + questionsList.get(i)));
-                    document.add(new Paragraph("You fialed this one:"));
-                    document.add(new Paragraph("Your Answer: "+ userAnswers.get(i)));
-                    document.add(new Paragraph("The correct solution is : " + solutionlist.get(i)));
-                    document.add(new Paragraph("Response Time: " + responsetime[i]/1000 + " seconds"));
+                    document.add(new Paragraph("You failed this one:"));
+                    document.add(new Paragraph("Your Answer: " + userAnswers.get(i)));
+                    document.add(new Paragraph("The correct solution is: " + solutionList.get(i)));
+                    document.add(new Paragraph("Response Time: " + responseTime[i] / 1000 + " seconds"));
                     document.add(new Paragraph(" "));
                 }
             }
-            
+    
             // Optional: Add some alignment to center
-            Paragraph footer = new Paragraph("End of Report\n Thanks for Attending");
+            Paragraph footer = new Paragraph("End of Report\nThanks for Attending");
             footer.setAlignment(Element.ALIGN_CENTER);
             document.add(footer);
-            
+    
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             // Step 5: Close the document
             document.close();
         }
-        
+    
         System.out.println("PDF report created successfully!");
-        String participant_Email = DatabaseConnection.checkApplicantEmail(username);
-        PDFEmailSender.sendEmailWithAttachment(participant_Email, "The report of the Thrive Challenge", "Thank You for attempting the challenge. Here is the report of the challenge.","ChallengeReport1.pdf");
-    }
+        
+        try {
+            String participantEmail = DatabaseConnection.checkApplicantEmail(username);
 
+
+
+            
+            // This sends the email with the report attachment to the applicant immediately
+            //PDFEmailSender.sendEmailWithAttachment(participantEmail, "The report of the Thrive Challenge", "Thank you for attempting the challenge. Here is the report of the challenge.", "ChallengeReport1.pdf");
+
+
+
+
+
+
+            
+            // This sends the email with the report attachment to the applicant after the challenge is over
+            scheduleEmailWithAttachment(participantEmail, "The report of the Thrive Challenge", "Thank you for attempting the challenge. Here is the report of the challenge.", "ChallengeReport1.pdf", "2025-01-01");
+
+
+
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
+        }
+    }
     public static void scheduleEmailWithAttachment(String to, String subject, String bodyText, String filePath, String endTime) {
         // Define the date format
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
