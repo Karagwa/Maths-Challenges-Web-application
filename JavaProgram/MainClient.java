@@ -28,6 +28,9 @@ public class MainClient {
      * based on the responses.
      * @throws SQLException 
      */
+
+
+     //code starts here
     public static void main(String[] args) throws SQLException {
         String hostname = "localhost";
         int port = 2020;
